@@ -5,8 +5,11 @@ from datetime import datetime
 app = Flask(__name__)
 
 # ====== 설정 ======
-MODEL_FILE = 'hate_speech_classifier.pkl'
-ABUSE_DB_FILE = 'final_abuse_db.json'
+# 현재 스크립트 파일(이 파일)이 있는 폴더의 절대 경로를 계산합니다.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# 위에서 계산한 폴더 경로와 파일 이름을 합쳐서 완전한 파일 경로를 만듭니다.
+MODEL_FILE = os.path.join(BASE_DIR, 'hate_speech_classifier.pkl')
+ABUSE_DB_FILE = os.path.join(BASE_DIR, 'final_abuse_db.json')
 REQUIRE_API_KEY = os.getenv("REQUIRE_API_KEY", "false").lower() == "true"
 API_KEY = os.getenv("API_KEY", "")
 THRESHOLD = float(os.getenv("THRESHOLD", "0.5"))  # (모델이 predict_proba 지원 시 사용 예정)

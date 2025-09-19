@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Slider</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            width: 80%;
+            gap: 10px; /* 버튼과 카드 영역 사이 간격 */
+        }
+        .slider-wrapper {
+            display: flex;
+            overflow: hidden;
+            flex: 1; /* 버튼 사이에서 공간을 채움 */
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 10px;
+        }
+        .cards {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card {
+            min-width: 150px;
+            margin-right: 10px;
+            background-color: #e3e3e3;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .slider-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slider-container">
+    <button class="slider-button left">&#8592;</button>
+    <div class="slider-wrapper">
+        <div class="cards">
+            <div class="card">Card 1</div>
+            <div class="card">Card 2</div>
+            <div class="card">Card 3</div>
+            <div class="card">Card 4</div>
+            <div class="card">Card 5</div>
+        </div>
+    </div>
+    <button class="slider-button right">&#8594;</button>
+</div>
+
+<script>
+    const wrapper = document.querySelector('.cards');
+    const leftBtn = document.querySelector('.slider-button.left');
+    const rightBtn = document.querySelector('.slider-button.right');
+
+    let offset = 0;
+    const cardWidth = document.querySelector('.card').offsetWidth + 10; // margin 포함
+
+    leftBtn.addEventListener('click', () => {
+        offset += cardWidth;
+        if (offset > 0) offset = 0;
+        wrapper.style.transform = `translateX(${offset}px)`;
+    });
+
+    rightBtn.addEventListener('click', () => {
+        const maxOffset = -(wrapper.scrollWidth - wrapper.parentElement.offsetWidth);
+        offset -= cardWidth;
+        if (offset < maxOffset) offset = maxOffset;
+        wrapper.style.transform = `translateX(${offset}px)`;
+    });
+</script>
+
+</body>
+</html>

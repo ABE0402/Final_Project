@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약하기</title>
+    <link rel="stylesheet" href="/css/reserve.css">
+    <script src="/js/reserve.js"></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="logo">Logo</div>
+    <div class="auth">
+        <a href="#">로그인</a>
+        <a href="#">회원가입</a>
+    </div>
+</header>
+
+<main class="reservation-container">
+    <div class="reservation-box">
+        <h2>예약하기</h2>
+
+        <div class="reservation-section">
+            <p class="section-title"><span class="bullet">■</span> 인원수를 선택하세요.</p>
+            <div class="people-count-section">
+                <div class="people-options">
+                    <button class="people-btn" data-value="1">1인</button>
+                    <button class="people-btn" data-value="2">2인</button>
+                    <button class="people-btn" data-value="3">3인</button>
+                    <button class="people-btn" data-value="4">4인</button>
+                    <button class="people-btn" data-value="5">5인</button>
+                    <button class="people-btn" data-value="6">6인</button>
+                    <button class="people-btn" data-value="7">7인</button>
+                    <button class="people-btn" data-value="8">8인</button>
+                </div>
+                <input type="number" id="people-input" placeholder="직접입력" min="1">
+            </div>
+        </div>
+
+        <div class="reservation-section">
+            <p class="section-title"><span class="bullet">■</span> 날짜를 선택하세요.</p>
+            <div class="datetime-section">
+                <div class="calendar-header">
+                    <button class="nav-arrow prev">‹</button>
+                    <span id="month-year-display">2025. 9</span>
+                    <button class="nav-arrow next">›</button>
+                </div>
+
+                <div class="calendar-grid">
+                    <span class="day-of-week">일</span>
+                    <span class="day-of-week">월</span>
+                    <span class="day-of-week">화</span>
+                    <span class="day-of-week">수</span>
+                    <span class="day-of-week">목</span>
+                    <span class="day-of-week">금</span>
+                    <span class="day-of-week">토</span>
+                    <span class="day inactive">31</span>
+                    <span class="day" data-date="2025-09-01">1</span>
+                    <span class="day" data-date="2025-09-02">2</span>
+                    <span class="day selected" data-date="2025-09-24">24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="reservation-section">
+            <p class="section-title"><span class="bullet">■</span> 시간을 선택하세요.</p>
+            <div class="time-slots">
+                <div class="time-period-group">
+                    <button class="time-period-btn selected" data-period="am">오전</button>
+                    <button class="time-period-btn" data-period="pm">오후</button>
+                </div>
+                <div class="time-slot-list" id="am-slots">
+                    <button class="time-btn" data-time="10:00">10:00</button>
+                    <button class="time-btn" data-time="11:00">11:00</button>
+                </div>
+                <div class="time-slot-list hidden" id="pm-slots">
+                    <button class="time-btn" data-time="12:00">12:00</button>
+                    <button class="time-btn" data-time="13:00">01:00</button>
+                    <button class="time-btn" data-time="14:00">02:00</button>
+                    <button class="time-btn" data-time="15:00">03:00</button>
+                    <button class="time-btn" data-time="16:00">04:00</button>
+                    <button class="time-btn" data-time="17:00">05:00</button>
+                    <button class="time-btn" data-time="18:00">06:00</button>
+                    <button class="time-btn" data-time="19:00">07:00</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="reservation-section">
+            <p class="section-title"><span class="bullet">■</span> 예약 알림 받기</p>
+            <div class="notification-options">
+                <label class="checkbox-container">이메일
+                    <input type="checkbox" checked="checked">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">문자(SMS)
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn secondary" id="reset-btn">
+                <img src="../images/reset.png" alt="초기화 아이콘">
+                초기화
+            </button>
+            <button class="action-btn primary" id="reserve-btn">예약하기</button>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-logo">Logo</div>
+    <div class="social-icons">
+        <a href="#">아이콘1</a>
+        <a href="#">아이콘2</a>
+        <a href="#">아이콘3</a>
+    </div>
+    <nav class="footer-menu">
+        <a href="#">About</a>
+        <a href="#">Authors</a>
+        <a href="#">Archive</a>
+        <a href="#">Terms and Conditions</a>
+        <a href="#">Cookie Policy</a>
+    </nav>
+</footer>
+
+</body>
+</html>

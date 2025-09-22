@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="/css/main.css">
+    <script defer src="/js/main.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="logo">Logo</div>
+    <div class="auth"><a href="/login">로그인</a></div>
+</header>
+
+<main>
+    <!-- 🔍 검색 & 카테고리 -->
+    <section class="search-area">
+        <h1 class="title">HonG Around</h1>
+        <form action="/search" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Search">
+            <button type="submit">🔍</button>
+        </form>
+        <div class="category-buttons">
+            <button class="category-btn active" data-category="cafe">카페</button>
+            <button class="category-btn" data-category="restaurant">음식점</button>
+        </div>
+    </section>
+
+    <!-- 🧩 태그별 섹션 -->
+    <div id="main-content">
+        {{> fragments/fragment}}
+    </div>
+
+    <!-- 🔁 무한 스크롤 감지 -->
+    <div id="scroll-end"></div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-logo">Logo</div>
+
+    <div class="social-icons">
+        <a href="#">아이콘1</a>
+        <a href="#">아이콘2</a>
+        <a href="#">아이콘3</a>
+    </div>
+
+    <nav class="footer-menu">
+        <a href="#">About</a>
+        <a href="#">Authors</a>
+        <a href="#">Archive</a>
+        <a href="#">Terms and Conditions</a>
+        <a href="#">Cookie Policy</a>
+    </nav>
+</footer>
+
+</body>
+</html>

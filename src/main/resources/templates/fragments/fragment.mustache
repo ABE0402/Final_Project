@@ -1,0 +1,46 @@
+
+{{#tagSections}}
+    <section class="tag-section" data-tag="{{tag}}" data-category="{{category}}">
+        <div class="tag-header">
+            <h2 class="tag-title">
+                <a href="/list?category={{category}}&tag={{tag}}">#{{tag}}</a>
+            </h2>
+
+
+            <!-- 드롭다운 정렬 -->
+            <div class="sort-dropdown">
+                <button class="sort-btn" id="sortBtn">
+                    기본순 ▼
+                </button>
+                <ul class="sort-options">
+                    <li data-sort="recommend" class="selected">기본순</li>
+                    <li data-sort="review">리뷰많은순</li>
+                    <li data-sort="rating">별점높은순</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="carousel-wrapper">
+            <!-- Prev Button -->
+            <button class="carousel-btn prev">◀</button>
+
+            <!-- 카드 컨테이너 -->
+            <div class="carousel-container">
+                <div class="carousel-items">
+                    {{#posts}}
+                        <div class="post-card">
+                            <a href="/detail?category={{category}}&id={{id}}" class="card-link">
+                            <img src="https://placehold.co/400x400/E5E7EB/4B5563?text=Image+1" alt="{{title}}" />
+                            <h4>{{title}}</h4>
+                            <p>{{description}}</p>
+                            </a>
+                        </div>
+                    {{/posts}}
+                </div>
+            </div>
+
+            <!-- Next Button -->
+            <button class="carousel-btn next">▶</button>
+        </div>
+    </section>
+{{/tagSections}}

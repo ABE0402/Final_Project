@@ -3,7 +3,7 @@ package com.example.hong.service;
 import com.example.hong.entity.Cafe;
 import com.example.hong.entity.User;
 import com.example.hong.repository.CafeRepository;
-import com.example.hong.repository.UserRepository; // UserRepository가 필요합니다.
+import com.example.hong.repository.UserRepository;
 import com.example.hong.dto.CafeCreateRequestDto;
 import com.example.hong.dto.CafeDetailResponseDto;
 import com.example.hong.dto.CafeSummaryResponseDto;

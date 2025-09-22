@@ -1,0 +1,54 @@
+<header class="site-header border-bottom bg-white">
+    <nav class="container d-flex align-items-center justify-content-between py-3 gap-3">
+
+        <!-- Left: Logo -->
+        <a href="/" class="brand d-inline-flex align-items-center text-decoration-none">
+            <span class="brand-mark rounded-2 me-2"></span>
+            <span class="fw-bold text-olive">Hong Around</span>
+        </a>
+
+        <!-- Center: Search (md~) -->
+        <form class="d-none d-md-block flex-grow-1 mx-3" action="/search" method="get" style="max-width:560px;">
+            <div class="input-group input-group-sm shadow-sm">
+                <input type="search" name="q" class="form-control" placeholder="카페/식당명, 지역, 메뉴로 검색" aria-label="검색">
+                <button class="btn btn-outline-olive" type="submit">검색</button>
+            </div>
+        </form>
+
+        <!-- Right: Actions -->
+        <div class="d-flex align-items-center gap-2">
+            {{#auth.isLoggedIn}}
+                {{#auth.isOwner}}
+                    <a href="/owner" class="badge text-bg-success text-decoration-none">점주</a>
+                    <a href="/owner/shops/new" class="btn btn-sm btn-outline-olive">가게 등록</a>
+                {{/auth.isOwner}}
+
+                {{#auth.isAdmin}}
+                    <a class="btn btn-warning btn-sm" href="/admin">관리자</a>
+                {{/auth.isAdmin}}
+
+                <a class="btn btn-sm btn-outline-olive" href="/mypage">마이페이지</a>
+
+                <form method="post" action="/logout" class="m-0">
+                    {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">로그아웃</button>
+                </form>
+            {{/auth.isLoggedIn}}
+
+            {{^auth.isLoggedIn}}
+                <a class="btn btn-sm btn-outline-olive" href="/login">로그인</a>
+                <a class="btn btn-sm btn-olive" href="/signup">회원가입</a>
+            {{/auth.isLoggedIn}}
+        </div>
+    </nav>
+
+    <!-- Mobile search (xs~sm) -->
+    <div class="container d-md-none pb-3">
+        <form action="/search" method="get">
+            <div class="input-group input-group-sm shadow-sm">
+                <input type="search" name="q" class="form-control" placeholder="검색">
+                <button class="btn btn-outline-olive" type="submit">검색</button>
+            </div>
+        </form>
+    </div>
+</header>

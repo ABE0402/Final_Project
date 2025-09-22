@@ -4,6 +4,7 @@ import com.example.hong.service.CafeService;
 import com.example.hong.dto.CafeCreateRequestDto;
 import com.example.hong.dto.CafeDetailResponseDto;
 import com.example.hong.dto.CafeSummaryResponseDto;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,5 +1,6 @@
 package com.example.hong.entity;
 
+import com.example.hong.domain.AccountStatus;
 import com.example.hong.domain.Gender;
 import com.example.hong.domain.UserRole;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 
 @Entity @Table(name = "users")
-@Getter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,16 +35,16 @@ public class User {
 
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
     @Builder.Default
-    @Column(name = "gender", columnDefinition = "ENUM('MALE','FEMALE','OTHER','UNKNOWN')")
     private Gender gender = Gender.UNKNOWN;
 
     @Column(nullable = true)
     private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
     @Builder.Default
-    @Column(name = "role", columnDefinition = "ENUM('USER','OWNER','ADMIN')")
     private UserRole role = UserRole.USER;
 
     @Column(length = 500, nullable = true)
@@ -71,9 +72,9 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
-    public void updateProfile(String nickname, String bio, String profileImageUrl) {
-        this.nickname = nickname;
-        this.bio = bio;
-        this.profileImageUrl = profileImageUrl;
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    @Builder.Default
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
+
 }

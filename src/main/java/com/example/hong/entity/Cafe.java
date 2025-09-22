@@ -1,10 +1,8 @@
 package com.example.hong.entity;
 
+import com.example.hong.domain.ApprovalStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,18 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "cafes")
+@Table(name = "cafes",
+        indexes = {
+                @Index(name = "idx_cafes_owner", columnList = "owner_user_id"),
+                @Index(name = "idx_cafes_status_visible", columnList = "approval_status,is_visible"),
+                @Index(name = "idx_cafes_geo", columnList = "lat,lng")
+        }
+)
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA는 기본 생성자를 필요로 합니다.
 
 public class Cafe {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY) // User 엔티티와 다대일 관계
-    @JoinColumn(name = "owner_user_id", nullable = false)
+    @JoinColumn(name = "owner_user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_cafes_owner"))
     private User owner; // owner_user_id 컬럼을 User 객체로 매핑   // 이거 삭제 예정
 
     @Column(length = 100, nullable = false)
@@ -59,7 +63,7 @@ public class Cafe {
 
     @Column(name = "average_rating", precision = 3, scale = 2, nullable = false)
     @ColumnDefault("0.00")
-    private BigDecimal averageRating;
+    private BigDecimal averageRating = BigDecimal.ZERO;
 
     @Column(name = "favorites_count", nullable = false)
     @ColumnDefault("0")
@@ -68,7 +72,7 @@ public class Cafe {
     @Enumerated(EnumType.STRING) // ENUM 타입을 문자열로 저장
     @Column(name = "approval_status", nullable = false)
     @ColumnDefault("'PENDING'")
-    private ApprovalStatus approvalStatus;
+    private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
 
     @Column(name = "rejection_reason", columnDefinition = "TEXT")
     private String rejectionReason;
@@ -108,10 +112,6 @@ public class Cafe {
         this.isVisible = true;
     }
 
-    // ApprovalStatus ENUM 정의
-    public enum ApprovalStatus {
-        PENDING, APPROVED, REJECTED
-    }
 
     // 연관관계 편의 메서드 (필요 시)
 //    public void setOwner(User owner) {

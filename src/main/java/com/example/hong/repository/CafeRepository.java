@@ -1,10 +1,12 @@
 package com.example.hong.repository;
 
+import com.example.hong.domain.ApprovalStatus;
 import com.example.hong.entity.Cafe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 // JpaRepository와 우리가 만든 CafeRepositoryCustom을 함께 상속받습니다.
 public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositoryCustom {
@@ -17,4 +19,23 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
         LEFT JOIN FETCH ct.tag
     """)
     List<Cafe> findAllWithTags();
+
+    List<Cafe> findTop8ByApprovalStatusAndIsVisibleOrderByAverageRatingDescReviewCountDesc(
+            ApprovalStatus status, boolean isVisible);
+    List<Cafe> findByOwner_IdOrderByCreatedAtDesc(Long ownerId);
+
+    // 오너가 소유한 특정 카페 단건 접근(권한 체크에 유용)
+    Optional<Cafe> findByIdAndOwnerId(Long cafeId, Long ownerId);
+
+    long countByOwnerId(Long ownerId);
+
+
+    // 관리자: 대기 목록
+    List<Cafe> findByApprovalStatusOrderByCreatedAtAsc(ApprovalStatus status);
+
+    // 관리자: 승인된 가게 목록(최근 수정 순)
+    List<Cafe> findByApprovalStatusOrderByUpdatedAtDesc(ApprovalStatus status);
+
+    // 관리자: 승인 + 가시성 필터
+    List<Cafe> findByApprovalStatusAndIsVisibleOrderByUpdatedAtDesc(ApprovalStatus status, boolean isVisible);
 }

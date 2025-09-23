@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/reviews.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer src="/js/reviews.js"></script>
+
 </head>
 <body>
 <header class="site-header">
@@ -42,14 +43,17 @@
                         </div>
                         <div class="form-section photo-upload-section">
                             <h4>사진 등록</h4>
-                            <div class="photo-upload-box">+</div>
+                            <div class="photo-upload-container">
+                                <div class="photo-upload-box">+</div>
+                            </div>
                         </div>
                         <div class="form-section review-text-section">
                             <h4>리뷰 등록</h4>
-                            <textarea placeholder="리뷰를 입력하세요"></textarea>
+                            <textarea placeholder="리뷰를 입력하세요" maxlength="1000"></textarea>
+                            <div class="char-count">0 / 1000</div>
                         </div>
                         <div class="form-buttons">
-                            <button class="cancel-btn">취소</button>
+                            <button class="cancel-btn" data-page-type = "list">취소</button>
                             <button class="submit-btn">등록</button>
                         </div>
                     </div>

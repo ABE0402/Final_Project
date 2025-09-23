@@ -115,12 +115,12 @@ body {
 
 /* 리뷰 작성 폼 */
 .review-form-wrapper {
-    display: none; /* 이 부분이 폼을 숨기는 역할을 합니다. */
+    display: none;
 }
 
 .review-form {
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #fff;
     border-radius: 8px;
     margin-bottom: 20px;
     border: 1px solid #ddd;
@@ -149,6 +149,34 @@ body {
     margin: 0 0 10px;
 }
 
+/* 사진 업로드 섹션 */
+.form-section.photo-upload-section {
+    margin-top: 10px;
+}
+
+.photo-upload-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.photo-preview-box {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.photo-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .photo-upload-box {
     width: 100px;
     height: 100px;
@@ -160,6 +188,25 @@ body {
     font-size: 40px;
     color: #ccc;
     cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* "+" 기호 스타일 */
+.photo-upload-box::after {
+    content: '+';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: #ccc;
+    pointer-events: none;
+}
+
+/* 리뷰 텍스트 영역 */
+.review-text-section {
+    margin-top: 20px;
 }
 
 .review-text-section textarea {
@@ -168,32 +215,50 @@ body {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    resize: vertical;
+    resize: none;
     box-sizing: border-box;
+    transition: border-color 0.3s ease;
 }
 
+/* textarea에 포커스될 때의 스타일 */
+.review-text-section textarea:focus {
+    border-color: #3A6D1F;
+    outline: none;
+}
+
+/* 글자 수 카운터 스타일 */
+.char-count {
+    font-size: 12px;
+    color: #888;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* 폼 버튼 */
 .form-buttons {
     display: flex;
-    justify-content: center;
     gap: 10px;
     margin-top: 20px;
 }
 
 .form-buttons button {
-    padding: 10px 30px;
+    flex: 1;
+    padding: 10px 0;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
+    box-sizing: border-box;
 }
 
 .form-buttons .cancel-btn {
-    background-color: #ccc;
+    background-color: #d9d9d9;
     color: #555;
+    text-decoration: none;
 }
 
 .form-buttons .submit-btn {
-    background-color: #3A6D1F; /* 등록 버튼 배경색 */
+    background-color: #3A6D1F;
     color: #fff;
 }
 
@@ -234,4 +299,22 @@ body {
     margin: 5px 0 10px;
     color: #555;
     font-size: 14px;
+}
+
+/* 삭제 버튼 스타일 */
+.delete-photo-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+  z-index: 10;
 }

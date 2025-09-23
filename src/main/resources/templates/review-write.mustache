@@ -6,7 +6,7 @@
     <title>리뷰 작성</title>
     <link rel="stylesheet" href="/css/reviews.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="/js/reviews.js"></script>
+    <script defer src="/js/reviews.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -29,15 +29,17 @@
             </div>
             <div class="form-section photo-upload-section">
                 <h4>사진 등록</h4>
-                <div class="photo-upload-box">+</div>
+                <div class="photo-upload-container">
+                    <div class="photo-upload-box">+</div>
+                </div>
             </div>
             <div class="form-section review-text-section">
                 <h4>리뷰 등록</h4>
-                <textarea placeholder="리뷰를 입력하세요"></textarea>
+                <textarea placeholder="리뷰를 입력하세요" maxlength="1000"></textarea>
+                <div class="char-count">0 / 1000</div>
             </div>
             <div class="form-buttons">
-                <!-- 취소 버튼을 리뷰 목록 페이지로 돌아가는 링크로 변경 -->
-                <a href="reviews.html" class="cancel-btn">취소</a>
+                <button class="cancel-btn" data-page-type="write">취소</button>
                 <button class="submit-btn">등록</button>
             </div>
         </div>

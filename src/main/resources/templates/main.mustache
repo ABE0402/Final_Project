@@ -1,0 +1,53 @@
+<!-- templates/main.mustache -->
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>HonG Around</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <script defer src="/js/main.js"></script>
+</head>
+<body>
+{{> layout/header}}
+
+<main class="bg-body-tertiary py-5">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold">HonG Around</h1>
+
+        <!-- 검색 (선택) -->
+        <form class="mx-auto mt-3" style="max-width:640px" action="/search" method="get">
+            <div class="input-group input-group-lg shadow-sm">
+                <input type="search" name="q" class="form-control" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-secondary" type="submit">🔍</button>
+            </div>
+        </form>
+
+        <!-- 카테고리 -->
+        <div class="d-flex gap-2 justify-content-center mt-3">
+            <button class="btn btn-sm {{#isAll}}btn-olive{{/isAll}} {{^isAll}}btn-outline-olive{{/isAll}} cat-btn" data-category="all">전체</button>
+            <button class="btn btn-sm {{#isCafe}}btn-olive{{/isCafe}} {{^isCafe}}btn-outline-olive{{/isCafe}} cat-btn" data-category="cafe">카페</button>
+            <button class="btn btn-sm {{#isRestaurant}}btn-olive{{/isRestaurant}} {{^isRestaurant}}btn-outline-olive{{/isRestaurant}} cat-btn" data-category="restaurant">식당</button>
+        </div>
+
+        <!-- 정렬 -->
+        <div class="d-flex gap-2 justify-content-center mt-2">
+            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_recommend}}active{{/sort_recommend}}" data-sort="recommend">추천순</button>
+            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_rating}}active{{/sort_rating}}" data-sort="rating">평점순</button>
+            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_review}}active{{/sort_review}}" data-sort="review">리뷰순</button>
+        </div>
+    </div>
+
+    <!-- 카드 그리드 -->
+    <div class="container mt-4" id="card-container">
+        {{> fragments/cards_grid}}
+    </div>
+
+    <!-- 무한 스크롤 트리거 -->
+    <div id="scroll-end" class="py-3"></div>
+</main>
+
+{{> layout/footer}}
+</body>
+</html>

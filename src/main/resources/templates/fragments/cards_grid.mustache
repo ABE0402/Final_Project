@@ -1,0 +1,26 @@
+<!-- templates/fragments/cards_grid.mustache -->
+<section class="mb-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+        {{#cards}}
+            <div class="col">
+                <a class="card h-100 text-decoration-none text-reset" href="/{{pathSegment}}/{{id}}">
+                    <div class="ratio ratio-16x9 bg-light card-img-top"
+                         style="background-image:url('{{#heroImageUrl}}{{.}}{{/heroImageUrl}}{{^heroImageUrl}}/images/placeholder.jpg{{/heroImageUrl}}'); background-size:cover; background-position:center"></div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h6 class="card-title text-truncate">{{name}}</h6>
+                            <span class="badge text-bg-success">{{type}}</span>
+                        </div>
+                        <div class="small text-muted text-truncate">{{address}}</div>
+                        <div class="mt-2 small">⭐ {{averageRating}} · 리뷰 {{reviewCount}}</div>
+                    </div>
+                </a>
+            </div>
+        {{/cards}}
+        {{^cards}}
+            <div class="col">
+                <div class="alert alert-light border empty-message">표시할 카드가 없습니다.</div>
+            </div>
+        {{/cards}}
+    </div>
+</section>

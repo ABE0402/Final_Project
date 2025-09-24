@@ -1,120 +1,90 @@
+// src/main/java/com/example/hong/service/TagService.java
 package com.example.hong.service;
 
-import com.example.hong.dto.PostDto;
-import com.example.hong.dto.TagSection;
-import com.example.hong.dto.PostDto;
+import com.example.hong.domain.ApprovalStatus;
+import com.example.hong.dto.CardDto;
+import com.example.hong.dto.TagSectionDto;
+import com.example.hong.entity.Cafe;
+import com.example.hong.entity.Tag;
+import com.example.hong.repository.CafeRepository;
+import com.example.hong.repository.TagRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TagService {
 
-    private final Random rnd = new Random();
-    private final List<PostDto> allPosts = new ArrayList<>();
+    private final TagRepository tagRepository;
+    private final CafeRepository cafeRepository;
 
-    public TagService() {
-        // 더미 데이터 초기화
-        createDummyData("카페", "cafe", List.of("카페", "디저트", "브런치", "루프탑", "데이트", "혼밥", "술집", "바"));
-        createDummyData("음식점", "restaurant", List.of("식당", "한식", "일식", "중식", "분식", "고기집", "족발보쌈", "야시장", "포장마차"));
+    /** 메인: 페이지 단위(태그 1페이지= N개)로 섹션 리스트 */
+    public List<TagSectionDto> getTagSectionsByCategoryPageAndSort(String category, int page, String sort) {
+        int tagsPerPage = 5; // 한 번에 섹션 5개씩
+        Page<Tag> tagPage = tagRepository.findByCategoryOrderByNameAsc(
+                category, PageRequest.of(page, tagsPerPage)
+        );
+
+        return tagPage.getContent().stream()
+                .map(tag -> TagSectionDto.builder()
+                        .tag(tag.getName())
+                        .category(category)
+                        .items(findCafesByTagAndSort(tag, sort, 8)  // 섹션당 카드 8개
+                                .stream().map(this::toCard).toList())
+                        .build())
+                .toList();
     }
 
-    private void createDummyData(String titlePrefix, String category, List<String> tags) {
-        for (String tag : tags) {
-            for (int i = 1; i <= 10; i++) { // 태그당 데이터 10개
-                long id = allPosts.size() + 1L;
-                allPosts.add(new PostDto(
-                        titlePrefix + " " + i + " " + tag,
-                        "#" + tag + " 관련된 설명입니다.",
-                        "/images/sample" + (id % 5 + 1) + ".jpg",
-                        rnd.nextInt(500),
-                        Math.round((2 + rnd.nextDouble() * 3) * 10) / 10.0,
-                        id,
-                        category,
-                        "여기는 상세 내용입니다.",
-                        "작가" + id,
-                        "서울시 마포구",
-                        "평일 10:00 - 22:00",
-                        "02-1234-5678"
-                ));
-            }
-        }
+    /** 메인: 단일 태그만 새로고침(정렬 변경 시) */
+    public List<TagSectionDto> getTagSectionByTagAndSort(String category, String tagName, String sort) {
+        Tag tag = tagRepository.findByCategoryAndName(category, tagName)
+                .orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다: " + tagName));
+
+        var cards = findCafesByTagAndSort(tag, sort, 8).stream()
+                .map(this::toCard)
+                .toList();
+
+        return List.of(TagSectionDto.builder()
+                .tag(tag.getName())
+                .category(category)
+                .items(cards)
+                .build());
     }
 
-    private List<String> getTagsByCategory(String category) {
-        if ("restaurant".equals(category)) {
-            return List.of("식당", "한식", "일식", "중식", "분식", "고기집", "족발보쌈", "야시장", "포장마차");
-        }
-        return List.of("카페", "디저트", "브런치", "루프탑", "데이트", "혼밥", "술집", "바");
+    /* ================= 내부 ================= */
+
+    private List<Cafe> findCafesByTagAndSort(Tag tag, String sort, int limit) {
+        Sort order = switch (safe(sort)) {
+            case "rating"   -> Sort.by(Sort.Order.desc("averageRating"), Sort.Order.desc("reviewCount"));
+            case "review"   -> Sort.by(Sort.Order.desc("reviewCount"),   Sort.Order.desc("averageRating"));
+            case "favorite" -> Sort.by(Sort.Order.desc("favoritesCount"), Sort.Order.desc("averageRating"));
+            default /* recommend */ ->
+                    Sort.by(Sort.Order.desc("averageRating"),
+                            Sort.Order.desc("reviewCount"),
+                            Sort.Order.desc("favoritesCount"));
+        };
+
+        Pageable pageable = PageRequest.of(0, limit, order);
+        return cafeRepository.findByApprovalStatusAndIsVisibleAndCafeTags_Tag_Id(
+                ApprovalStatus.APPROVED, true, tag.getId(), pageable
+        ).getContent();
     }
 
-    /**
-     * 메인 페이지용 - 페이지 단위로 여러 태그 섹션 반환
-     */
-    public List<TagSection> getTagSectionsByCategoryPageAndSort(String category, int page, String sort) {
-        int tagsPerPage = 5;
-        List<String> tags = getTagsByCategory(category);
-        int start = page * tagsPerPage;
-        int end = Math.min(start + tagsPerPage, tags.size());
+    private String safe(String s) { return (s == null || s.isBlank()) ? "recommend" : s.toLowerCase(); }
 
-        List<TagSection> sections = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            String tag = tags.get(i);
-            List<PostDto> posts = getPostsByCategoryAndTag(category, tag, sort);
-            sections.add(new TagSection(tag, category, posts));
-        }
-        return sections;
-    }
-
-    /**
-     * 메인 페이지용 - 단일 태그 섹션 반환
-     */
-    public List<TagSection> getTagSectionByTagAndSort(String category, String tag, String sort) {
-        List<PostDto> posts = getPostsByCategoryAndTag(category, tag, sort);
-        TagSection section = new TagSection(tag, category, posts);
-        return List.of(section);
-    }
-
-    /**
-     * 목록 페이지용 - 카테고리 + 태그 기반 게시물 리스트 반환
-     */
-    public List<PostDto> getPostsByCategoryAndTag(String category, String tag, String sort) {
-        List<PostDto> filteredPosts = allPosts.stream()
-                .filter(post -> post.getCategory().equals(category) && post.getDescription().contains("#" + tag))
-                .collect(Collectors.toList());
-
-        // 정렬
-        switch (sort) {
-            case "review":
-                filteredPosts.sort(Comparator.comparingInt(PostDto::getReviewCount).reversed());
-                break;
-            case "rating":
-                filteredPosts.sort(Comparator.comparingDouble(PostDto::getRating).reversed());
-                break;
-            default:
-                break;
-        }
-
-        return filteredPosts;
-    }
-
-    /**
-     * 상세 페이지용 - ID 기반 단일 게시물 반환
-     */
-    public PostDto getPostById(Long id) {
-        return allPosts.stream()
-                .filter(post -> post.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public List<Long> getAllPostIds() {
-        return allPosts.stream()
-                .map(PostDto::getId)
-                .collect(Collectors.toList());
+    private CardDto toCard(Cafe c) {
+        return CardDto.builder()
+                .id(c.getId())
+                .type("CAFE")
+                .name(c.getName())
+                .address(c.getAddressRoad())
+                .heroImageUrl(c.getHeroImageUrl())
+                .averageRating(c.getAverageRating() == null ? 0.0 : c.getAverageRating().doubleValue())
+                .reviewCount(c.getReviewCount())
+                .pathSegment("cafes")
+                .build();
     }
 }

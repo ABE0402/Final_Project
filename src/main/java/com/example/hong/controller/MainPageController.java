@@ -1,6 +1,6 @@
 package com.example.hong.controller;
 
-import com.example.hong.dto.TagSection;
+import com.example.hong.dto.TagSectionDto;
 import com.example.hong.service.TagService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +21,13 @@ public class MainPageController {
     /**
      * 메인 페이지
      */
-    @GetMapping("/")
+    @GetMapping("/main")
     public String mainPage(@RequestParam(defaultValue = "cafe") String category,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam(defaultValue = "recommend") String sort,
                            Model model) {
 
-        List<TagSection> tagSections = tagService.getTagSectionsByCategoryPageAndSort(category, page, sort);
+        List<TagSectionDto> tagSections = tagService.getTagSectionsByCategoryPageAndSort(category, page, sort);
         model.addAttribute("tagSections", tagSections);
         model.addAttribute("category", category);
         model.addAttribute("currentPage", page);
@@ -48,7 +48,7 @@ public class MainPageController {
 
         log.info("loadMoreTags - category: {}, tag: {}, page: {}, sort: {}", category, tag, page, sort);
         log.info("tag : {}", tag);
-        List<TagSection> tagSections;
+        List<TagSectionDto> tagSections;
 
         if (tag != null && !tag.isBlank()) {
             // 특정 태그 섹션만 가져오기

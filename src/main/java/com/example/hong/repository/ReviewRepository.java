@@ -24,14 +24,16 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("""
     select r from Review r
     join fetch r.user u
+    left join fetch r.reviewAspectScores s
     where r.cafe.id = :cafeId and r.deleted = false
     order by r.id desc
-""")
+    """)
     List<Review> findForCafeWithUser(@Param("cafeId") Long cafeId);
 
     @Query("""
         select r from Review r
         join fetch r.user u
+        left join fetch r.reviewAspectScores s
         where r.user.id = :userId and r.deleted = false
         order by r.id desc
     """)

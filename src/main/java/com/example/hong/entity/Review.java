@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(
@@ -45,6 +47,9 @@ public class Review {
 
     @Column(nullable = false) @Builder.Default
     private boolean deleted = false;
+
+    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
+    private List<ReviewAspectScore> reviewAspectScores = new ArrayList<>();
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

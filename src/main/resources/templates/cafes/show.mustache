@@ -147,6 +147,14 @@
                             <div class="mt-2">{{content}}</div>
 
                             <div class="mt-2 d-flex gap-2 flex-wrap">
+                                {{#aspectScores}}
+                                    <span class="badge rounded-pill text-bg-light border fw-normal">
+                    {{aspect}}: <span class="fw-bold">{{score}}</span>
+                </span>
+                                {{/aspectScores}}
+                            </div>
+
+                            <div class="mt-2 d-flex gap-2 flex-wrap">
                                 {{#imageUrl1}}<img src="{{.}}" class="rounded" style="width:96px;height:96px;object-fit:cover">{{/imageUrl1}}
                                 {{#imageUrl2}}<img src="{{.}}" class="rounded" style="width:96px;height:96px;object-fit:cover">{{/imageUrl2}}
                                 {{#imageUrl3}}<img src="{{.}}" class="rounded" style="width:96px;height:96px;object-fit:cover">{{/imageUrl3}}
@@ -182,6 +190,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 </main>

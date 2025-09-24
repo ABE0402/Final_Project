@@ -28,19 +28,18 @@
         <div class="content-wrapper">
             <div class="info-content">
                 <div class="cafe-header">
-                    <h1 class="cafe-name">카페345</h1>
-                    <span class="badge">영업중</span>
+                    <div class="cafe-title-group">
+                        <span class="cafe-name">카페345</span>
+                        <span id="bookmarkBtn" class="bookmark-btn" role="button" tabindex="0">
+                            <i class="fa-regular fa-heart"></i>
+                        </span>
+                    </div>
+                    <span id="statusBadge" class="badge"></span>
                 </div>
                 <p class="cafe-location">서울시 강남구 테헤란로 123</p>
                 <div class="rating">
-                    <div class="stars">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star-half-stroke"></i>
-                    </div>
-                    <span class="rating-text">4.8 (19,899명)</span>
+                    <div class="rating-stars" data-rating="{{averageRating}}"></div>
+                    <span class="rating-text">{{averageRating}} (19,899명)</span>
                 </div>
                 <p class="cafe-description">편안한 분위기에서 즐기는 스페셜티 커피</p>
                 <div class="tags">
@@ -50,7 +49,7 @@
                     <span class="tag">#작업하기좋은</span>
                 </div>
                 <div class="action-buttons">
-                    <a href="/reserve" class="reserve-btn">예약</a>
+                    <a href="/reserve?category={{category}}&postId={{post.id}}" class="reserve-btn">예약</a>
                     <a href="/reviews/write?category={{category}}&postId={{post.Id}}" class="write-review-btn">리뷰 작성</a>
                 </div>
             </div>
@@ -83,7 +82,7 @@
             </div>
             <div class="info-item">
                 <span class="icon"><i class="fa-solid fa-clock"></i></span>
-                <span>매일 08:00 ~ 01:00<br>금/토 08:00 ~ 04:00<br>휴무 없음</span>
+                <div id="business-hours-container"></div>
             </div>
             <div class="info-item">
                 <span class="icon"><i class="fa-solid fa-house"></i></span>
@@ -128,13 +127,7 @@
                         <p class="reviewer">김민지</p>
                         <span class="review-date">2024.08.10</span>
                     </div>
-                    <div class="rating-stars">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star-half-stroke"></i>
-                    </div>
+                    <div class="rating-stars" data-rating="4.5"></div>
                     <div class="review-content">
                         <p>음료도 맛있고 분위기도 좋아서 자주 가는 곳이에요. 추천합니다!</p>
                     </div>
@@ -147,13 +140,7 @@
                         <p class="reviewer">박서준</p>
                         <span class="review-date">2024.08.08</span>
                     </div>
-                    <div class="rating-stars">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
+                    <div class="rating-stars" data-rating="5"></div>
                     <div class="review-content">
                         <p>커피 맛이 정말 훌륭해요. 직원분들도 친절해서 기분 좋게 머물다 갑니다.</p>
                     </div>
@@ -163,20 +150,14 @@
                         <p class="reviewer">최유리</p>
                         <span class="review-date">2024.08.05</span>
                     </div>
-                    <div class="rating-stars">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-regular fa-star"></i>
-                    </div>
+                    <div class="rating-stars" data-rating="4"></div>
                     <div class="review-content">
                         <p>디저트 종류가 다양해서 좋아요. 특히 케이크가 맛있습니다.</p>
                     </div>
                 </div>
             </div>
             <a href="/reviews?category={{category}}&postId={{post.Id}}" class="load-more-reviews-link">
-                <button class="load-more-reviews">리뷰 더보기</button>
+            <button class="load-more-reviews">리뷰전체보기</button>
             </a>
         </section>
 
@@ -191,13 +172,36 @@
                     </div>
                     <div class="item-info">
                         <div class="item-info-header">
-                            <h4>레스토랑 이탈리아</h4>
-                            <span class="item-rating">⭐️ 4.5</span>
+                            <a href="/detail?category={{category}}&id={{post.id}}" class="item-link">
+                                <h4>레스토랑 이탈리아</h4>
+                            </a>
+                            <div class="item-rating">
+                                <div class="rating-stars" data-rating="{{averageRating}}"></div>
+                                <span class="rating-text">{{averageRating}} (19,899명)</span>
+                            </div>
                         </div>
                         <div class="item-tags">
                             <span>#파스타</span>
                             <span>#이탈리안</span>
                             <span>#데이트</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="recommend-item">
+                    <div class="recommend-item-images">
+                        <img src="https://placehold.co/400x400/FFD1D1/333333?text=Food+4" alt="음식 이미지 4">
+                        <img src="https://placehold.co/400x400/FFD1D1/333333?text=Food+5" alt="음식 이미지 5">
+                        <img src="https://placehold.co/400x400/FFD1D1/333333?text=Food+6" alt="음식 이미지 6">
+                    </div>
+                    <div class="item-info">
+                        <div class="item-info-header">
+                            <h4>한정식 예찬</h4>
+                            <span class="item-rating">⭐️ 4.7</span>
+                        </div>
+                        <div class="item-tags">
+                            <span>#한정식</span>
+                            <span>#전통음식</span>
+                            <span>#모임</span>
                         </div>
                     </div>
                 </div>

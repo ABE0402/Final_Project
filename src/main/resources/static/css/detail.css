@@ -76,8 +76,8 @@ body {
     align-items: center;
     padding: 15px 15px;
     width: 90%;
-    max-width: 370px; /* ✅ 가로 길이를 줄임 */
-    flex-direction: row-reverse; /* ✅ 아이콘과 입력 필드 순서를 바꿈 */
+    max-width: 370px;
+    flex-direction: row-reverse;
 }
 
 .search-container input {
@@ -89,8 +89,8 @@ body {
 
 .search-container i {
     color: #888;
-    margin-left: 0; /* 기존 마진 제거 */
-    margin-right: 10px; /* ✅ 아이콘을 오른쪽으로 옮기고 마진 추가 */
+    margin-left: 0;
+    margin-right: 10px;
 }
 
 /* 주요 정보 섹션 */
@@ -126,17 +126,60 @@ body {
     justify-content: space-between;
 }
 
+/* 카페 이름과 즐겨찾기 버튼을 감싸는 그룹 */
+.cafe-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 카페 이름 스타일 */
 .cafe-name {
     margin: 0;
     font-size: 24px;
+    font-weight: bold;
 }
 
+/* 즐겨찾기 버튼 스타일 */
+.bookmark-btn {
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #dc3545;
+    position: relative;
+    z-index: 5;
+    background: none;
+    border: none;
+}
+
+.bookmark-btn .fa-solid.fa-heart {
+    color: #dc3545;
+}
+
+/* 영업 상태 뱃지 스타일 */
 .badge {
-    background-color: #f56652;
-    color: #fff;
+    display: inline-block;
     padding: 5px 10px;
     border-radius: 15px;
     font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+}
+
+.badge.status-open {
+    background-color: #3A6D1F;
+}
+
+.badge.status-closed {
+    background-color: #888;
+}
+
+.badge.status-holiday {
+    background-color: #dc3545;
+}
+
+.badge.status-unavailable {
+    background-color: #9b9b9b;
 }
 
 .cafe-location {
@@ -150,7 +193,7 @@ body {
     gap: 5px;
 }
 
-.stars i {
+.rating-stars i {
     color: #3A6D1F;
 }
 
@@ -211,8 +254,8 @@ body {
     font-weight: bold;
     cursor: pointer;
     text-align: center;
-    text-decoration: none; /* 밑줄 제거 */
-    display: block; /* 블록 요소로 만들어 너비를 채우도록 함 */
+    text-decoration: none;
+    display: block;
 }
 
 /* 이미지 캐러셀 섹션 */
@@ -295,9 +338,8 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-    max-height: 350px; /* 원하는 최대 높이를 설정하세요. */
-    overflow-y: auto;  /* 내용이 넘칠 때 세로 스크롤 생성 */
+    max-height: 350px;
+    overflow-y: auto;
 }
 
 .box-title {
@@ -309,9 +351,10 @@ body {
     margin-bottom: 20px;
 }
 
+/* 아이콘과 텍스트를 위쪽으로 정렬하기 위한 수정 */
 .info-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     margin-bottom: 10px;
     color: #555;
@@ -321,6 +364,13 @@ body {
     font-size: 18px;
 }
 
+/* 동적으로 생성될 영업시간 스타일 */
+#business-hours-container p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* 메뉴 스타일 */
 .menu-item {
     display: flex;
     justify-content: space-between;
@@ -331,6 +381,7 @@ body {
     color: #888;
 }
 
+/* 지도 영역 스타일 */
 .map-placeholder {
     height: 250px;
     background-color: #e0e0e0;
@@ -486,15 +537,44 @@ body {
     margin-bottom: 5px;
 }
 
+/* 기존 h4 스타일 제거 (링크에서 관리) */
 .item-info-header h4 {
     margin: 0;
     font-size: 18px;
+}
+
+/* 주변 맛집 타이틀 링크 스타일 (변경 없음) */
+.item-info-header .item-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 주변 맛집 타이틀의 h4에 호버 스타일 적용 (변경된 부분) */
+.item-info-header .item-link h4 {
     color: #333;
+    transition: color 0.2s;
+}
+
+.item-info-header .item-link:hover h4 {
+    color: #3A6D1F;
+}
+
+/* ⭐ 새로 추가된 .item-info-header 내부의 rating 스타일 */
+.item-info-header .item-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .item-rating {
     font-size: 14px;
-    color: #f7a623;
+    color: #3A6D1F;
+}
+
+/* 평점 텍스트 스타일 */
+.rating-text {
+    color: #3A6D1F;
+    font-size: 14px;
 }
 
 .item-tags {

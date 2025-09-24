@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
@@ -53,6 +52,8 @@ public class CommonController {
         model.addAttribute("reviews", reviewService.getReviewsByPlaceId(id));
         model.addAttribute("tags", tags); // 추출한 태그 리스트를 모델에 추가);
         model.addAttribute("category", category);
+
+        model.addAttribute("averageRating", 1.7);
 
         return "detail"; // detail.html 템플릿 반환
     }

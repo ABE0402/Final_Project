@@ -2,6 +2,8 @@ package com.example.hong.repository;
 
 import com.example.hong.domain.ApprovalStatus;
 import com.example.hong.entity.Cafe;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -38,4 +40,15 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
 
     // 관리자: 승인 + 가시성 필터
     List<Cafe> findByApprovalStatusAndIsVisibleOrderByUpdatedAtDesc(ApprovalStatus status, boolean isVisible);
+
+    Page<Cafe> findByApprovalStatusAndIsVisible(ApprovalStatus status, boolean isVisible, Pageable pageable);
+
+    Page<Cafe> findByApprovalStatusAndIsVisibleAndCafeTags_Tag_Id(
+            ApprovalStatus status, boolean isVisible, Integer tagId, Pageable pageable
+    );
+
+    // ✅ 태그로 필터 + "추천 정렬(평점 desc, 리뷰수 desc)" Top N (빠른 호출용)
+    List<Cafe> findTop8ByApprovalStatusAndIsVisibleAndCafeTags_Tag_IdOrderByAverageRatingDescReviewCountDesc(
+            ApprovalStatus status, boolean isVisible, Integer tagId
+    );
 }

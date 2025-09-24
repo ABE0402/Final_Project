@@ -4,6 +4,8 @@ import com.example.hong.domain.ApprovalStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "restaurants",
         indexes = {
@@ -36,8 +38,8 @@ public class Restaurant {
     private int reviewCount;
 
 
-    private double lat;
-    private double lng;
+    private BigDecimal lat;
+    private BigDecimal lng;
 
 
     @Enumerated(EnumType.STRING)

@@ -1,59 +1,77 @@
-<html lang="en">
+<!doctype html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <title>HonG Around</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
-
-    <link rel="stylesheet" href="/css/main.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
     <script defer src="/js/main.js"></script>
 </head>
 <body>
+{{> layout/header}}
 
-<header class="site-header">
-    <div class="logo">Logo</div>
-    <div class="auth"><a href="/login">로그인</a></div>
-</header>
+<main class="bg-body-tertiary py-5">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold">HonG Around</h1>
 
-<main>
-    <!-- 🔍 검색 & 카테고리 -->
-    <section class="search-area">
-        <h1 class="title">HonG Around</h1>
-        <form action="/search" method="get" class="search-form">
-            <input type="text" name="q" placeholder="Search">
-            <button type="submit">🔍</button>
+        <form action="/search" method="get" class="mx-auto mt-4" style="max-width: 640px;">
+            <input type="hidden" id="search-category" name="category" value="cafe">
+            <input type="hidden" id="search-companion" name="companion">
+            <input type="hidden" id="search-mood" name="mood">
+            <input type="hidden" id="search-amenities" name="amenities">
+            <input type="hidden" id="search-reservation" name="reservation">
+            <input type="hidden" id="search-days" name="days">
+            <input type="hidden" id="search-sort" name="sort" value="hits">
+            <input type="hidden" id="search-type" name="type">
+
+            <div class="input-group input-group-lg shadow-sm">
+                <input type="search" name="query" class="form-control" placeholder="가게 이름, 메뉴, 지역 검색">
+
+                <button type="button" class="btn btn-info filter-trigger-btn" data-category="cafe" data-bs-toggle="modal" data-bs-target="#filterModal">카페 필터</button>
+                <button type="button" class="btn btn-warning filter-trigger-btn" data-category="restaurant" data-bs-toggle="modal" data-bs-target="#filterModal">식당 필터</button>
+
+                <button type="submit" class="btn btn-primary">🔍</button>
+            </div>
         </form>
-        <div class="category-buttons">
-            <button class="category-btn active" data-category="cafe">카페</button>
-            <button class="category-btn" data-category="restaurant">음식점</button>
-        </div>
-    </section>
 
-    <!-- 🧩 태그별 섹션 -->
-    <div id="main-content">
-        {{> fragments/fragment}}
+        <div class="d-flex gap-2 justify-content-center mt-4">
+            <button class="btn btn-sm {{#isAll}}btn-olive{{/isAll}} {{^isAll}}btn-outline-olive{{/isAll}} cat-btn" data-category="all">전체</button>
+            <button class="btn btn-sm {{#isCafe}}btn-olive{{/isCafe}} {{^isCafe}}btn-outline-olive{{/isCafe}} cat-btn" data-category="cafe">카페</button>
+            <button class="btn btn-sm {{#isRestaurant}}btn-olive{{/isRestaurant}} {{^isRestaurant}}btn-outline-olive{{/isRestaurant}} cat-btn" data-category="restaurant">식당</button>
+        </div>
+        <div class="d-flex gap-2 justify-content-center mt-2">
+            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_recommend}}active{{/sort_recommend}}" data-sort="recommend">추천순</button>
+            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_rating}}active{{/sort_rating}}" data-sort="rating">평점순</button>
+            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_review}}active{{/sort_review}}" data-sort="review">리뷰순</button>
+        </div>
     </div>
 
-    <!-- 🔁 무한 스크롤 감지 -->
-    <div id="scroll-end"></div>
+    <div class="container mt-4" id="card-container">
+        {{> fragments/cards_grid}}
+    </div>
+
+    <div id="scroll-end" class="py-3"></div>
 </main>
 
-<footer class="site-footer">
-    <div class="footer-logo">Logo</div>
-
-    <div class="social-icons">
-        <a href="#">아이콘1</a>
-        <a href="#">아이콘2</a>
-        <a href="#">아이콘3</a>
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" id="reset-filters">초기화</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="apply-filters">필터 적용</button>
+            </div>
+        </div>
     </div>
+</div>
 
-    <nav class="footer-menu">
-        <a href="#">About</a>
-        <a href="#">Authors</a>
-        <a href="#">Archive</a>
-        <a href="#">Terms and Conditions</a>
-        <a href="#">Cookie Policy</a>
-    </nav>
-</footer>
-
+{{> layout/footer}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

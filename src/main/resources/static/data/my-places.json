@@ -1,0 +1,3002 @@
+[
+  {
+    "id": 1,
+    "name": "커피덕",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로2길 37 커피덕",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 아이스 라떼로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 2,
+    "name": "1984",
+    "location": "동교동",
+    "address": "서울 마포구 동교로 194 혜원빌딩 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 에스프레소로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/1984a/600/400",
+      "https://picsum.photos/seed/1984b/600/400",
+      "https://picsum.photos/seed/1984c/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 3,
+    "name": "오스카 커피부스",
+    "location": "동교동",
+    "address": "서울 마포구 동교로 187 동명빌딩2층 오스카",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 필터커피로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 4,
+    "name": "W카페",
+    "location": "동교동",
+    "address": "서울 마포구 동교로25길 16",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 하늘색 유혹로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/Wa/600/400",
+      "https://picsum.photos/seed/Wb/600/400",
+      "https://picsum.photos/seed/Wc/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 5,
+    "name": "카페 메리",
+    "location": "동교동",
+    "address": "서울 마포구 동교로23길 32-22 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 헤이 메리로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 6,
+    "name": "공상온도",
+    "location": "동교동",
+    "address": "서울 마포구 동교로23길 40 지하",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 트리플베리 요거트 스무디로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 7,
+    "name": "cafe Co.R (카페 코르)",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로4길 43 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 코르코르로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/cafeCoRa/600/400",
+      "https://picsum.photos/seed/cafeCoRb/600/400",
+      "https://picsum.photos/seed/cafeCoRc/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 8,
+    "name": "티와이티디",
+    "location": "동교동",
+    "address": "서울 마포구 양화로19길 22-8 1층 tytd",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 티와이티디로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 9,
+    "name": "모파상",
+    "location": "동교동",
+    "address": "서울 마포구 양화로19길 22-13",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 알롱제로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 10,
+    "name": "리드미",
+    "location": "연남동",
+    "address": "서울 마포구 월드컵북로6길 83",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 브라운치즈 크로플(2p)로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 11,
+    "name": "노체",
+    "location": "연남동",
+    "address": "서울 마포구 동교로 227-5 2층 201호",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 에티오피아 코케 허니로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 12,
+    "name": "커피로드뷰 연남점",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로6길 52 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 로드뷰 라떼로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 13,
+    "name": "이혜와 서울",
+    "location": "동교동",
+    "address": "서울 마포구 동교로27길 29 2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 티라미수 컵케익로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 14,
+    "name": "코코로카라",
+    "location": "연남동",
+    "address": "서울 마포구 연남로1길 41",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 미쯔말차 푸딩로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 15,
+    "name": "환대",
+    "location": "연남동",
+    "address": "서울 마포구 연남로1길 70 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 판나코타로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 16,
+    "name": "터틀힙 연남",
+    "location": "연남동",
+    "address": "서울 마포구 연남로1길 44 1층 터틀힙",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 복숭아 크레이프로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 17,
+    "name": "페블스",
+    "location": "연남동",
+    "address": "서울 마포구 연남로3길 23",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 오리지널 푸딩로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 18,
+    "name": "핸드릭스커피로스터스",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로4길 20",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 밀크티로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 19,
+    "name": "연백딸기모찌 연남점",
+    "location": "연남동",
+    "address": "서울 마포구 동교로 227-11 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 연백딸기모찌로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 20,
+    "name": "8810 커피컴퍼니",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로6길 88-10",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 드립커피로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/8810a/600/400",
+      "https://picsum.photos/seed/8810b/600/400",
+      "https://picsum.photos/seed/8810c/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 21,
+    "name": "메머드익스프레스 홍대경의선숲길점",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로4길 22-22 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 스몰 아메리카노로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 22,
+    "name": "애프터눈커피",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로4길 22-14",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 아메리카노로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 23,
+    "name": "틸로스터스",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로2길 5-14 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 아메리카노로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 24,
+    "name": "러비니돌",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로2안길 20 B02호",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 콜드브루로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 25,
+    "name": "아크 홍대점",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로2길 5-8 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 ARK Smoothie로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 26,
+    "name": "익 커피",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로 20 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 수박주스로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 27,
+    "name": "더 누크",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로4길 9 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 아메리카노로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 28,
+    "name": "로덴드론 동교 2호점",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로4길 11 세광빌딩 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 시나몬 or 모카 블랑로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/2a/600/400",
+      "https://picsum.photos/seed/2b/600/400",
+      "https://picsum.photos/seed/2c/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 29,
+    "name": "아비아채 서울홍대점",
+    "location": "동교동",
+    "address": "서울 마포구 와우산로37길 52 아비아채 서울홍대점",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 에스프레소로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 30,
+    "name": "쥬마뺄",
+    "location": "동교동",
+    "address": "서울 마포구 와우산로37길 42 2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 오늘의 티로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 31,
+    "name": "러브이즈아트 Love Is Art atelier",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로2안길 48 러브이즈아트 Love Is Art atelier",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 바닐라 치즈 케이크로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/LoveIsArtateliera/600/400",
+      "https://picsum.photos/seed/LoveIsArtatelierb/600/400",
+      "https://picsum.photos/seed/LoveIsArtatelierc/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 32,
+    "name": "무슈랑",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로 24 1층 102호",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 미니 바닐라진주망고로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 33,
+    "name": "테라론사 홍대서교점",
+    "location": "서교동",
+    "address": "서울 마포구 서교동 460-25",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 핸드드립로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 34,
+    "name": "아날로그가든",
+    "location": "서교동",
+    "address": "서울 마포구 서교동 446-58",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 가든 스페셜로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 35,
+    "name": "아벨롭 홍대본점",
+    "location": "서교동",
+    "address": "서울 마포구 서교동 375-2",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 Avelop latte로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 36,
+    "name": "바나프레소 홍대입구역사거리점",
+    "location": "서교동",
+    "address": "서울특별시 마포구 양화로 129",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 허니브레드로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 37,
+    "name": "943 킹스크로스",
+    "location": "서교동",
+    "address": "서울 마포구 양화로16길 24 B1층~4",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 멘트레이크 케이크로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/943a/600/400",
+      "https://picsum.photos/seed/943b/600/400",
+      "https://picsum.photos/seed/943c/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 38,
+    "name": "침니맨션",
+    "location": "서교동",
+    "address": "서울 마포구 잔다리로6길 14",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 침니페퍼로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 39,
+    "name": "커피폴리",
+    "location": "서교동",
+    "address": "서울 마포구 양화로11길 14 커피폴리 1층 2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 [레전더리 밀크커피]호주식 진한카페라떼,\n겉바 속촉 베이직 소금빵로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 40,
+    "name": "해피베어데이 합정본점",
+    "location": "서교동",
+    "address": "서울 마포구 양화로12길 16-6 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 미니/1호 홀케이크,\n크림메론소다로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 41,
+    "name": "이뮤 베이크샵",
+    "location": "서교동",
+    "address": "서울 마포구 양화로6길 57-13 2층 202호",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 초콜렛머드케이크로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 42,
+    "name": "콜린",
+    "location": "서교동",
+    "address": "서울 마포구 어울마당로 45 1~2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 코튼라떼(솜사탕)로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 43,
+    "name": "산리오 러버스 클럽",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로19길 18 산리오 러버스 클럽",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 도넛로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 44,
+    "name": "코코넛박스 카페",
+    "location": "서교동",
+    "address": "서울 마포구 홍익로3길 20 지하 2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 코코넛 크림 라떼로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 45,
+    "name": "더블유오엔",
+    "location": "서교동",
+    "address": "서울 마포구 잔다리로6길 20-9 1층, B1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 W:ON Latte[Only Ice]로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 46,
+    "name": "신이도가",
+    "location": "서교동",
+    "address": "서울 마포구 잔다리로 20-12",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 초코 테디케이크로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 47,
+    "name": "홍대카페",
+    "location": "서교동",
+    "address": "서울 마포구 어울마당로 68",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 아메리카노, 치즈케이크로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 48,
+    "name": "오버트 합정",
+    "location": "서교동",
+    "address": "서울 마포구 잔다리로 43 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 뷔릴레라떼로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 49,
+    "name": "투니크 유니버스점",
+    "location": "서교동",
+    "address": "서울 마포구 양화로 78-17 2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 아메리카노로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 50,
+    "name": "이미커피",
+    "location": "동교동",
+    "address": "서울 마포구 동교로25길 7 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 핸드드립 커피/디저트(변동)로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 51,
+    "name": "내면의 발견",
+    "location": "서교동",
+    "address": "서울 마포구 월드컵북로5길 53",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 티라미-숲로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 52,
+    "name": "발코니가든",
+    "location": "동교동",
+    "address": "서울 마포구 어울마당로 155-1 4층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 제주애플망고&복숭아 눈꽃빙수로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 53,
+    "name": "렉터스라운지 홍대",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29가길 54-6 지하1층, 지상1층 렉터스라운지",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 치아바타 잠봉뵈르, 블랙돌체라떼로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 54,
+    "name": "베리블리스",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로27길 20 1층.",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 복자 모찌 수플레 팬케이크, 복숭아 파르페로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 55,
+    "name": "카페 가비애",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로 147-1 1층과 2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 아메리카노로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 56,
+    "name": "띵끄 프룻",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 14-12 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 복숭아 수플레로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 57,
+    "name": "아오이토리",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 8 K.C빌딩",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 야키소바빵로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 58,
+    "name": "달화채 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로 125 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 화채로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 59,
+    "name": "베이글랜드",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29바길 19\n 삼이빌딩 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 베이글로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 60,
+    "name": "어 슬라이스",
+    "location": "창전동",
+    "address": "서울 마포구 서강로11길 36-35 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 크리미 에그번로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 61,
+    "name": "카페 장썜",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29마길 5",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 케이크, 커피로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 62,
+    "name": "밀로 커피",
+    "location": "동교동",
+    "address": "서울 마포구 양화로18안길 36 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 비엔나 커피로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 63,
+    "name": "훌리건 커피",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29바길 11-5 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 시즈널 갈레트로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 64,
+    "name": "토라비",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29바길 24 카페 토라비 2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 생과일 파블로바로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 65,
+    "name": "조블라",
+    "location": "서교동",
+    "address": "서울 마포구 어울마당로 136-10 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 크림라떼로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 66,
+    "name": "말릭 커피",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29바길 20 반지층 카페 말릭",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 너티크림라떼로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 67,
+    "name": "제로카페",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로27길 17 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 저당 바나나프레드 푸딩로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 68,
+    "name": "나무의 숲",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로 155",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 아메리카노로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": false,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 69,
+    "name": "키친205 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로 101 1층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 딸기케이크로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/205a/600/400",
+      "https://picsum.photos/seed/205b/600/400",
+      "https://picsum.photos/seed/205c/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": false,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 70,
+    "name": "버티컬커피",
+    "location": "서교동",
+    "address": "서울 마포구 어울마당로 134 3층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 생감귤프레지에로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 71,
+    "name": "라헬의 부엌 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 47 1,2층",
+    "url": null,
+    "type": "CAFE",
+    "description": "시그니처 딸기수플레로 유명한 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 72,
+    "name": "산장물갈비",
+    "location": "동교동",
+    "address": "서울 마포구 양화로19길 2 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 매운 산장 물갈비가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 73,
+    "name": "웨스턴타코",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로2길 90 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 웨스턴타코가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 74,
+    "name": "뇨끼테리아 피우",
+    "location": "동교동",
+    "address": "서울 마포구 동교로 212-8 1층 벽돌집",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 고르곤 크림 뇨끼가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 75,
+    "name": "또보겠지떡볶이집 붕붕허니비점",
+    "location": "동교동",
+    "address": "서울 마포구 양화로19길 22-25 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 즉석떡볶이가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 76,
+    "name": "오마 파스타 바",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로4길 76 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 한우 까르파치오가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 77,
+    "name": "마포곱창타운 연남점",
+    "location": "동교동",
+    "address": "서울 마포구 동교로27길 20",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 황소곱창구이가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 78,
+    "name": "디어리스트 연남",
+    "location": "동교동",
+    "address": "서울 마포구 동교로27길 21-8 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 시그니처 부챗살 스테이크가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 79,
+    "name": "낙지낚찌 연남점",
+    "location": "연남동",
+    "address": "서울 마포구 월드컵북로6길 55 1층 건너편",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 직화낙지볶음가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 80,
+    "name": "쿠시노주방",
+    "location": "동교동",
+    "address": "서울 마포구 동교로 218-1 지하 1층 \n쿠시노주방",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 쿠시노 나베가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 81,
+    "name": "꽃살집 홍대점",
+    "location": "동교동",
+    "address": "서울 마포구 동교로 212-2 1층 꽃살집 \n홍대점",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 눈꽃살 모둠가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 82,
+    "name": "돼지명가 연남점",
+    "location": "동교동",
+    "address": "서울 마포구 동교로 221 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 25mm삼겹살가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 83,
+    "name": "명호야 식탁",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로4길 59 2층 \n명호야 식탁",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 연어사시미 정식가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 84,
+    "name": "이이요이 연남",
+    "location": "연남동",
+    "address": "서울 마포구 연남로 12 1층 이이요이 연남",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 수제 생돈까스가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 85,
+    "name": "소바하우스멘야준 연남점",
+    "location": "동교동",
+    "address": "서울 마포구 월드컵북로6길 84 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 특선쇼유라멘가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 86,
+    "name": "최정훈 닭꼬치",
+    "location": "동교동",
+    "address": "서울 마포구 동교로 226 1층 4호",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 파닭꼬치가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 87,
+    "name": "밀라노식당",
+    "location": "연남동",
+    "address": "서울 마포구 연남로1길 6-9 예나빌딩 1F",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 브루스케타가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 88,
+    "name": "고덕",
+    "location": "연남동",
+    "address": "서울 마포구 동교로27길 61 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 북경오리가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 89,
+    "name": "모츠모츠",
+    "location": "연남동",
+    "address": "서울 마포구 연남로3길 23 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 모츠나베가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 90,
+    "name": "사루카메",
+    "location": "연남동",
+    "address": "서울 마포구 연남로 15 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 꽃게 바지락 라멘가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 91,
+    "name": "테이커테이블 연남점",
+    "location": "동교동",
+    "address": "서울 마포구 동교로30길 6 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 채끝 스테이크가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 92,
+    "name": "더리얼치즈버거",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 48-29 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 더블가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 93,
+    "name": "홍스쭈꾸미",
+    "location": "서교동",
+    "address": "서울 마포구 어울마당로 146",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 쭈꾸미+볶음밥가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 94,
+    "name": "칠백식당",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로4길 22-6",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 칠백 한우모둠가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 95,
+    "name": "탐스칼국수",
+    "location": "동교동",
+    "address": "서울 마포구 와우산로37길 46",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 사골칼국수가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 96,
+    "name": "셔우드",
+    "location": "동교동",
+    "address": "서울 마포구 와우산로37길 11 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 루꼴라&리코타 피자가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 97,
+    "name": "에일크루 피자펍 홍대점",
+    "location": "동교동",
+    "address": "서울 마포구 와우산로37길 7 에일크루",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 99% 천연모짜렐라 치즈피자가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 98,
+    "name": "풍년한식뷔페",
+    "location": "동교동",
+    "address": "서울 마포구 신촌로2길 5-13 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 무한리필 한식뷔페가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 99,
+    "name": "돈수백 홍대직영점",
+    "location": "동교동",
+    "address": "서울 마포구 홍익로6길 74",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 돈수백가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 100,
+    "name": "배떼기곱창",
+    "location": "동교동",
+    "address": "서울 마포구 양화로18안길 26-6 1층 배떼기곱창",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 배떼기 삼창가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 101,
+    "name": "쵸쵸 홍대",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 45 성암빌딩 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 카이센동가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 102,
+    "name": "긴자료코 홍대본점",
+    "location": "서교동",
+    "address": "서울 마포구 홍익로2길 43",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 데미그라스 돈까스가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 103,
+    "name": "오레타치카레",
+    "location": "동교동",
+    "address": "서울 마포구 홍익로6길 83 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 비프샤브카레가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 104,
+    "name": "봉림대패 홍대점",
+    "location": "동교동",
+    "address": "서울 마포구 양화로18안길 22 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 봉림대패가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 105,
+    "name": "밥장인 홍대점",
+    "location": "동교동",
+    "address": "서울 마포구 양화로18안길 16 1층 밥장인돼지찌개 홍대점",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 짜글이(돼지찌개)가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 106,
+    "name": "온정텐동",
+    "location": "동교동",
+    "address": "서울 마포구 양화로23길 10-10 지1층 좌측호",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 온정텐동가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 107,
+    "name": "바쿠단야끼 홍대본점",
+    "location": "동교동",
+    "address": "서울 마포구 양화로 188 AK플라자 홍대점 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 레귤러가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 108,
+    "name": "레이몬드 홍대점",
+    "location": "동교동",
+    "address": "서울 마포구 양화로18안길 15 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 스파이시푸실리피자가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 109,
+    "name": "반가숯불닭갈비 홍대본점",
+    "location": "동교동",
+    "address": "서울 마포구 어울마당로 147-1 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 반가 소금구이 닭갈비가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 110,
+    "name": "손오공 마라탕 동교동점",
+    "location": "동교동",
+    "address": "서울 마포구 양화로18길 15 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 마라탕가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 111,
+    "name": "멘야준 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 동교로 128",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 시오라멘가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 112,
+    "name": "바다 회사랑",
+    "location": "서교동",
+    "address": "서울 마포구 동교로 143",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 줄전갱이+참돔가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 113,
+    "name": "멜라 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 월드컵북로5길 41 1층 105호",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 빅토리아 프렌치토스트가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 114,
+    "name": "들풀한상",
+    "location": "서교동",
+    "address": "서울 마포구 동교로 156-5",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 계절솥밥+수비드 돼지갈비찜가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 115,
+    "name": "육몽 홍대본점",
+    "location": "서교동",
+    "address": "서울 마포구 양화로16길 19 1-3층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 육몽 슈렉몽갈비가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 116,
+    "name": "정돈 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 어울마당로 46",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 등심 돈카츠+새우&안심 돈카츠+카레가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 117,
+    "name": "진진",
+    "location": "서교동",
+    "address": "서울 마포구 월드컵북로1길 60 1층 진진",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 멘보사가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 118,
+    "name": "비스트로세노",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29마길 12 지1층 101호",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 트러플 크림뇨끼가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 119,
+    "name": "알페로 홍대",
+    "location": "서교동",
+    "address": "서울 마포구 홍익로5길 32 2층 알페로",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 클래식 토마토 파스타가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 120,
+    "name": "수림식당 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로21길 19-19 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 가지만두가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 121,
+    "name": "우와",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로21길 21-16 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 토마토 돼지고기 오코노미야끼가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 122,
+    "name": "담택",
+    "location": "서교동",
+    "address": "서울 마포구 동교로12안길 51 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 시오라멘가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 123,
+    "name": "기요한",
+    "location": "서교동",
+    "address": "서울 마포구 동교로12길 3 1층기요한",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 기요한 카이센동가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 124,
+    "name": "구워삶다",
+    "location": "서교동",
+    "address": "서울 마포구 독막로3길 46",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 모둠한상가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 125,
+    "name": "우담가&해담가",
+    "location": "서교동",
+    "address": "서울 마포구 양화로 45 메세나폴리스 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 곷등심코스가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 126,
+    "name": "홍대육지",
+    "location": "서교동",
+    "address": "서울 마포구 독막로3길 34 1F",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 돈대갈비가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 127,
+    "name": "츠케루",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로23길 9 1층 102호",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 츠케멘가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 128,
+    "name": "카와카츠 본점",
+    "location": "서교동",
+    "address": "서울 마포구 동교로 126 1층 102호",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 로스카츠 정식가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 129,
+    "name": "하와이조개 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로21길 19-8 태경빌딩 지하 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 실속하와이조개2인가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 130,
+    "name": "23플래티",
+    "location": "서교동",
+    "address": "서울 마포구 잔다리로3안길 36 1층 23플래터",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 스텔라 피자가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/23a/600/400",
+      "https://picsum.photos/seed/23b/600/400",
+      "https://picsum.photos/seed/23c/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 131,
+    "name": "마루샤브스카이 홍대직영점",
+    "location": "상수동",
+    "address": "서울 마포구 와우산로 94 홍익대학교 홍문관 16층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 소고기샤브(부페 포함)가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 132,
+    "name": "화산라멘 멘야마쯔리 홍대점",
+    "location": "창천동",
+    "address": "서울 마포구 와우산로 112 화산라멘",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 화산라멘가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 133,
+    "name": "알 누오보",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29가길 83 2F",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 브런치 플래터가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 134,
+    "name": "왕소야 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로25길 13 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 동파육가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 135,
+    "name": "이화누룽지삼계탕",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로 137 1층 101, 2, 3호",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 누룽지 삼계탕가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 136,
+    "name": "고기꾼김춘배 홍대본점",
+    "location": "서교동",
+    "address": "서울 마포구 홍익로3길 36 3층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 소+돼지 Set A가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 137,
+    "name": "철길왕갈비살",
+    "location": "창천동",
+    "address": "서울 마포구 와우산로32길 24",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 양념/생 갈비살가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 138,
+    "name": "탐탐오향족발",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 48-6 1층, 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 오향+마늘 반반 족발홍가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 139,
+    "name": "고토히라우동",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 14-8 지하1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 해물우동가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 140,
+    "name": "홍대조폭떡볶이 본점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 26 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 떡볶이가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 141,
+    "name": "토모토카레 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29길 27 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 토모토 + 치킨가라아게가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 142,
+    "name": "츄카히로",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29라길 20 건물 오른쪽계단 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 츄카소바가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": false,
+    "takeout_available": true,
+    "reservation_available": false
+  },
+  {
+    "id": 143,
+    "name": "스아게",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29마길 27 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 하와이안새우카레가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 144,
+    "name": "증증일상",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로27길 62 2층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 꽌탕바오(육즙샤오롱바오)가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 145,
+    "name": "그동네떡볶이 홍대본점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로27길 14 그동네떡볶이",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 떡볶이가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 146,
+    "name": "비스트로세노",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29마길 12 지1층 101호",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 한우 채끝 스테이크가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": true,
+    "reservation_available": true
+  },
+  {
+    "id": 147,
+    "name": "술취한여행자",
+    "location": "서교동",
+    "address": "서울 마포구 어울마당로 136-6 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 밀푀유나베가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": true,
+    "allows_pets": true,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 148,
+    "name": "심야식당밤",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29바길 16 심야식당밤",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 연어사시미가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  },
+  {
+    "id": 149,
+    "name": "798화로 홍대본점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29마길 6 지1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 소고기 A세트가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/798a/600/400",
+      "https://picsum.photos/seed/798b/600/400",
+      "https://picsum.photos/seed/798c/600/400"
+    ],
+    "has_parking": true,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": true
+  },
+  {
+    "id": 150,
+    "name": "치히로 홍대점",
+    "location": "서교동",
+    "address": "서울 마포구 와우산로29바길 12-4 1층",
+    "url": null,
+    "type": "RESTAURANT",
+    "description": "시그니처 이베리코동가 인기인 곳.",
+    "images": [
+      "https://picsum.photos/seed/placea/600/400",
+      "https://picsum.photos/seed/placeb/600/400",
+      "https://picsum.photos/seed/placec/600/400"
+    ],
+    "has_parking": false,
+    "has_restroom": true,
+    "has_waiting_room": false,
+    "allows_pets": false,
+    "takeout_available": false,
+    "reservation_available": false
+  }
+]

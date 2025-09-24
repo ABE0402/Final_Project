@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 목록</title>
+    <link rel="stylesheet" href="/css/reviews.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="/js/reviews.js"></script>
+
+</head>
+<body>
+<header class="site-header">
+    <div class="logo">Logo</div>
+    <div class="auth">
+        <a href="#">로그인</a>
+    </div>
+</header>
+
+<main class="review-page-container">
+    <div class="review-page-header">
+        <h2>카페345 리뷰</h2>
+        <div class="rating">⭐️ 4.8 (19,899명)</div>
+    </div>
+
+    <div class="main-content-wrapper">
+        <div class="review-list-box">
+            <div class="review-list-header">
+                <h3>전체 리뷰</h3>
+                <button class="review-write-btn">리뷰 작성</button>
+            </div>
+
+            <div class="review-list-and-form">
+                <div class="review-form-wrapper">
+                    <div class="review-form">
+                        <h3>리뷰 작성</h3>
+                        <div class="review-rating-stars">
+                            <i class="fa-star fa-regular" data-value="1"></i>
+                            <i class="fa-star fa-regular" data-value="2"></i>
+                            <i class="fa-star fa-regular" data-value="3"></i>
+                            <i class="fa-star fa-regular" data-value="4"></i>
+                            <i class="fa-star fa-regular" data-value="5"></i>
+                        </div>
+                        <div class="form-section photo-upload-section">
+                            <h4>사진 등록</h4>
+                            <div class="photo-upload-container">
+                                <div class="photo-upload-box">+</div>
+                            </div>
+                        </div>
+                        <div class="form-section review-text-section">
+                            <h4>리뷰 등록</h4>
+                            <textarea placeholder="리뷰를 입력하세요" maxlength="1000"></textarea>
+                            <div class="char-count">0 / 1000</div>
+                        </div>
+                        <div class="form-buttons">
+                            <button class="cancel-btn" data-page-type = "list">취소</button>
+                            <button class="submit-btn">등록</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-list">
+                    <div class="review-item">
+                        <div class="review-item-header">
+                            <span class="reviewer">김민지</span>
+                            <span class="review-date">2024.08.10</span>
+                        </div>
+                        <div class="review-content">
+                            <p>음료도 맛있고 분위기도 좋아서 자주 가는 곳이에요. 추천합니다!</p>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-item-header">
+                            <span class="reviewer">박서준</span>
+                            <span class="review-date">2024.08.08</span>
+                        </div>
+                        <div class="review-content">
+                            <p>커피 맛이 정말 훌륭해요. 직원분들도 친절해서 기분 좋게 머물다 갑니다.</p>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-item-header">
+                            <span class="reviewer">최유리</span>
+                            <span class="review-date">2024.08.05</span>
+                        </div>
+                        <div class="review-content">
+                            <p>디저트 종류가 다양해서 좋아요. 특히 케이크가 맛있습니다.</p>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-item-header">
+                            <span class="reviewer">이하늘</span>
+                            <span class="review-date">2024.08.01</span>
+                        </div>
+                        <div class="review-content">
+                            <p>조용하고 아늑한 분위기라 작업하기에도 좋습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-logo">Logo</div>
+    <div class="social-icons">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+    </div>
+    <div class="footer-menu">
+        <a href="#">About</a>
+        <a href="#">Authors</a>
+        <a href="#">Archive</a>
+        <a href="#">Terms and Conditions</a>
+        <a href="#">Cookie Policy</a>
+    </div>
+</footer>
+
+<script src="reviews.js"></script>
+</body>
+</html>

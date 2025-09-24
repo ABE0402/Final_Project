@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 작성</title>
+    <link rel="stylesheet" href="/css/reviews.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="/js/reviews.js"></script>
+</head>
+<body>
+<header class="site-header">
+    <div class="logo">Logo</div>
+    <div class="auth">
+        <a href="#">로그인</a>
+    </div>
+</header>
+
+<main class="review-page-container">
+    <div class="write-review-container">
+        <div class="review-form">
+            <h3>리뷰 작성</h3>
+            <div class="review-rating-stars">
+                <i class="fa-star fa-regular" data-value="1"></i>
+                <i class="fa-star fa-regular" data-value="2"></i>
+                <i class="fa-star fa-regular" data-value="3"></i>
+                <i class="fa-star fa-regular" data-value="4"></i>
+                <i class="fa-star fa-regular" data-value="5"></i>
+            </div>
+            <div class="form-section photo-upload-section">
+                <h4>사진 등록</h4>
+                <div class="photo-upload-container">
+                    <div class="photo-upload-box">+</div>
+                </div>
+            </div>
+            <div class="form-section review-text-section">
+                <h4>리뷰 등록</h4>
+                <textarea placeholder="리뷰를 입력하세요" maxlength="1000"></textarea>
+                <div class="char-count">0 / 1000</div>
+            </div>
+            <div class="form-buttons">
+                <button class="cancel-btn" data-page-type="write">취소</button>
+                <button class="submit-btn">등록</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-logo">Logo</div>
+    <div class="social-icons">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+    </div>
+    <div class="footer-menu">
+        <a href="#">About</a>
+        <a href="#">Authors</a>
+        <a href="#">Archive</a>
+        <a href="#">Terms and Conditions</a>
+        <a href="#">Cookie Policy</a>
+    </div>
+</footer>
+
+</body>
+</html>

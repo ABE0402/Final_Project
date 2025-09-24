@@ -1,0 +1,50 @@
+<div class="photo-upload-section">
+    <h4>사진 등록</h4>
+    <div class="photo-upload-container">
+        <div class="photo-upload-box">+</div>
+    </div>
+</div>
+
+<script>
+    const photoUploadSection = document.querySelector('.photo-upload-section');
+    const photoUploadBox = document.querySelector('.photo-upload-box');
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.multiple = true;
+    fileInput.style.display = 'none';
+    photoUploadBox.appendChild(fileInput);
+
+    photoUploadBox.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', e => {
+      const files = Array.from(e.target.files);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = event => {
+          const previewBox = document.createElement('div');
+          previewBox.style.width = '100px';
+          previewBox.style.height = '100px';
+          previewBox.style.border = '1px solid black';
+          previewBox.style.marginRight = '10px';
+          previewBox.style.display = 'inline-block';
+          previewBox.style.position = 'relative';
+
+          const img = document.createElement('img');
+          img.src = event.target.result;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+
+          previewBox.appendChild(img);
+          photoUploadSection.appendChild(previewBox);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      fileInput.value = '';
+    });
+</script>

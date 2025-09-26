@@ -1,8 +1,11 @@
 // src/main/java/com/example/HONGAROUND/controller/HomeController.java
 package com.example.hong.controller;
 
+import com.example.hong.repository.TagRepository;
+import com.example.hong.service.MainSectionService;
 import com.example.hong.service.PlaceQueryService;
 import com.example.hong.service.PlaceQueryService;
+import com.example.hong.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
 
     private final PlaceQueryService placeQueryService;
+    private final TagRepository tagRepository;
+    private final MainSectionService mainSectionService;
 
     // 화면 최초 진입
     @GetMapping("/")
@@ -41,5 +46,24 @@ public class HomeController {
                                 Model model) {
         model.addAttribute("cards", placeQueryService.fetchCards(category, sort, page, size));
         return "fragments/cards_grid"; // templates/fragments/cards_grid.mustache
+    }
+    @GetMapping("/tags-fragment")
+    public String tagsFragment(
+            @RequestParam String category,
+            @RequestParam(defaultValue="recommend") String sort,
+            @RequestParam(defaultValue="0") int page,
+            Model model) {
+
+        int tagsPerPage = 4; // 한 번에 그릴 섹션 수
+        int totalTags = tagRepository.findByCategoryOrderByNameAsc(category).size();
+
+        var sections = mainSectionService.fetchSections(category, sort, page, null); // 위에서 만든 서비스
+
+        boolean hasMore = (page+1) * tagsPerPage < totalTags;
+
+        model.addAttribute("sections", sections);
+        model.addAttribute("hasMore", hasMore);  // ← 프론트에서 보고 종료
+
+        return "fragments/fragment"; // 섹션 카드들만 렌더하는 부분 템플릿
     }
 }

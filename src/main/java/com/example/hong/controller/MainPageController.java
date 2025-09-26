@@ -33,13 +33,13 @@ public class MainPageController {
         model.addAttribute("currentPage", page);
         model.addAttribute("currentSort", sort);
 
-        return "main";
+        return "main2";
     }
 
     /**
      * 무한 스크롤 & 섹션별 정렬 지원
      */
-    @GetMapping("/tags-fragment")
+    @GetMapping("/tags-fragment2")
     public String loadMoreTags(@RequestParam String category,
                                @RequestParam(required = false) String tag,
                                @RequestParam int page,
@@ -59,16 +59,16 @@ public class MainPageController {
         }
 
         if (tagSections.isEmpty()) {
-            return "fragments/empty";
+            return "fragments/empty2";
         }
 
         model.addAttribute("tagSections", tagSections);
         model.addAttribute("currentSort", sort);
         model.addAttribute("category", category);
-        return "fragments/fragment";
+        return "fragments/fragment2";
     }
     @GetMapping("/post")
     public String PostPage(){
-        return "owner/shops_new";
+        return "owner/shops_new2";
     }
 }

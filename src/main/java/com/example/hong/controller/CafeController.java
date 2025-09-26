@@ -1,9 +1,11 @@
-// src/main/java/com/example/HONGAROUND/controller/CafeController.java
+// src/main/java/com/example/hong/controller/CafeController.java
 package com.example.hong.controller;
 
 import com.example.hong.domain.ApprovalStatus;
 import com.example.hong.entity.Cafe;
+import com.example.hong.entity.Tag;
 import com.example.hong.repository.CafeRepository;
+import com.example.hong.repository.CafeTagRepository;
 import com.example.hong.service.FavoriteService;
 import com.example.hong.service.ReviewService;
 import com.example.hong.service.auth.AppUserPrincipal;
@@ -17,14 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class CafeController {
 
     private final CafeRepository cafeRepository;
+    private final CafeTagRepository cafeTagRepository; // ✅ 추가
     private final ReviewService reviewService;
     private final FavoriteService favoriteService;
 
@@ -44,37 +47,80 @@ public class CafeController {
         Cafe c = cafeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // 상단 썸네일 3칸
-        List<String> images = (c.getHeroImageUrl() != null && !c.getHeroImageUrl().isBlank())
-                ? List.of(c.getHeroImageUrl(), c.getHeroImageUrl(), c.getHeroImageUrl())
-                : List.of("/images/placeholder_shop.jpg",
-                "/images/placeholder_shop.jpg",
-                "/images/placeholder_shop.jpg");
+        // ====== 이미지 레일(히어로 보조 썸네일) ======
+        List<String> thumbs = new ArrayList<>();
+        // 대표사진이 있으면 최우선
+        if (notBlank(c.getHeroImageUrl())) thumbs.add(c.getHeroImageUrl());
+        // 메뉴 사진도 썸네일 레일에 섞어서 최대 3장까지
+        if (notBlank(c.getMenuImageUrl1())) thumbs.add(c.getMenuImageUrl1());
+        if (notBlank(c.getMenuImageUrl2())) thumbs.add(c.getMenuImageUrl2());
+        if (notBlank(c.getMenuImageUrl3())) thumbs.add(c.getMenuImageUrl3());
+        // 대체 이미지
+        if (thumbs.isEmpty()) {
+            thumbs = List.of(
+                    "/images/placeholder_shop.jpg",
+                    "/images/placeholder_shop.jpg",
+                    "/images/placeholder_shop.jpg"
+            );
+        } else if (thumbs.size() == 1) {
+            // 1장만 있으면 레일 느낌을 위해 복제
+            thumbs = List.of(thumbs.get(0), thumbs.get(0), thumbs.get(0));
+        } else if (thumbs.size() == 2) {
+            thumbs = List.of(thumbs.get(0), thumbs.get(1), thumbs.get(0));
+        } else if (thumbs.size() > 3) {
+            thumbs = thumbs.subList(0, 3);
+        }
+        // show.mustache가 2중 반복을 쓰므로 List<List<String>> 형태로 전달
+        model.addAttribute("images", List.of(thumbs));
 
-        // 우측 베스트 카페
+        // ====== 사이드 베스트 ======
         List<Cafe> best = cafeRepository
                 .findTop8ByApprovalStatusAndIsVisibleOrderByAverageRatingDescReviewCountDesc(
                         ApprovalStatus.APPROVED, true);
+        model.addAttribute("bestCafes", best);
 
-        // 기본 정보
+        // ====== 기본 정보 ======
         model.addAttribute("cafe", c);
-        model.addAttribute("images", images);
         model.addAttribute("avg", c.getAverageRating() == null ? "0.0" : c.getAverageRating().toPlainString());
         model.addAttribute("hasGeo", c.getLat() != null && c.getLng() != null);
 
-        // 메뉴/리뷰
-        model.addAttribute("menus", Collections.emptyList());        // TODO: 메뉴 연동 시 교체
-        model.addAttribute("reviews", reviewService.listForCafeDtos(id)); // ★ nickname 포함되도록 서비스에서 변환
+        // ====== 메뉴(텍스트/사진) ======
+        // menuText는 템플릿에서 {{#cafe}}{{#menuText}}… 으로 직접 접근
+        List<String> menuImgs = new ArrayList<>();
+        if (notBlank(c.getMenuImageUrl1())) menuImgs.add(c.getMenuImageUrl1());
+        if (notBlank(c.getMenuImageUrl2())) menuImgs.add(c.getMenuImageUrl2());
+        if (notBlank(c.getMenuImageUrl3())) menuImgs.add(c.getMenuImageUrl3());
+        if (notBlank(c.getMenuImageUrl4())) menuImgs.add(c.getMenuImageUrl4());
+        if (notBlank(c.getMenuImageUrl5())) menuImgs.add(c.getMenuImageUrl5());
+        model.addAttribute("menuImages", menuImgs.isEmpty() ? null : List.of(menuImgs)); // 2중 반복 대응
 
-        // 즐겨찾기 여부
+        // ====== 태그(칩/해시태그/카테고리별) ======
+        List<Tag> tagEntities = cafeTagRepository.findTagsByCafeId(id);
+        List<String> tagNames = tagEntities.stream().map(Tag::getName).toList();
+        model.addAttribute("tagsAll", tagNames); // 칩 나열용
+
+        String hashtags = tagNames.stream()
+                .map(n -> "#" + n.replaceAll("\\s+", "")) // 공백 제거
+                .collect(Collectors.joining(" "));
+        model.addAttribute("hashtags", hashtags.isBlank() ? null : hashtags); // 히어로 아래 해시태그 한 줄
+
+        Map<String, List<String>> byCat = tagEntities.stream()
+                .collect(Collectors.groupingBy(
+                        Tag::getCategory,
+                        LinkedHashMap::new,
+                        Collectors.mapping(Tag::getName, Collectors.toList())
+                ));
+        model.addAttribute("tags", byCat); // tags.companion / tags.mood / tags.amenities / tags.reservation / tags.type
+
+        // ====== 리뷰 ======
+        model.addAttribute("reviews", reviewService.listForCafeDtos(id));
+
+        // ====== 즐겨찾기 ======
         Long uid = meId(auth);
-        boolean isFav = false;
-        if (uid != null) {
-            isFav = favoriteService.isFavorite(uid, id);
-        }
+        boolean isFav = (uid != null) && favoriteService.isFavorite(uid, id);
         model.addAttribute("isFav", isFav);
 
-        // 알림 메시지
+        // ====== 메시지 ======
         if (msg != null) model.addAttribute("msg", msg);
         if (err != null) model.addAttribute("err", err);
 
@@ -115,14 +161,13 @@ public class CafeController {
             return "redirect:/login";
         }
 
-        // 카페 존재 확인
         cafeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // 즐겨찾기 토글
         favoriteService.toggle(uid, id);
-
-        // 상세 페이지로 리다이렉트 (GET에서 isFav 재계산)
         return "redirect:/cafes/" + id;
     }
+
+    /* ===== helpers ===== */
+    private static boolean notBlank(String s) { return s != null && !s.isBlank(); }
 }

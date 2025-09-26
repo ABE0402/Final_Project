@@ -4,14 +4,17 @@ import lombok.Data;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Data
 @Setter
 public class ShopCreateRequestDto {
     private String type;        // "CAFE" or "RESTAURANT"
     private String name;
-    private String phone;
-
-    private String postcode;
+    private String phone;           // 가게 전화번호
+    private String businessNumber;  // 사업자 번호
+    private String postcode;        // 우편번호
+    //사업자 번호
     private String addressRoad;     // 도로명 주소 (주입 필수)
     private String addressDetail;   // 상세 주소 (선택)
 
@@ -19,4 +22,11 @@ public class ShopCreateRequestDto {
     private Double lng;             // 선택      // -> Cafe.lng(BigDecimal)
     private String description;
     private MultipartFile image;
+
+    private String operatingHours;       // 텍스트
+    private String menuText;             // 텍스트
+    private List<MultipartFile> menuImages;
+
+    private List<Integer> tagIds;
+
 }

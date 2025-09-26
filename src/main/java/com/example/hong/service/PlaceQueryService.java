@@ -5,6 +5,7 @@ import com.example.hong.dto.PlaceCardDto;
 import com.example.hong.entity.Cafe;
 import com.example.hong.entity.Restaurant;
 import com.example.hong.repository.CafeRepository;
+import com.example.hong.repository.CafeTagRepository;
 import com.example.hong.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,10 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +24,7 @@ public class PlaceQueryService {
 
     private final CafeRepository cafeRepository;
     private final RestaurantRepository restaurantRepository;
+    private final CafeTagRepository cafeTagRepository; // ★ 추가
 
     /** 메인 카드 그리드 조회 (카테고리/정렬/페이지네이션 지원) */
     public List<PlaceCardDto> fetchCards(String category, String sort, int page, int size) {
@@ -35,28 +35,41 @@ public class PlaceQueryService {
         if ("cafe".equals(cat)) {
             Page<Cafe> p = cafeRepository.findByApprovalStatusAndIsVisible(
                     ApprovalStatus.APPROVED, true, pageable);
-            return p.stream().map(this::toDto).toList();
+
+            // ★ cafe ids -> hashtags 맵
+            Map<Long, String> hashtags = buildCafeHashtags(p.getContent());
+
+            return p.stream().map(c -> toDto(c, hashtags.getOrDefault(c.getId(), ""))).toList();
 
         } else if ("restaurant".equals(cat)) {
             Page<Restaurant> p = restaurantRepository.findByApprovalStatusAndIsVisible(
                     ApprovalStatus.APPROVED, true, pageable);
-            return p.stream().map(this::toDto).toList();
 
-        } else { // all: 두 엔티티를 합쳐 정렬 후 페이징 흉내 (간단 병합 전략)
-            // 각 카테고리에서 size만큼 뽑아 합친 뒤 정렬 → 상위 size만 반환
-            var cafes = cafeRepository.findByApprovalStatusAndIsVisible(
-                            ApprovalStatus.APPROVED, true, PageRequest.of(page, size, sortFor(srt)))
-                    .stream().map(this::toDto).toList();
+            // ★ 레스토랑은 일단 빈 문자열
+            return p.stream().map(r -> toDto(r, "")).toList();
 
-            var rests = restaurantRepository.findByApprovalStatusAndIsVisible(
-                            ApprovalStatus.APPROVED, true, PageRequest.of(page, size, sortFor(srt)))
-                    .stream().map(this::toDto).toList();
+        } else {
+            // all: 카페/식당 각각 size만큼 가져와 합친 뒤 정렬, 상위 size 반환
+            var cafePage = cafeRepository.findByApprovalStatusAndIsVisible(
+                    ApprovalStatus.APPROVED, true, PageRequest.of(page, size, sortFor(srt)));
+            var restPage = restaurantRepository.findByApprovalStatusAndIsVisible(
+                    ApprovalStatus.APPROVED, true, PageRequest.of(page, size, sortFor(srt)));
+
+            // ★ cafe hashtags
+            Map<Long, String> hashtags = buildCafeHashtags(cafePage.getContent());
+
+            List<PlaceCardDto> cafes = cafePage.stream()
+                    .map(c -> toDto(c, hashtags.getOrDefault(c.getId(), "")))
+                    .toList();
+
+            List<PlaceCardDto> rests = restPage.stream()
+                    .map(r -> toDto(r, "")) // 레스토랑은 빈 해시태그
+                    .toList();
 
             List<PlaceCardDto> merged = new ArrayList<>(cafes.size() + rests.size());
             merged.addAll(cafes);
             merged.addAll(rests);
 
-            // recommend: 평점 desc, 리뷰 desc
             Comparator<PlaceCardDto> cmp = Comparator
                     .comparing(PlaceCardDto::getAverageRating, Comparator.nullsFirst(Double::compareTo)).reversed()
                     .thenComparing(PlaceCardDto::getReviewCount, Comparator.nullsFirst(Integer::compareTo)).reversed();
@@ -66,13 +79,11 @@ public class PlaceQueryService {
             } else if ("review".equals(srt)) {
                 cmp = Comparator.comparing(PlaceCardDto::getReviewCount, Comparator.nullsFirst(Integer::compareTo)).reversed();
             }
-
             return merged.stream().sorted(cmp).limit(size).toList();
         }
     }
 
     private Sort sortFor(String sort) {
-        // recommend: avg desc, reviews desc
         return switch (sort) {
             case "rating" -> Sort.by(Sort.Order.desc("averageRating"), Sort.Order.desc("reviewCount"));
             case "review" -> Sort.by(Sort.Order.desc("reviewCount"), Sort.Order.desc("averageRating"));
@@ -80,7 +91,8 @@ public class PlaceQueryService {
         };
     }
 
-    private PlaceCardDto toDto(Cafe c) {
+    // ======= DTO 변환 =======
+    private PlaceCardDto toDto(Cafe c, String hashtags) {
         return PlaceCardDto.builder()
                 .type("CAFE")
                 .pathSegment("cafes")
@@ -88,12 +100,13 @@ public class PlaceQueryService {
                 .name(c.getName())
                 .address(c.getAddressRoad())
                 .heroImageUrl(c.getHeroImageUrl())
-                .averageRating(toDouble(c.getAverageRating())) // BigDecimal -> double (null 안전)
+                .averageRating(toDouble(c.getAverageRating()))
                 .reviewCount(c.getReviewCount())
+                .hashtags(hashtags) // ★ 세팅
                 .build();
     }
 
-    private PlaceCardDto toDto(Restaurant r) {
+    private PlaceCardDto toDto(Restaurant r, String hashtags) {
         return PlaceCardDto.builder()
                 .type("RESTAURANT")
                 .pathSegment("restaurants")
@@ -101,18 +114,41 @@ public class PlaceQueryService {
                 .name(r.getName())
                 .address(r.getAddressRoad())
                 .heroImageUrl(r.getHeroImageUrl())
-                .averageRating(sanitize(r.getAverageRating())) // primitive double 그대로 사용
+                .averageRating(toDouble(r.getAverageRating()))
                 .reviewCount(r.getReviewCount())
+                .hashtags(hashtags) // 현재는 ""
                 .build();
+    }
+
+    // ======= 해시태그 유틸 =======
+    private Map<Long, String> buildCafeHashtags(List<Cafe> cafes) {
+        if (cafes == null || cafes.isEmpty()) return Collections.emptyMap();
+        List<Long> cafeIds = cafes.stream().map(Cafe::getId).toList();
+
+        // 프로젝션으로 (cafeId, tagName) 가져오기
+        var rows = cafeTagRepository.findTagNamesByCafeIds(cafeIds);
+
+        Map<Long, List<String>> byCafe = rows.stream().collect(
+                Collectors.groupingBy(
+                        CafeTagRepository.CafeIdTagName::getCafeId,
+                        LinkedHashMap::new,
+                        Collectors.mapping(CafeTagRepository.CafeIdTagName::getName, Collectors.toList())
+                )
+        );
+
+        Map<Long, String> result = new HashMap<>();
+        for (Long id : cafeIds) {
+            String text = byCafe.getOrDefault(id, List.of()).stream()
+                    .map(n -> "#" + n.replaceAll("\\s+", "")) // 공백 제거
+                    .collect(Collectors.joining(" "));
+            result.put(id, text);
+        }
+        return result;
     }
 
     // ===== helpers =====
     private static double toDouble(java.math.BigDecimal v) {
         return (v == null) ? 0.0 : v.doubleValue();
     }
-
-    private static double sanitize(double v) {
-        // 필요하면 NaN/무한대 방어
-        return (Double.isNaN(v) || Double.isInfinite(v)) ? 0.0 : v;
-    }
+    private static double sanitize(double v) { return (Double.isNaN(v) || Double.isInfinite(v)) ? 0.0 : v; }
 }

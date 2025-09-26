@@ -42,6 +42,9 @@ public class Cafe {
     @Column(name = "address_road", length = 255, nullable = false)
     private String addressRoad;
 
+    @Column(name = "business_number", length = 20)
+    private String businessNumber;
+
     @Column(length = 10)
     private String postcode;
 
@@ -89,6 +92,21 @@ public class Cafe {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "operating_hours", columnDefinition = "TEXT")
+    private String operatingHours;
+
+    /** 메뉴 텍스트(자유형식: 메뉴명/가격 등) */
+    @Column(name = "menu_text", columnDefinition = "TEXT")
+    private String menuText;
+
+    /** 메뉴 이미지(최대 5장, 단순 컬럼) */
+    @Column(name = "menu_image_url1", length = 500) private String menuImageUrl1;
+    @Column(name = "menu_image_url2", length = 500) private String menuImageUrl2;
+    @Column(name = "menu_image_url3", length = 500) private String menuImageUrl3;
+    @Column(name = "menu_image_url4", length = 500) private String menuImageUrl4;
+    @Column(name = "menu_image_url5", length = 500) private String menuImageUrl5;
+
+
     // Cafe 입장에서 자신을 참조하는 CafeTag 목록
     @OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CafeTag> cafeTags = new ArrayList<>();
@@ -103,8 +121,6 @@ public class Cafe {
         this.lat = lat;
         this.lng = lng;
         this.description = description;
-
-        // 엔티티 생성 시 기본값 설정
         this.reviewCount = 0;
         this.averageRating = BigDecimal.ZERO;
         this.favoritesCount = 0;
@@ -112,10 +128,13 @@ public class Cafe {
         this.isVisible = true;
     }
 
+    public void addTag(Tag tag) {
+        CafeTag ct = CafeTag.of(this, tag);
+        this.cafeTags.add(ct);
+    }
+    public void removeTag(Tag tag) {
+        this.cafeTags.removeIf(ct -> ct.getTag().getId().equals(tag.getId()));
+    }
 
-    // 연관관계 편의 메서드 (필요 시)
-//    public void setOwner(User owner) {
-//        this.owner = owner;
-//        // owner.getCafes().add(this); // User 엔티티에 카페 목록이 있다면 양방향 관계 설정
-//    }
+
 }

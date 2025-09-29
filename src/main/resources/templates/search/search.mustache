@@ -15,7 +15,7 @@
     <div class="container text-center">
         <h1 class="display-3 fw-bold brand-title">HonG Around</h1>
 
-        <form action="/search" method="get" class="mx-auto mt-4" style="max-width: 640px;">
+        <form action="/searchresult" method="get" class="mx-auto mt-4" style="max-width: 640px;">
             <input type="hidden" id="search-category" name="category" value="all">
             <input type="hidden" id="search-companion" name="companion">
             <input type="hidden" id="search-mood" name="mood">
@@ -55,91 +55,91 @@
 
     </div>
 
-<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="filterModalLabel">☕ 카페 상세 필터</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="filter-group mb-4">
-                    <h6>동반인 <small class="text-muted">(다중 선택 가능)</small></h6>
-                    <div class="btn-group flex-wrap gap-2" role="group" id="filter-companion">
-                        <button type="button" class="btn btn-outline-secondary" data-value="solo">👤 1인</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="friends">🎉 친구</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="couple">💖 커플</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="family">👨‍👩‍👧‍👦 가족</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="group">🏢 단체</button>
-                    </div>
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">☕ 카페 상세 필터</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                    <div class="filter-group mb-4">
+                        <h6>동반인 <small class="text-muted">(다중 선택 가능)</small></h6>
+                        <div class="btn-group flex-wrap gap-2" role="group" id="filter-companion">
+                            <button type="button" class="btn btn-outline-secondary" data-value="solo">👤 1인</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="friends">🎉 친구</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="couple">💖 커플</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="family">👨‍👩‍👧‍👦 가족</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="group">🏢 단체</button>
+                        </div>
+                    </div>
 
-                <div class="filter-group mb-4">
-                    <h6>분위기 <small class="text-muted">(다중 선택 가능)</small></h6>
-                    <div class="btn-group flex-wrap gap-2" role="group" id="filter-mood">
-                        <button type="button" class="btn btn-outline-secondary" data-value="quiet">🤫 조용한</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="talk">💬 대화하기 좋은</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="study">📚 카공하기 좋은</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="photo-spot">📸 사진 맛집</button>
+                    <div class="filter-group mb-4">
+                        <h6>분위기 <small class="text-muted">(다중 선택 가능)</small></h6>
+                        <div class="btn-group flex-wrap gap-2" role="group" id="filter-mood">
+                            <button type="button" class="btn btn-outline-secondary" data-value="quiet">🤫 조용한</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="talk">💬 대화하기 좋은</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="study">📚 카공하기 좋은</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="photo-spot">📸 사진 맛집</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="filter-group mb-4">
-                    <h6>편의 및 서비스 <small class="text-muted">(다중 선택 가능)</small></h6>
-                    <div class="btn-group flex-wrap gap-2" role="group" id="filter-amenities">
-                        <button type="button" class="btn btn-outline-secondary" data-value="parking">🚗 주차장</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="pet-friendly">🐾 반려동물</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="takeout">🥡 포장</button>
+                    <div class="filter-group mb-4">
+                        <h6>편의 및 서비스 <small class="text-muted">(다중 선택 가능)</small></h6>
+                        <div class="btn-group flex-wrap gap-2" role="group" id="filter-amenities">
+                            <button type="button" class="btn btn-outline-secondary" data-value="parking">🚗 주차장</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="pet-friendly">🐾 반려동물</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="takeout">🥡 포장</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="filter-group mb-4">
-                    <h6>영업 요일 <small class="text-muted">(다중 선택 가능)</small></h6>
-                    <div class="btn-group flex-wrap gap-2" role="group" id="filter-days">
-                        <button type="button" class="btn btn-outline-secondary" data-value="mon">월</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="tue">화</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="wed">수</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="thu">목</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="fri">금</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="sat">토</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="sun">일</button>
+                    <div class="filter-group mb-4">
+                        <h6>영업 요일 <small class="text-muted">(다중 선택 가능)</small></h6>
+                        <div class="btn-group flex-wrap gap-2" role="group" id="filter-days">
+                            <button type="button" class="btn btn-outline-secondary" data-value="mon">월</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="tue">화</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="wed">수</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="thu">목</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="fri">금</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="sat">토</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="sun">일</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="filter-group mb-4">
-                    <h6>종류 <small class="text-muted">(다중 선택 가능)</small></h6>
-                    <div class="btn-group flex-wrap gap-2" role="group" id="filter-type">
-                        <button type="button" class="btn btn-outline-secondary" data-value="dessert">🍰 디저트 전문</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="coffee">☕ 커피 전문</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="interior">🛋️ 인테리어 맛집</button>
+                    <div class="filter-group mb-4">
+                        <h6>종류 <small class="text-muted">(다중 선택 가능)</small></h6>
+                        <div class="btn-group flex-wrap gap-2" role="group" id="filter-type">
+                            <button type="button" class="btn btn-outline-secondary" data-value="dessert">🍰 디저트 전문</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="coffee">☕ 커피 전문</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="interior">🛋️ 인테리어 맛집</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="filter-group mb-4">
-                    <h6>예약 여부</h6>
-                    <div class="btn-group flex-wrap gap-2" role="group" id="filter-reservation">
-                        <button type="button" class="btn btn-outline-secondary" data-value="any">상관없음</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="possible">✅ 가능</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="impossible">❌ 불가능</button>
+                    <div class="filter-group mb-4">
+                        <h6>예약 여부</h6>
+                        <div class="btn-group flex-wrap gap-2" role="group" id="filter-reservation">
+                            <button type="button" class="btn btn-outline-secondary" data-value="any">상관없음</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="possible">✅ 가능</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="impossible">❌ 불가능</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="filter-group mb-4">
-                    <h6>우선순위 (정렬)</h6>
-                    <div class="btn-group flex-wrap gap-2" role="group" id="filter-sort">
-                        <button type="button" class="btn btn-secondary" data-value="hits">⭐ 많이 찾는 순</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="reviews">📝 리뷰 많은 순</button>
-                        <button type="button" class="btn btn-outline-secondary" data-value="rating">👍 평점 높은 순</button>
+                    <div class="filter-group mb-4">
+                        <h6>우선순위 (정렬)</h6>
+                        <div class="btn-group flex-wrap gap-2" role="group" id="filter-sort">
+                            <button type="button" class="btn btn-secondary" data-value="hits">⭐ 많이 찾는 순</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="reviews">📝 리뷰 많은 순</button>
+                            <button type="button" class="btn btn-outline-secondary" data-value="rating">👍 평점 높은 순</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" id="reset-filters">초기화</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="apply-filters">필터 적용</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" id="reset-filters">초기화</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="apply-filters">필터 적용</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <div class="container mt-5">

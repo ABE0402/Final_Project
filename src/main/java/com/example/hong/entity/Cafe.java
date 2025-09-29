@@ -107,9 +107,13 @@ public class Cafe {
     @Column(name = "menu_image_url5", length = 500) private String menuImageUrl5;
 
 
-    // Cafe 입장에서 자신을 참조하는 CafeTag 목록
+    // Cafe ↔ CafeTag (1:N)
     @OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CafeTag> cafeTags = new ArrayList<>();
+
+    // [통합됨] 첫 번째 코드에 있던 CafeMenu 와의 연관관계 추가
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CafeMenu> menus = new ArrayList<>();
 
     @Builder
     public Cafe(User owner, String name, String phone, String addressRoad, String postcode, String description, BigDecimal lat, BigDecimal lng) {

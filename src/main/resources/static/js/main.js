@@ -106,78 +106,35 @@ function initMainPageDynamicLoader() {
 // 기능 2: 검색창 상세 필터 모달 관리
 // =======================================================================
 function initSearchFilterModal() {
+    const mainCategoryButton = document.getElementById('category-dropdown-button');
     const mainCategoryInput = document.getElementById('search-category');
-        // [수정됨] HTML의 클래스 이름과 일치시킴
-    const categoryButtons = document.querySelectorAll('.filter-trigger-btn');
+    const mainDropdownItems = document.querySelectorAll('.main-category-item');
+    const cafeFilterTrigger = document.querySelector('.filter-trigger-btn[data-category="cafe"]');
+    const restaurantFilterTrigger = document.querySelector('.filter-trigger-btn[data-category="restaurant"]');
     const modalTitle = document.getElementById('filterModalLabel');
     const modalBody = document.querySelector('#filterModal .modal-body');
 
-
-    if (!modalBody) return; // 상세 필터 모달이 없는 페이지면 실행 중단
+    if (!mainCategoryButton || !modalBody) return;
 
     const filterData = {
-               cafe: {
-                       title: '☕ 카페 상세 필터',
-                       groups: [
-                           // 1. 동반인 (요청사항과 동일하여 유지)
-                           { id: 'companion', title: '동반인', multi: true, options: [
-                               { value: 'solo', text: '👤 1인' }, { value: 'friends', text: '🎉 친구' }, { value: 'couple', text: '💖 커플' }, { value: 'family', text: '👨‍👩‍👧‍👦 가족' }, { value: 'group', text: '🏢 단체' }
-                           ]},
-                           // 2. 분위기 (옵션 수정)
-                           { id: 'mood', title: '분위기', multi: true, options: [
-                               { value: 'quiet', text: '🤫 조용한' }, { value: 'talk', text: '💬 대화하기 좋은' },
-                               { value: 'exciting', text: '🎉 신나는' }, // '신나는' 추가
-                               { value: 'study', text: '📚 카공하기 좋은' }, { value: 'feel good', text: '🍷 분위기 좋은' }, { value: 'date', text: '💖 데이트하기 좋은' }
-                           ]},
-                           // 3. 편의 및 서비스 (요청사항과 동일하여 유지)
-                           { id: 'amenities', title: '편의 및 서비스', multi: true, options: [
-                               { value: 'parking', text: '🚗 주차장' }, { value: 'toilet', text: '🚻 화장실' }, { value: 'pet-friendly', text: '🐾 반려동물' }, { value: 'waiting room', text: '🛌 대기실' }, { value: 'takeout', text: '🥡 포장' }
-                           ]},
-                           // 4. 예약 여부 (옵션 수정)
-                           { id: 'reservation', title: '예약 여부', multi: false, default: 'possible', options: [
-                               // '상관없음' 제거
-                               { value: 'possible', text: '✅ 가능' }, { value: 'impossible', text: '❌ 불가능' }
-                           ]},
-                           // 5. 우선순위 (요청사항과 동일하여 유지)
-                           { id: 'sort', title: '우선순위 (정렬)', multi: false, default: 'hits', options: [
-                               { value: 'hits', text: '⭐ 많이 찾는 순' }, { value: 'reviews', text: '📝 리뷰 많은 순' }, { value: 'rating', text: '👍 평점 높은 순' }, { value: 'like', text: '⭐️ 즐겨찾기 많은 순' }
-                           ]},
-                           // 6. 종류 (옵션 수정)
-                           { id: 'type', title: '종류', multi: true, options: [
-                               { value: 'dessert', text: '🍰 디저트 전문' }, { value: 'coffee', text: '☕ 커피 전문' },
-                               { value: 'interior', text: '🛋️ 인테리어 맛집' } // '사진 맛집' 제거
-                           ]}
-                       ]
-                   },
-                restaurant: {
-                    title: '🍽️ 식당 상세 필터',
-                    groups: [
-                        { id: 'companion', title: '동반인', multi: true, options: [
-                            { value: 'solo', text: '👤 1인' }, { value: 'friends', text: '🎉 친구' }, { value: 'couple', text: '💖 커플' }, { value: 'family', text: '👨‍👩‍👧‍👦 가족' }, { value: 'group', text: '🏢 단체' }
-                        ]},
-                         { id: 'mood', title: '분위기', multi: true, options: [
-                            { value: 'quiet', text: '🤫 조용한' }, { value: 'solo-friendly', text: '🍚 혼밥하기 좋은' }, { value: 'date', text: '💖 데이트하기 좋은' },  { value: 'feel good', text: '🍷 분위기 좋은' }, { value: 'photo-spot', text: '📸 사진 맛집' }
-                        ]},
-                        { id: 'amenities', title: '편의시설', multi: true, options: [
-                            { value: 'parking', text: '🚗 주차장' }, { value: 'toilet', text: '🚻 화장실' }, { value: 'pet-friendly', text: '🐾 반려동물' }, { value: 'waiting room', text: '🛌 대기실' }, { value: 'takeout', text: '🥡 포장' }
-                        ]},
-                        { id: 'days', title: '영업 요일', multi: true, options: [
-                            { value: 'mon', text: '월' }, { value: 'tue', text: '화' }, { value: 'wed', text: '수' }, { value: 'thu', text: '목' }, { value: 'fri', text: '금' }, { value: 'sat', text: '토' }, { value: 'sun', text: '일' }
-                        ]},
-                        { id: 'type', title: '종류', multi: true, options: [
-                            { value: 'korean', text: '🍚 한식' }, { value: 'chinese', text: '🍜 중식' }, { value: 'japanese', text: '🍣 일식' }, { value: 'western', text: '🍝 양식' }, { value: 'fusion', text: '🥘 퓨전' }, { value: 'asian', text: '🥠 아시안' }
-                        ]},
-                        { id: 'reservation', title: '예약 여부', multi: false, default: 'any', options: [
-                            { value: 'any', text: '상관없음' }, { value: 'possible', text: '✅ 가능' }, { value: 'impossible', text: '❌ 불가능' }
-                        ]},
-                         { id: 'sort', title: '우선순위 (정렬)', multi: false, default: 'hits', options: [
-                            { value: 'hits', text: '⭐ 많이 찾는 순' }, { value: 'reviews', text: '📝 리뷰 많은 순' }, { value: 'rating', text: '👍 평점 높은 순' }, { value: 'like', text: '⭐️ 즐겨찾기 많은 순' }
-                        ]},
-                    ]
-                }
-            };
+        cafe: {
+            title: '☕ 카페 상세 필터',
+            groups: [
+                { id: 'companion', title: '동반인', multi: true, options: [ { value: 'solo', text: '👤 1인' }, { value: 'friends', text: '🎉 친구' }, { value: 'couple', text: '💖 커플' }, { value: 'family', text: '👨‍👩‍👧‍👦 가족' } ] },
+                { id: 'mood', title: '분위기', multi: true, options: [ { value: 'quiet', text: '🤫 조용한' }, { value: 'talk', text: '💬 대화하기 좋은' } ] },
+                { id: 'sort', title: '정렬', multi: false, default: 'hits', options: [ { value: 'hits', text: '⭐ 인기순' }, { value: 'reviews', text: '📝 리뷰순' } ] }
+            ]
+        },
+        restaurant: {
+            title: '🍽️ 식당 상세 필터',
+            groups: [
+                { id: 'type', title: '종류', multi: true, options: [ { value: 'korean', text: '🍚 한식' }, { value: 'chinese', text: '🍜 중식' } ] },
+                { id: 'sort', title: '정렬', multi: false, default: 'hits', options: [ { value: 'hits', text: '⭐ 인기순' }, { value: 'rating', text: '👍 평점순' } ] }
+            ]
+        }
+    };
 
-    let activeFilterCategory = 'cafe';
+    let activeFilterCategory = null;
     let selectedFilters = {};
 
     function buildModalBody(category) {
@@ -185,20 +142,16 @@ function initSearchFilterModal() {
         const data = filterData[category];
         modalTitle.textContent = data.title;
         modalBody.innerHTML = '';
-
         data.groups.forEach(group => {
             const multiText = group.multi ? '<small class="text-muted">(다중 선택)</small>' : '';
             const optionsHtml = group.options.map(opt => `<button type="button" class="btn btn-outline-secondary" data-value="${opt.value}">${opt.text}</button>`).join('');
-            modalBody.innerHTML += `
-                <div class="filter-group mb-4">
-                    <h6>${group.title} ${multiText}</h6>
-                    <div class="btn-group flex-wrap gap-2" id="filter-${group.id}">${optionsHtml}</div>
-                </div>`;
+            modalBody.innerHTML += `<div class="filter-group mb-4"><h6>${group.title} ${multiText}</h6><div class="btn-group flex-wrap gap-2" id="filter-${group.id}">${optionsHtml}</div></div>`;
         });
         initializeFilters();
     }
 
     function initializeFilters() {
+        if (!activeFilterCategory) return;
         const data = filterData[activeFilterCategory];
         selectedFilters = {};
         data.groups.forEach(group => {
@@ -218,13 +171,20 @@ function initSearchFilterModal() {
         });
     }
 
-    categoryButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            categoryButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            const category = this.dataset.category;
-            mainCategoryInput.value = category;
-            buildModalBody(category);
+    mainDropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const value = this.dataset.value;
+            mainCategoryButton.innerHTML = this.innerHTML;
+            mainCategoryInput.value = value;
+            cafeFilterTrigger.style.display = (value === 'cafe') ? 'inline-block' : 'none';
+            restaurantFilterTrigger.style.display = (value === 'restaurant') ? 'inline-block' : 'none';
+        });
+    });
+
+    [cafeFilterTrigger, restaurantFilterTrigger].forEach(trigger => {
+        trigger.addEventListener('click', function() {
+            buildModalBody(this.dataset.category);
         });
     });
 
@@ -253,6 +213,4 @@ function initSearchFilterModal() {
     });
 
     document.getElementById('reset-filters').addEventListener('click', initializeFilters);
-
-    buildModalBody(activeFilterCategory);
 }

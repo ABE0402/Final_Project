@@ -7,14 +7,6 @@
             <span class="fw-bold text-olive">Hong Around</span>
         </a>
 
-        <!-- Center: Search (md~) -->
-        <form class="d-none d-md-block flex-grow-1 mx-3" action="/search" method="get" style="max-width:560px;">
-            <div class="input-group input-group-sm shadow-sm">
-                <input type="search" name="q" class="form-control" placeholder="카페/식당명, 지역, 메뉴로 검색" aria-label="검색">
-                <button class="btn btn-outline-olive" type="submit">검색</button>
-            </div>
-        </form>
-
         <!-- Right: Actions -->
         <div class="d-flex align-items-center gap-2">
             {{#auth.isLoggedIn}}
@@ -26,6 +18,25 @@
                 {{#auth.isAdmin}}
                     <a class="btn btn-warning btn-sm" href="/admin">관리자</a>
                 {{/auth.isAdmin}}
+
+                <!-- ▼▼▼ 알림 벨 UI (로그인 전용) ▼▼▼ -->
+                <div class="position-relative">
+                    <button id="notif-bell" type="button" class="btn btn-sm btn-outline-secondary position-relative">
+                        🛎
+                        <span id="notif-count"
+                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger hidden">0</span>
+                    </button>
+
+                    <!-- 드롭다운 패널 -->
+                    <div id="notif-panel" class="notif-panel hidden">
+                        <div class="d-flex justify-content-between align-items-center border-bottom px-3 py-2">
+                            <strong>알림</strong>
+                            <button id="notif-read-all" type="button" class="btn btn-link btn-sm text-decoration-none">모두 읽음</button>
+                        </div>
+                        <div id="notif-list" class="notif-list">불러오는 중...</div>
+                    </div>
+                </div>
+                <!-- ▲▲▲ 알림 벨 UI 끝 ▲▲▲ -->
 
                 <a class="btn btn-sm btn-outline-olive" href="/mypage">마이페이지</a>
 
@@ -42,13 +53,8 @@
         </div>
     </nav>
 
-    <!-- Mobile search (xs~sm) -->
-    <div class="container d-md-none pb-3">
-        <form action="/search" method="get">
-            <div class="input-group input-group-sm shadow-sm">
-                <input type="search" name="q" class="form-control" placeholder="검색">
-                <button class="btn btn-outline-olive" type="submit">검색</button>
-            </div>
-        </form>
-    </div>
+
+    <!-- 알림 전용 리소스 (중복 로드만 피하면 됨) -->
+    <link rel="stylesheet" href="/css/notifications.css">
+    <script defer src="/js/notifications.js"></script>
 </header>

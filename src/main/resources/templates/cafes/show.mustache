@@ -64,7 +64,10 @@
                 <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#favConfirmModal">
                     {{#isFav}}즐겨찾기 해제{{/isFav}}{{^isFav}}즐겨찾기 추가{{/isFav}}
                 </button>
-                <a class="btn btn-sm btn-secondary disabled">예약</a>
+                <button class="action-btn primary"
+                        onclick="location.href='/reserve?type=CAFE&id={{cafe.id}}'">
+                예약하기
+                </button>
             </div>
         </div>
     </section>

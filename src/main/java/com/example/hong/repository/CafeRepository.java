@@ -98,4 +98,9 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
             """)
     List<CafeIdTagName> findTagNamesByCafeIdIn(@Param("cafeIds") Collection<Long> cafeIds);
 
+
+    List<Cafe> findByOwner_Id(Long ownerId);
+    boolean existsByIdAndOwner_Id(Long id, Long ownerId);
+
+
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,4 +37,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         order by r.id desc
     """)
     List<Review> findByUserIdWithUser(@Param("userId") Long userId);
+
+    // 카페 리뷰(여러 매장 id)
+    List<Review> findByCafe_IdInAndDeletedFalseOrderByCreatedAtDesc(Collection<Long> cafeIds);
+
+    // 레스토랑 리뷰(여러 매장 id) — 레스토랑 리뷰가 있다면 사용
+    List<Review> findByRestaurant_IdInAndDeletedFalseOrderByCreatedAtDesc(Collection<Long> restaurantIds);
+
+    Optional<Review> findByIdAndDeletedFalse(Long id);
+
 }

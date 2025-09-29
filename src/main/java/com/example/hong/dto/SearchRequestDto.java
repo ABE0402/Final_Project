@@ -28,4 +28,6 @@ public class SearchRequestDto {
 
     // from <input name="type">
     private String type;
+
+    private String reservation;
 }

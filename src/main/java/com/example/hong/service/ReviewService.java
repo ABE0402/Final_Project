@@ -1,4 +1,3 @@
-// src/main/java/com/example/HONGAROUND/service/ReviewService.java
 package com.example.hong.service;
 
 import com.example.hong.dto.AspectScoreDto;

@@ -1,17 +1,22 @@
 package com.example.hong.dto;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CardDto {
-    Long id;
-    String type;          // CAFE / RESTAURANT
-    String pathSegment;   // "cafes" / "restaurants"
-    String name;
-    String address;
-    String heroImageUrl;
-    double averageRating;
-    int reviewCount;
+    private Long id;
+    private String type;
+    private String pathSegment;
+    private String name;
+    private String address;
+    private String heroImageUrl;
+    private Double averageRating;
+    private Integer reviewCount;
+
+    @Builder.Default
+    private String hashtags = "";
 }

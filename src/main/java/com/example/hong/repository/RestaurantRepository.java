@@ -13,4 +13,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
             ApprovalStatus status, boolean isVisible);
 
     Page<Restaurant> findByApprovalStatusAndIsVisible(ApprovalStatus status, boolean isVisible, Pageable pageable);
+
+    List<Restaurant> findByOwner_Id(Long ownerId);
+    boolean existsByIdAndOwner_Id(Long id, Long ownerId);
 }

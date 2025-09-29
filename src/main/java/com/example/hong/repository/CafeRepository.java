@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,4 +53,49 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
     List<Cafe> findTop8ByApprovalStatusAndIsVisibleAndCafeTags_Tag_IdOrderByAverageRatingDescReviewCountDesc(
             ApprovalStatus status, boolean isVisible, Integer tagId
     );
+
+    @Query(
+            value = """
+                        select c
+                        from Cafe c
+                        join c.cafeTags ct
+                        where c.approvalStatus = :status
+                          and c.isVisible = :visible
+                          and ct.tag.id = :tagId
+                    """,
+            countQuery = """
+                        select count(c)
+                        from Cafe c
+                        join c.cafeTags ct
+                        where c.approvalStatus = :status
+                          and c.isVisible = :visible
+                          and ct.tag.id = :tagId
+                    """
+    )
+    Page<Cafe> findByTagPaged(@Param("status") ApprovalStatus status,
+                              @Param("visible") boolean visible,
+                              @Param("tagId") Integer tagId,
+                              Pageable pageable);
+
+    /* ===== 카드에 #태그 표시용 벌크 조회 (프로젝션) =====
+       여러 카페의 태그명을 한 번에 가져옵니다. N+1 방지용.
+       - 반환은 (cafeId, tagName) 튜플 리스트
+     */
+    interface CafeIdTagName {
+        Long getCafeId();
+
+        String getName();
+    }
+
+    @Query("""
+                select ct.cafe.id as cafeId, t.name as name
+                from CafeTag ct
+                join ct.tag t
+                where ct.cafe.id in :cafeIds
+            """)
+    List<CafeIdTagName> findTagNamesByCafeIdIn(@Param("cafeIds") Collection<Long> cafeIds);
+
+
+    List<Cafe> findByOwner_Id(Long ownerId);
+    boolean existsByIdAndOwner_Id(Long id, Long ownerId);
 }

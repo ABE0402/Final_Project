@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"><title>리뷰 관리</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/css/app.css" rel="stylesheet"/>
+    <style>
+        .hidden{display:none!important}
+        .review-card .meta{color:#6c757d;font-size:.875rem}
+        .reply-box{background:#f8f9fa;border:1px solid #e9ecef;border-radius:.5rem}
+    </style>
+</head>
+<body class="bg-body-tertiary">
+{{> layout/header}}
+
+<main class="container py-5">
+    <h3 class="fw-bold mb-4">점주 페이지</h3>
+    <div class="row g-4">
+        <aside class="col-12 col-md-3">
+            <div class="card shadow-sm"><div class="card-body p-0">{{> owner/sidebar}}</div></div>
+        </aside>
+
+        <section class="col-12 col-md-9">
+            <div class="card shadow-sm"><div class="card-body p-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="m-0">리뷰 관리</h5>
+                    <div class="d-flex gap-2">
+                        <select id="reply-filter" class="form-select form-select-sm" style="min-width:180px">
+                            <option value="ALL">전체</option>
+                            <option value="REPLIED">답글 있음</option>
+                            <option value="NOREPLY">답글 없음</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{#reviews}}
+                    <div class="border rounded p-3 mb-3 review-card" data-has-reply="{{hasReply}}">
+                        <div class="d-flex justify-content-between flex-wrap gap-2">
+                            <div>
+                                <div class="fw-semibold">{{targetName}} <span class="badge text-bg-light">{{targetType}}</span></div>
+                                <div class="meta">{{createdAt}} · 평점 {{rating}} · {{authorName}}</div>
+                                <div class="mt-2">{{content}}</div>
+                            </div>
+
+                            <div class="text-end">
+                                {{#hasReply}}
+                                    <span class="badge text-bg-success">답글 등록됨</span>
+                                {{/hasReply}}
+                                {{^hasReply}}
+                                    <span class="badge text-bg-secondary">미답글</span>
+                                {{/hasReply}}
+                            </div>
+                        </div>
+
+                        <!-- 답글 영역 -->
+                        <div class="mt-3 reply-box p-3">
+                            {{#hasReply}}
+                                <div class="mb-2">
+                                    <div class="fw-semibold">내 답글</div>
+                                    <div class="small text-muted">수정일 {{replyUpdatedAt}}</div>
+                                    <div class="mt-2">{{replyContent}}</div>
+                                </div>
+                            {{/hasReply}}
+
+                            <form class="mt-2" method="post" action="/owner/reviews/{{reviewId}}/reply">
+                                {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                                <div class="form-floating">
+                  <textarea class="form-control" id="reply-{{reviewId}}" name="content" style="height:100px"
+                            placeholder="답글을 입력하세요.">{{#hasReply}}{{replyContent}}{{/hasReply}}</textarea>
+                                    <label for="reply-{{reviewId}}">답글</label>
+                                </div>
+
+                                <div class="d-flex mt-2">
+                                    <button type="submit" class="btn btn-olive">{{#hasReply}}수정{{/hasReply}}{{^hasReply}}등록{{/hasReply}}</button>
+                                    {{#hasReply}}
+                                        <form method="post" action="/owner/reviews/{{reviewId}}/reply/delete" class="ms-2 m-0"
+                                              onsubmit="return confirm('답글을 삭제할까요?');">
+                                            {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                                            <button type="submit" class="btn btn-outline-danger">삭제</button>
+                                        </form>
+                                    {{/hasReply}}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {{/reviews}}
+
+                {{^reviews}}
+                    <div class="text-muted">표시할 리뷰가 없습니다.</div>
+                {{/reviews}}
+
+            </div></div>
+        </section>
+    </div>
+</main>
+
+{{> layout/footer}}
+
+<script>
+    // 답글 필터
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const sel = document.getElementById('reply-filter');
+      const items = [...document.querySelectorAll('.review-card')];
+      function apply(){
+        const v = sel.value;
+        items.forEach(el=>{
+          const has = el.dataset.hasReply === 'true';
+          el.classList.toggle('hidden', (v==='REPLIED' && !has) || (v==='NOREPLY' && has));
+        });
+      }
+      sel.addEventListener('change', apply);
+      apply();
+    });
+</script>
+</body>
+</html>

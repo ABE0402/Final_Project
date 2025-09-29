@@ -1,32 +1,59 @@
 package com.example.hong.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Entity
-@Table(name = "Cafe_Tags") // DDL에 명시된 테이블 이름
-@Getter
+@Table(
+        name = "cafe_tags",
+        uniqueConstraints = @UniqueConstraint(name = "uk_cafe_tag", columnNames = {"cafe_id", "tag_id"}),
+        indexes = {
+                @Index(name = "idx_cafe_tags_tag_cafe", columnList = "tag_id,cafe_id")
+        }
+)
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@IdClass(CafeTag.CafeTagId.class) // 복합키 클래스 지정
+@AllArgsConstructor
+@Builder
 public class CafeTag {
 
-    @Id
+    @EmbeddedId
+    private CafeTagId id;
+
+    @MapsId("cafeId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cafe_id")
+    @JoinColumn(name = "cafe_id", nullable = false)
     private Cafe cafe;
 
-    @Id
+    @MapsId("tagId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
+    @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 
-    // --- 복합키 클래스 ---
-    public static class CafeTagId implements Serializable {
-        private Long cafe;
-        private Integer tag;
+    /* 팩토리 */
+    public static CafeTag of(Cafe cafe, Tag tag) {
+        CafeTag ct = new CafeTag();
+        ct.cafe = cafe;
+        ct.tag = tag;
+        ct.id = new CafeTagId(cafe.getId(), tag.getId());
+        return ct;
     }
+
+    /* ===== 복합키 ===== */
+    @Embeddable
+    @Getter @Setter
+    @NoArgsConstructor @AllArgsConstructor
+    public static class CafeTagId implements Serializable {
+        @Column(name = "cafe_id")
+        private Long cafeId;
+        @Column(name = "tag_id")
+        private Integer tagId;
+    }
+
+    public void setCafe(Cafe cafe){ this.cafe = cafe; }
+    public void setTag(Tag tag){ this.tag = tag; }
+
+
 }

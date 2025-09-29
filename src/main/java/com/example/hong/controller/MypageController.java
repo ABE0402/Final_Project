@@ -1,13 +1,16 @@
 package com.example.hong.controller;
 
+import com.example.hong.domain.ReservationStatus;
+import com.example.hong.domain.ReserveTargetType;
 import com.example.hong.dto.ProfileUpdateDto;
+import com.example.hong.entity.Cafe;
+import com.example.hong.entity.Reservation;
 import com.example.hong.entity.User;
+import com.example.hong.repository.CafeRepository;
+import com.example.hong.repository.RestaurantRepository;
 import com.example.hong.repository.ReviewRepository;
 import com.example.hong.repository.UserRepository;
-import com.example.hong.service.FavoriteService;
-import com.example.hong.service.OwnerApplicationService;
-import com.example.hong.service.ReviewService;
-import com.example.hong.service.UserService;
+import com.example.hong.service.*;
 import com.example.hong.service.auth.AppUserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -16,10 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,6 +33,9 @@ public class MypageController {
     private final UserRepository userRepository;
     private final UserService userService;
     private final OwnerApplicationService ownerAppService;
+    private final ReservationService reservationService;     // ✅ 추가
+    private final CafeRepository cafeRepository;             // ✅ 추가
+    private final RestaurantRepository restaurantRepository;
 
     /* ---------- 공통 유틸 ---------- */
     private Long meId(Authentication auth) { return ((AppUserPrincipal) auth.getPrincipal()).getId(); }
@@ -116,7 +120,28 @@ public class MypageController {
     public String myReservations(Authentication auth, Model model) {
         putMe(auth, model);
         activateTab(model, "reservations");
-        model.addAttribute("reservations", Collections.emptyList());
+
+        Long uid = meId(auth);
+        var fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        // 카페 예약
+        List<Reservation> cafeRes = reservationService.myByType(uid, ReserveTargetType.CAFE);
+        var cafes = cafeRes.stream().map(r -> {
+            String name = cafeRepository.findById(r.getTargetId())
+                    .map(Cafe::getName).orElse("카페");
+            return ResVM.of(r, name, fmt);
+        }).toList();
+
+        // 레스토랑 예약
+        List<Reservation> restRes = reservationService.myByType(uid, ReserveTargetType.RESTAURANT);
+        var restaurants = restRes.stream().map(r -> {
+            String name = restaurantRepository.findById(r.getTargetId())
+                    .map(rt -> rt.getName()).orElse("레스토랑");
+            return ResVM.of(r, name, fmt);
+        }).toList();
+
+        model.addAttribute("cafes", cafes);
+        model.addAttribute("restaurants", restaurants);
         return "mypage/reservations";
     }
 
@@ -175,5 +200,27 @@ public class MypageController {
             return "redirect:/mypage/account?pwError=현재 비밀번호가 올바르지 않습니다.";
         }
         return "redirect:/mypage/account?pwChanged=1";
+    }
+
+    /** 뷰 전용 VM */
+    @lombok.Data
+    static class ResVM {
+        private Long id;
+        private String targetName;
+        private String reservationAt; // 포맷 적용된 문자열
+        private int partySize;
+        private String status;
+        private boolean isCancelled;
+
+        static ResVM of(Reservation r, String targetName, DateTimeFormatter fmt) {
+            ResVM vm = new ResVM();
+            vm.id = r.getId();
+            vm.targetName = targetName;
+            vm.reservationAt = r.getReservationAt().format(fmt);
+            vm.partySize = r.getPartySize();
+            vm.status = r.getStatus().name();
+            vm.isCancelled = r.getStatus() == ReservationStatus.CANCELLED;
+            return vm;
+        }
     }
 }

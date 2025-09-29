@@ -26,6 +26,8 @@ public class SearchController {
             @AuthenticationPrincipal AppUserPrincipal userPrincipal,
             Model model
     ) {
+
+        model.addAttribute("searchParams", searchRequest);
         // (2) 실제 로그인 사용자 ID 추출 (비로그인 시 null)
         Long userId = (userPrincipal != null) ? userPrincipal.getId() : null;
 
@@ -59,7 +61,6 @@ public class SearchController {
                 StringUtils.hasText(request.getMood()) ||
                 StringUtils.hasText(request.getAmenities()) ||
                 StringUtils.hasText(request.getReservation()) ||
-                StringUtils.hasText(request.getDays()) ||
                 StringUtils.hasText(request.getType());
     }
 }

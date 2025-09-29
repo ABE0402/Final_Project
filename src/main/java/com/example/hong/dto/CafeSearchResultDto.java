@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -45,7 +46,7 @@ public class CafeSearchResultDto {
                 cafe.getCafeTags().stream().map(cafeTag -> cafeTag.getTag().getName()).toList() : List.of();
 
         // 메뉴 이미지 URL 목록 추출
-        List<String> menuImages = List.of(
+        List<String> menuImages = Arrays.asList( // List.of -> Arrays.asList 로 변경
                 cafe.getMenuImageUrl1(), cafe.getMenuImageUrl2(), cafe.getMenuImageUrl3(),
                 cafe.getMenuImageUrl4(), cafe.getMenuImageUrl5()
         ).stream().filter(url -> url != null && !url.isBlank()).toList();

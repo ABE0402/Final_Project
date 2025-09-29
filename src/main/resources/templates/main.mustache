@@ -21,20 +21,16 @@
     <div class="container text-center">
         <h1 class="display-5 fw-bold">HonG Around</h1>
 
-        <!-- [수정됨] 상세 필터 기능이 포함된 통합 검색창 -->
         <form action="/search" method="get" class="mx-auto mt-4" style="max-width: 640px;">
-            <!-- 필터 값 저장을 위한 숨겨진 input 필드들 -->
             <input type="hidden" id="search-category" name="category" value="all">
             <input type="hidden" id="search-companion" name="companion">
             <input type="hidden" id="search-mood" name="mood">
             <input type="hidden" id="search-amenities" name="amenities">
             <input type="hidden" id="search-reservation" name="reservation">
-            <input type="hidden" id="search-days" name="days">
             <input type="hidden" id="search-sort" name="sort" value="hits">
             <input type="hidden" id="search-type" name="type">
 
             <div class="input-group input-group-lg shadow-sm">
-                <!-- 카테고리 선택 드롭다운 -->
                 <div class="btn-group">
                     <button type="button" id="category-dropdown-button" class="btn btn-outline-secondary dropdown-toggle"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -47,32 +43,28 @@
                     </ul>
                 </div>
 
-                <!-- 텍스트 검색창 -->
                 <input type="search" name="query" class="form-control" placeholder="가게 이름, 메뉴, 지역 검색" aria-label="Search">
 
-                <!-- 상세 필터 모달을 여는 버튼들 -->
-                <button class="btn btn-info text-white" type="button" id="cafe-filter-trigger" style="display: none;"
+
+                <button class="btn btn-info text-white filter-trigger-btn" type="button" id="cafe-filter-trigger" data-category="cafe" style="display: none;"
                         data-bs-toggle="modal" data-bs-target="#filterModal">
                     카페 필터
                 </button>
-                <button class="btn btn-warning text-dark" type="button" id="restaurant-filter-trigger" style="display: none;"
+                <button class="btn btn-warning text-dark filter-trigger-btn" type="button" id="restaurant-filter-trigger" data-category="restaurant" style="display: none;"
                         data-bs-toggle="modal" data-bs-target="#filterModal">
                     식당 필터
                 </button>
 
-                <!-- 검색 실행 버튼 -->
                 <button class="btn btn-primary" type="submit">🔍</button>
             </div>
         </form>
 
-        <!-- 카테고리 (기존과 동일) -->
         <div class="d-flex gap-2 justify-content-center mt-3">
             <button class="btn btn-sm {{#isAll}}btn-olive{{/isAll}} {{^isAll}}btn-outline-olive{{/isAll}} cat-btn" data-category="all">전체</button>
             <button class="btn btn-sm {{#isCafe}}btn-olive{{/isCafe}} {{^isCafe}}btn-outline-olive{{/isCafe}} cat-btn" data-category="cafe">카페</button>
             <button class="btn btn-sm {{#isRestaurant}}btn-olive{{/isRestaurant}} {{^isRestaurant}}btn-outline-olive{{/isRestaurant}} cat-btn" data-category="restaurant">식당</button>
         </div>
 
-        <!-- 정렬 (기존과 동일) -->
         <div class="d-flex gap-2 justify-content-center mt-2">
             <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_recommend}}active{{/sort_recommend}}" data-sort="recommend">추천순</button>
             <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_rating}}active{{/sort_rating}}" data-sort="rating">평점순</button>
@@ -80,16 +72,13 @@
         </div>
     </div>
 
-    <!-- 카드 그리드 (기존과 동일) -->
     <div class="container mt-4" id="card-container">
         {{> fragments/cards_grid}}
     </div>
 
-    <!-- 무한 스크롤 트리거 (기존과 동일) -->
     <div id="scroll-end" class="py-3"></div>
 </main>
 
-<!-- [추가됨] 상세 필터 모달 -->
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content">

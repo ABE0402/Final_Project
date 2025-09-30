@@ -2,7 +2,6 @@ package com.example.hong.repository;
 
 import com.example.hong.domain.SegmentType;
 import com.example.hong.entity.CafeSegmentScore;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

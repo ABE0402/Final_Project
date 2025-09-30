@@ -1,4 +1,3 @@
-// src/main/java/com/example/hong/service/OwnerService.java
 package com.example.hong.service;
 
 import com.example.hong.domain.ReservationStatus;

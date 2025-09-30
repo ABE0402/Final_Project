@@ -115,15 +115,19 @@ public class OwnerShopController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Authentication auth, Model model) {
         var vm = ownerShopService.getShopForEdit(meId(auth), id);
+        vm.putIfAbsent("addressRoad", "");
+        // select 표시용 플래그(원하면)
+        String type = String.valueOf(vm.getOrDefault("type", "CAFE"));
+        vm.put("typeIsCafe", "CAFE".equalsIgnoreCase(type));
+        vm.put("typeIsRestaurant", "RESTAURANT".equalsIgnoreCase(type));
         model.addAttribute("tabOwnerShops", true);
         model.addAttribute("form", vm);
 
         // 선택된 태그 id 집합
         @SuppressWarnings("unchecked")
         var sel = (List<Integer>) vm.getOrDefault("selectedTagIds", List.of());
-        var selectedIds = new HashSet<>(sel);
 
-        populateTagLists(model, selectedIds); // 선택 반영
+        populateTagLists(model, new HashSet<>(sel));// 선택 반영
         return "owner/shops_edit";
     }
 
@@ -141,6 +145,13 @@ public class OwnerShopController {
     public String close(@PathVariable Long id, Authentication auth, RedirectAttributes ra) {
         ownerShopService.requestClose(meId(auth), id);
         ra.addAttribute("msg", "폐업(숨김) 처리되었습니다.");
+        return "redirect:/owner/shops";
+    }
+
+    @PostMapping("/{id}/reopen")
+    public String reopen(@PathVariable Long id, Authentication auth, RedirectAttributes ra) {
+        ownerShopService.reopen(meId(auth), id);
+        ra.addAttribute("msg", "재오픈(표시) 처리되었습니다.");
         return "redirect:/owner/shops";
     }
 }

@@ -25,18 +25,22 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("""
     select r from Review r
     join fetch r.user u
+    left join fetch r.reviewAspectScores s
     where r.cafe.id = :cafeId and r.deleted = false
     order by r.id desc
-""")
+    """)
     List<Review> findForCafeWithUser(@Param("cafeId") Long cafeId);
 
     @Query("""
         select r from Review r
         join fetch r.user u
+        left join fetch r.reviewAspectScores s
         where r.user.id = :userId and r.deleted = false
         order by r.id desc
     """)
     List<Review> findByUserIdWithUser(@Param("userId") Long userId);
+
+    //카페 - 레스토랑 리뷰 구분
 
     // 카페 리뷰(여러 매장 id)
     List<Review> findByCafe_IdInAndDeletedFalseOrderByCreatedAtDesc(Collection<Long> cafeIds);
@@ -83,5 +87,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> adminSearch(@Param("q") String q,
                              @Param("target") String target,   // null/CAFE/RESTAURANT
                              @Param("deleted") Boolean deleted); // null/true/false
-
 }

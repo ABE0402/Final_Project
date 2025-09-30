@@ -26,12 +26,13 @@ public class OwnerController {
         return auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    // 점주 메인
+    // 점주 메인(리뷰 탭 기본)
     @GetMapping({"", "/"})
     public String home() {
         return "redirect:/owner/reviews";
     }
 
+    // 점주 리뷰 관리(대댓글)
     @GetMapping("/reviews")
     public String reviews(Authentication auth, Model model) {
         model.addAttribute("tabOwnerReviews", true);
@@ -51,6 +52,7 @@ public class OwnerController {
         return "redirect:/owner/reviews";
     }
 
+    // 예약 기능 부분
     @GetMapping("/reservations")
     public String reservations(Authentication auth, Model model) {
         Long ownerId = ((AppUserPrincipal) auth.getPrincipal()).getId();

@@ -10,11 +10,14 @@ import com.example.hong.entity.CafeSegmentScore;
 import com.example.hong.entity.User;
 import com.example.hong.repository.CafeRepository;
 import com.example.hong.repository.CafeSegmentScoreRepository;
-import com.example.hong.repository.ReviewRepository;            // ✅ 추가
+import com.example.hong.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service

@@ -2,17 +2,19 @@ package com.example.hong.repository;
 
 import com.example.hong.dto.SearchRequestDto;
 import com.example.hong.entity.Cafe;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.hong.entity.QCafe.cafe;
-import static com.example.hong.entity.QCafeTag.cafeTag;
-import static com.example.hong.entity.QTag.tag;
 
 @RequiredArgsConstructor
 public class CafeRepositoryCustomImpl implements CafeRepositoryCustom {
@@ -21,61 +23,78 @@ public class CafeRepositoryCustomImpl implements CafeRepositoryCustom {
 
     @Override
     public List<Cafe> search(SearchRequestDto condition) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (StringUtils.hasText(condition.getQuery())) {
+            builder.and(keywordContains(condition.getQuery()));
+        }
+
+        List<String> allTagNames = extractFilterTags(condition);
+        if (allTagNames != null && !allTagNames.isEmpty()) {
+            builder.and(hasAllTags(allTagNames));
+        }
+
         return queryFactory
-                .select(cafe).from(cafe)
-                // 태그(필터) 조건을 위해 JOIN
-                .leftJoin(cafe.cafeTags, cafeTag)
-                .leftJoin(cafeTag.tag, tag)
-                .where(
-                        // 각 필터 조건을 AND로 연결 (조건이 없으면 null 반환하여 무시됨)
-                        keywordContains(condition.getQuery()),
-                        companionIn(condition.getCompanion()),
-                        moodIn(condition.getMood()),
-                        amenitiesIn(condition.getAmenities())
-                )
-                .groupBy(cafe.id) // 태그 Join으로 인한 결과 중복을 제거
-                .orderBy(sort(condition.getSort())) // 정렬 조건 적용
+                .selectFrom(cafe)
+                .where(builder)
+                .orderBy(sort(condition.getSort()))
                 .fetch();
     }
 
-    // 1. 텍스트 검색어 (가게 이름, 설명)
     private BooleanExpression keywordContains(String keyword) {
-        return StringUtils.hasText(keyword) ? cafe.name.contains(keyword).or(cafe.description.contains(keyword)) : null;
-    }
-
-    // 2. 동반인 필터
-    private BooleanExpression companionIn(String companion) {
-        return tagsIn("companion", companion);
-    }
-
-    // 3. 분위기 필터
-    private BooleanExpression moodIn(String mood) {
-        return tagsIn("mood", mood);
-    }
-
-    // 4. 편의시설 필터
-    private BooleanExpression amenitiesIn(String amenities) {
-        return tagsIn("amenities", amenities);
-    }
-
-    // (공통 로직) 태그 처리 메서드
-    private BooleanExpression tagsIn(String category, String tagValues) {
-        if (!StringUtils.hasText(tagValues)) {
+        if (!StringUtils.hasText(keyword)) {
             return null;
         }
-        List<String> tagList = List.of(tagValues.split(","));
-        return tag.category.eq(category).and(tag.name.in(tagList));
+        return cafe.name.containsIgnoreCase(keyword)
+                .or(cafe.description.containsIgnoreCase(keyword))
+                .or(cafe.addressRoad.containsIgnoreCase(keyword));
     }
 
-    // 5. 정렬 조건
-    private OrderSpecifier<?> sort(String sort) {
-        if ("rating".equals(sort)) {
-            return cafe.averageRating.desc(); // 평점 높은 순
+    private BooleanExpression hasAllTags(List<String> tagNames) {
+        if (tagNames == null || tagNames.isEmpty()) {
+            return null;
         }
-        if ("reviews".equals(sort)) {
-            return cafe.reviewCount.desc(); // 리뷰 많은 순
+        return tagNames.stream()
+                .map(this::cafeHasTag)
+                .reduce(BooleanExpression::and)
+                .orElse(null);
+    }
+
+    private BooleanExpression cafeHasTag(String tagName) {
+        return cafe.cafeTags.any().tag.name.eq(tagName);
+    }
+
+    private OrderSpecifier<?> sort(String sortValue) {
+        if (!StringUtils.hasText(sortValue)) {
+            return cafe.id.desc(); // 기본 정렬
         }
-        // 기본 정렬은 최신순 (ID 역순)
+        if ("rating".equalsIgnoreCase(sortValue)) {
+            return cafe.averageRating.desc();
+        }
+        if ("reviews".equalsIgnoreCase(sortValue)) {
+            return cafe.reviewCount.desc();
+        }
+        if ("like".equalsIgnoreCase(sortValue)) {
+            return cafe.favoritesCount.desc();
+        }
         return cafe.id.desc();
+    }
+
+    private List<String> extractFilterTags(SearchRequestDto request) {
+        List<String> tagNames = new ArrayList<>();
+        addTagsToList(tagNames, request.getCompanion());
+        addTagsToList(tagNames, request.getMood());
+        addTagsToList(tagNames, request.getAmenities());
+        addTagsToList(tagNames, request.getReservation());
+        addTagsToList(tagNames, request.getType());
+        return tagNames;
+    }
+
+    private void addTagsToList(List<String> list, String commaSeparatedTags) {
+        if (StringUtils.hasText(commaSeparatedTags)) {
+            list.addAll(Arrays.stream(commaSeparatedTags.split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList()));
+        }
     }
 }

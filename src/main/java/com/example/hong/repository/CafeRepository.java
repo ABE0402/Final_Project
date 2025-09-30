@@ -2,8 +2,6 @@ package com.example.hong.repository;
 
 import com.example.hong.domain.ApprovalStatus;
 import com.example.hong.entity.Cafe;
-import com.example.hong.entity.CafeTag;
-import com.example.hong.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,16 +17,15 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
 
     // Fetch Join을 사용하여 Cafe를 조회할 때 연관된 CafeTag와 Tag 정보까지 한 번에 가져오는 쿼리
     @Query("""
-                SELECT DISTINCT c
-                FROM Cafe c
-                LEFT JOIN FETCH c.cafeTags ct
-                LEFT JOIN FETCH ct.tag
-            """)
+        SELECT DISTINCT c
+        FROM Cafe c
+        LEFT JOIN FETCH c.cafeTags ct
+        LEFT JOIN FETCH ct.tag
+    """)
     List<Cafe> findAllWithTags();
 
     List<Cafe> findTop8ByApprovalStatusAndIsVisibleOrderByAverageRatingDescReviewCountDesc(
             ApprovalStatus status, boolean isVisible);
-
     List<Cafe> findByOwner_IdOrderByCreatedAtDesc(Long ownerId);
 
     // 오너가 소유한 특정 카페 단건 접근(권한 체크에 유용)
@@ -102,6 +99,19 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
     List<Cafe> findByOwner_Id(Long ownerId);
     boolean existsByIdAndOwner_Id(Long id, Long ownerId);
 
-    List<Cafe> findByIdInAndApprovalStatusAndIsVisible(List<Long> ids, ApprovalStatus approvalStatus, boolean isVisible);
-}
+    /* 오수현씨의 검색 기능 */
+    @Query("""
+        SELECT DISTINCT c
+        FROM Cafe c
+        LEFT JOIN c.menus m
+        WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+           OR LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+           OR LOWER(c.addressRoad) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    """)
+    List<Cafe> searchByKeyword(@Param("keyword") String keyword);
+    //LEFT JOIN → 메뉴까지 검색 가능
+    //DISTINCT → 하나의 카페가 여러 메뉴에 걸쳐 중복 출력되는 것 방지
 
+    List<Cafe> findByIdInAndApprovalStatusAndIsVisible(List<Long> ids, ApprovalStatus approvalStatus, boolean isVisible);
+
+}

@@ -31,7 +31,7 @@ public class OwnerApplication {
     @Column(nullable=false, length=200) private String storeAddress;   // 간단주소(도로명)
 
     @Enumerated(EnumType.STRING)
-    @Column( nullable=false, length=10)
+    @Column(nullable=false, length=10)
     private ApprovalStatus status; // PENDING/APPROVED/REJECTED
 
 

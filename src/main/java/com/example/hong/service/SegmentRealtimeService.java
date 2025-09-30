@@ -1,7 +1,10 @@
 // src/main/java/com/example/hong/service/SegmentRealtimeService.java
 package com.example.hong.service;
 
-import com.example.hong.domain.*;
+import com.example.hong.domain.AgeBucket;
+import com.example.hong.domain.EventAction;
+import com.example.hong.domain.Gender;
+import com.example.hong.domain.SegmentType;
 import com.example.hong.entity.CafeSegmentScore;
 import com.example.hong.entity.User;
 import com.example.hong.entity.UserEvent;

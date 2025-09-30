@@ -34,5 +34,4 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
             String category, Collection<TagAppliesTo> scopes
     );
 
-
 }

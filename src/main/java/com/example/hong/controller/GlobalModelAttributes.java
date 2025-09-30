@@ -5,7 +5,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -58,14 +57,5 @@ public class GlobalModelAttributes {
         if (email != null && !email.isBlank())       model.put("email", email);
         if (!roles.isEmpty()) model.put("roles", roles); // (옵션) 디버그/표시에 유용
         return model;
-    }
-
-    @ModelAttribute("_csrf")
-    public Map<String, Object> csrf(CsrfToken token) {
-        if (token == null) return Collections.emptyMap();
-        Map<String, Object> m = new HashMap<>();
-        m.put("parameterName", token.getParameterName());
-        m.put("token", token.getToken());
-        return m;
     }
 }

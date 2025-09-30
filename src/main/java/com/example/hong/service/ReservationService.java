@@ -72,14 +72,14 @@ public class ReservationService {
         );
 
         // (옵션) 점주에게도 새 예약 알림 보내려면 아래 주석 해제
-         Long ownerId = (targetType == ReserveTargetType.CAFE)
-                 ? cafeRepository.findById(targetId).map(c -> c.getOwner().getId()).orElse(null)
-                 : restaurantRepository.findById(targetId).map(r -> r.getOwner().getId()).orElse(null);
-         if (ownerId != null) {
-             notificationService.push(ownerId,
-                     "새 예약 도착: ‘" + targetName + "’ (" + when + ", " + partySize + "명)",
-                     "/owner/reservations");
-         }
+        Long ownerId = (targetType == ReserveTargetType.CAFE)
+                ? cafeRepository.findById(targetId).map(c -> c.getOwner().getId()).orElse(null)
+                : restaurantRepository.findById(targetId).map(r -> r.getOwner().getId()).orElse(null);
+        if (ownerId != null) {
+            notificationService.push(ownerId,
+                    "새 예약 도착: ‘" + targetName + "’ (" + when + ", " + partySize + "명)",
+                    "/owner/reservations");
+        }
 
         return saved;
     }
@@ -120,15 +120,15 @@ public class ReservationService {
         );
 
         // (옵션) 점주 알림도 원하면 주석 해제
-         Long ownerId = (res.getTargetType() == ReserveTargetType.CAFE)
-                 ? cafeRepository.findById(res.getTargetId()).map(c -> c.getOwner().getId()).orElse(null)
-                 : restaurantRepository.findById(res.getTargetId()).map(r -> r.getOwner().getId()).orElse(null);
-         if (ownerId != null) {
-             notificationService.push(
-                 ownerId,
-                 "고객 취소: ‘" + targetName + "’ (" + when + ", " + res.getPartySize() + "명)",
-                 "/owner/reservations"
-             );
-         }
+        Long ownerId = (res.getTargetType() == ReserveTargetType.CAFE)
+                ? cafeRepository.findById(res.getTargetId()).map(c -> c.getOwner().getId()).orElse(null)
+                : restaurantRepository.findById(res.getTargetId()).map(r -> r.getOwner().getId()).orElse(null);
+        if (ownerId != null) {
+            notificationService.push(
+                    ownerId,
+                    "고객 취소: ‘" + targetName + "’ (" + when + ", " + res.getPartySize() + "명)",
+                    "/owner/reservations"
+            );
+        }
     }
 }

@@ -117,7 +117,7 @@ public class OwnerShopService {
         m.put("phone", c.getPhone());
         m.put("businessNumber", c.getBusinessNumber());
         m.put("postcode", c.getPostcode());
-        m.put("address", c.getAddressRoad());
+        m.put("addressRoad", c.getAddressRoad());
         m.put("description", c.getDescription());
         m.put("lat", c.getLat() != null ? c.getLat().toPlainString() : "");
         m.put("lng", c.getLng() != null ? c.getLng().toPlainString() : "");
@@ -139,6 +139,15 @@ public class OwnerShopService {
         m.put("selectedTagIds", selected);
         return m;
     }
+
+    @Transactional
+    public void reopen(Long ownerId, Long shopId) {
+        Cafe c = cafeRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
+        verifyOwner(c, ownerId);
+        c.setVisible(true);
+    }
+
 
     @Transactional
     public void updateShop(Long ownerId, Long shopId, ShopCreateRequestDto req) {

@@ -1,6 +1,5 @@
 package com.example.hong.service;
 
-import com.example.hong.domain.NotificationType;
 import com.example.hong.entity.Notification;
 import com.example.hong.entity.User;
 import com.example.hong.repository.NotificationRepository;

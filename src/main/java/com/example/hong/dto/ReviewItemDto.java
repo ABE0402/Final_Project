@@ -3,6 +3,8 @@ package com.example.hong.dto;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.List;
+
 @Value
 @Builder
 public class ReviewItemDto {
@@ -17,4 +19,5 @@ public class ReviewItemDto {
     String imageUrl3;
     String imageUrl4;
     String imageUrl5;
+    List<AspectScoreDto> aspectScores; // 감성 분석 점수 리스트
 }

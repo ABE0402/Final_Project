@@ -1,4 +1,3 @@
-// src/main/java/com/example/hong/dto/owner/OwnerReservationDto.java
 package com.example.hong.dto;
 
 import com.example.hong.domain.ReservationStatus;

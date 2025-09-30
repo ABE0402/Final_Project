@@ -1,8 +1,13 @@
 // src/main/java/com/example/hong/service/SegmentScoringService.java
 package com.example.hong.service;
 
-import com.example.hong.domain.*;
-import com.example.hong.entity.*;
+import com.example.hong.domain.AgeBucket;
+import com.example.hong.domain.EventAction;
+import com.example.hong.domain.Gender;
+import com.example.hong.domain.SegmentType;
+import com.example.hong.entity.CafeSegmentScore;
+import com.example.hong.entity.User;
+import com.example.hong.entity.UserEvent;
 import com.example.hong.repository.CafeSegmentScoreRepository;
 import com.example.hong.repository.UserEventRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor

@@ -19,26 +19,26 @@ import static com.example.hong.entity.QCafe.cafe;
 @RequiredArgsConstructor
 public class CafeRepositoryCustomImpl implements CafeRepositoryCustom {
 
+
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Cafe> search(SearchRequestDto condition) {
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (StringUtils.hasText(condition.getQuery())) {
-            builder.and(keywordContains(condition.getQuery()));
-        }
-
-        List<String> allTagNames = extractFilterTags(condition);
-        if (allTagNames != null && !allTagNames.isEmpty()) {
-            builder.and(hasAllTags(allTagNames));
-        }
-
+    public List<Cafe> search(SearchRequestDto condition, List<String> tagNames) {
         return queryFactory
                 .selectFrom(cafe)
-                .where(builder)
-                .orderBy(sort(condition.getSort()))
+                .where(
+                        keywordContains(condition.getQuery()),
+                        hasAnyTag(tagNames) // 태그 조건을 OR로 필터링
+                )
                 .fetch();
+    }
+
+    // [추가됨] 태그 중 하나라도 포함하는지 확인 (OR 조건)
+    private BooleanExpression hasAnyTag(List<String> tagNames) {
+        if (tagNames == null || tagNames.isEmpty()) {
+            return null;
+        }
+        return cafe.cafeTags.any().tag.name.in(tagNames);
     }
 
     private BooleanExpression keywordContains(String keyword) {

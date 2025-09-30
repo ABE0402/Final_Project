@@ -102,5 +102,6 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
     List<Cafe> findByOwner_Id(Long ownerId);
     boolean existsByIdAndOwner_Id(Long id, Long ownerId);
 
-
+    List<Cafe> findByIdInAndApprovalStatusAndIsVisible(List<Long> ids, ApprovalStatus approvalStatus, boolean isVisible);
 }
+

@@ -1,54 +1,68 @@
-// /static/js/main.js
-
-let currentCategory = 'all';
-let currentSort = 'recommend';
+let currentCategory = 'cafe';       // 기본을 'cafe'로
+let currentSort = 'recommend';      // recommend | rating | review
 let currentPage = 0;
-let pageSize = 12;
 let isLoading = false;
 let noMore = false;
 let observer = null;
 
+// 태그는 type → mood 순서 고정
+const TAG_CATEGORIES = 'type,mood';
+
 document.addEventListener('DOMContentLoaded', () => {
-  // 서버에서 렌더된 초기 상태 감지
+  // 서버가 active 클래스 올려준 버튼에서 현재 카테고리 읽기 (없으면 'cafe' 유지)
   const catFromServer = document.querySelector('.cat-btn.btn-olive')?.dataset.category;
   if (catFromServer) currentCategory = catFromServer;
 
-  // 버튼 핸들
+  // 카테고리 버튼
   document.querySelectorAll('.cat-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       currentCategory = btn.dataset.category;
-      currentPage = 0;
-      noMore = false;
-      // 버튼 표시
-      document.querySelectorAll('.cat-btn').forEach(b => {
-        b.classList.remove('btn-olive'); b.classList.add('btn-outline-olive');
-      });
+      currentPage = 0; noMore = false;
+      document.querySelectorAll('.cat-btn').forEach(b => { b.classList.remove('btn-olive'); b.classList.add('btn-outline-olive'); });
       btn.classList.remove('btn-outline-olive'); btn.classList.add('btn-olive');
-      reloadCards();
+      reloadSections();
     });
   });
 
+  // 정렬 버튼
   document.querySelectorAll('.sort-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       currentSort = btn.dataset.sort;
-      currentPage = 0;
-      noMore = false;
+      currentPage = 0; noMore = false;
       document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      reloadCards();
+      reloadSections();
     });
   });
 
   setupInfiniteScroll();
 });
 
-function reloadCards() {
-  fetch(`/cards-fragment?category=${currentCategory}&sort=${currentSort}&page=0&size=${pageSize}`)
-    .then(res => res.text())
-    .then(html => {
-      document.querySelector('#card-container').innerHTML = html;
+function reloadSections() {
+  // 개인화 + 태그 조각을 함께 불러서 "개인화 → 태그" 순으로 렌더
+  const segUrl  = `/segments-fragment?place=${encodeURIComponent(currentCategory)}`;
+  const tagsUrl = `/tags-fragment?categories=${encodeURIComponent(TAG_CATEGORIES)}&place=${encodeURIComponent(currentCategory)}&sort=${encodeURIComponent(currentSort)}&page=0`;
+
+  Promise.all([fetch(segUrl), fetch(tagsUrl)])
+    .then(async ([resSeg, resTags]) => {
+      const htmlSeg  = await resSeg.text();
+      const htmlTags = await resTags.text();
+
+      const tempSeg  = document.createElement('div');  tempSeg.innerHTML  = htmlSeg;
+      const tempTags = document.createElement('div');  tempTags.innerHTML = htmlTags;
+
+      const container = document.querySelector('#sections-container');
+      container.innerHTML = ''; // reset
+
+      // 1) 개인화(연령 → 성별)
+      tempSeg.querySelectorAll('section.tag-section').forEach(sec => container.appendChild(sec));
+      // 2) 태그(type → mood)
+      tempTags.querySelectorAll('section.tag-section').forEach(sec => container.appendChild(sec));
+
+      // 무한스크롤은 태그 조각의 has-more 기준
+      noMore = getHasMoreFromEl(tempTags) === false;
       currentPage = 0;
-      noMore = false;
+
       setupInfiniteScroll(true);
     })
     .catch(console.error);
@@ -65,30 +79,31 @@ function setupInfiniteScroll(reset=false) {
     isLoading = true;
     try {
       const next = currentPage + 1;
-      const res = await fetch(`/cards-fragment?category=${currentCategory}&sort=${currentSort}&page=${next}&size=${pageSize}`);
+      const res  = await fetch(`/tags-fragment?categories=${encodeURIComponent(TAG_CATEGORIES)}&place=${encodeURIComponent(currentCategory)}&sort=${encodeURIComponent(currentSort)}&page=${next}`);
       const html = await res.text();
+
       const temp = document.createElement('div');
       temp.innerHTML = html;
 
-      // 카드가 없거나 empty-message가 있으면 종료
-      if (!html.trim() || temp.querySelector('.empty-message')) {
-        noMore = true;
-        return;
-      }
-      // 새로운 섹션 안의 카드를 현재 컨테이너에 append
-      const newSection = temp.querySelector('section');
-      if (newSection) {
-        document.querySelector('#card-container').appendChild(newSection);
-        currentPage = next;
-      } else {
-        noMore = true;
-      }
+      const sections = temp.querySelectorAll('section.tag-section');
+      if (sections.length === 0) { noMore = true; return; }
+
+      const container = document.querySelector('#sections-container');
+      sections.forEach(sec => container.appendChild(sec));
+
+      noMore = getHasMoreFromEl(temp) === false;
+      currentPage = next;
     } catch (e) {
       console.error(e);
     } finally {
       isLoading = false;
     }
-  }, { rootMargin: '200px' });
+  }, { rootMargin: '400px' });
 
   if (target) observer.observe(target);
+}
+
+function getHasMoreFromEl(node) {
+  const hv = node.querySelector('#has-more')?.dataset.value;
+  return hv ? hv === 'true' : false;
 }

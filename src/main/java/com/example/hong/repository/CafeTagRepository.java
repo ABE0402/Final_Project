@@ -39,4 +39,7 @@ public interface CafeTagRepository extends JpaRepository<CafeTag, CafeTag.CafeTa
   where ct.cafe.id in :cafeIds
   """)
     List<CafeIdTagName> findTagNamesByCafeIds(@Param("cafeIds") Collection<Long> cafeIds);
+
+    @Query("select ct.cafe.id from CafeTag ct where ct.tag.id = :tagId")
+    List<Long> findCafeIdsByTagId(@Param("tagId") Integer tagId);
 }

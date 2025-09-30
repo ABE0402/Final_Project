@@ -26,12 +26,10 @@ public class OwnerController {
         return auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    // 점주 메인(리뷰 탭 기본)
+    // 점주 메인
     @GetMapping({"", "/"})
-    public String home(Model model) {
-        model.addAttribute("tabOwnerReviews", true);
-        model.addAttribute("reviews", java.util.Collections.emptyList());
-        return "owner/index";
+    public String home() {
+        return "redirect:/owner/reviews";
     }
 
     @GetMapping("/reviews")

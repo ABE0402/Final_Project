@@ -35,7 +35,7 @@
                                 <option value="">선택</option>
                                 <option value="CAFE">카페</option>
                                 <option value="RESTAURANT" disabled>맛집(준비중)</option>
-                         ㄴ   </select>
+                            </select>
                             <div class="form-text">현재는 카페만 등록 가능합니다.</div>
                         </div>
                         <div class="col-md-8">
@@ -114,7 +114,7 @@
                                 <h6 class="mb-2">분위기 <small class="text-muted">(최대 2개)</small></h6>
                                 <div class="tag-cloud" data-group="mood" data-max="2">
                                     {{#moodTags}}
-                                        <label class="tag-chip">
+                                        <label class="tag-chip mood-chip">
                                             <input type="checkbox" class="tag-chk" name="tagIds" value="{{id}}" data-group="mood" {{#selected}}checked{{/selected}} />
                                             {{name}}
                                         </label>
@@ -197,14 +197,25 @@
 {{> layout/footer}}
 
 <script>
-    // 태그 카테고리별 선택 개수 제한
     document.addEventListener('DOMContentLoaded', () => {
+      /* 0) 유틸 */
+      const safeUncheck = (labelEl) => {
+        const input = labelEl ? labelEl.querySelector('input') : null;
+        if (input) input.checked = false;
+      };
+      const toggleHidden = (el, show) => {
+        if (!el) return;
+        el.classList.toggle('hidden', !show);
+        if (!show) safeUncheck(el);
+      };
+
+      /* 1) 태그 카테고리별 선택 개수 제한 */
       document.querySelectorAll('.tag-chk').forEach(cb => {
         cb.addEventListener('change', e => {
           const group = e.target.dataset.group;
           const wrap = e.target.closest('.tag-cloud');
-          const max = parseInt(wrap?.dataset.max || '2', 10);
-          const checked = [...document.querySelectorAll(`.tag-chk[data-group="${group}"]:checked`)];
+          const max = parseInt((wrap && wrap.dataset.max) ? wrap.dataset.max : '2', 10);
+          const checked = Array.from(document.querySelectorAll(`.tag-chk[data-group="${group}"]:checked`));
           if (checked.length > max) {
             e.target.checked = false;
             alert(`${group} 태그는 최대 ${max}개까지 선택 가능합니다.`);
@@ -212,26 +223,58 @@
         });
       });
 
-      // 유형에 따라 '종류' 태그 보이기/숨기기
+      /* 2) 유형 셀렉트 및 '종류(type)' 필터 */
       const typeSelect = document.getElementById('shop-type');
-      const chips = [...document.querySelectorAll('.type-chip')];
+      const typeChips = Array.from(document.querySelectorAll('.type-chip'));
       const cafeType = new Set(['디저트 전문','커피 전문','인테리어 맛집']);
       const restType = new Set(['한식','중식','일식','양식','퓨전','아시안']);
 
+      /* 3) 무드 스코프: **ID 기반 매핑** (DB 기준)
+             6 BOTH, 7 CAFE, 8 CAFE, 9 CAFE, 10 BOTH, 11 BOTH, 12 RESTAURANT, 13 RESTAURANT */
+      const MOOD_SCOPE_BY_ID = {
+        6:'BOTH', 7:'CAFE', 8:'CAFE', 9:'CAFE',
+        10:'BOTH', 11:'BOTH', 12:'RESTAURANT', 13:'RESTAURANT'
+      };
+
+      // 무드 칩 수집 + data-scope 주입(템플릿 값 없어도 JS에서 채움)
+      const moodChips = Array.from(document.querySelectorAll('.tag-cloud[data-group="mood"] .tag-chip'));
+      moodChips.forEach(chip => {
+        // input value = tag id
+        const idStr = chip && chip.querySelector('input') ? chip.querySelector('input').value : null;
+        const id = idStr ? parseInt(idStr, 10) : NaN;
+        const scope = (!isNaN(id) && MOOD_SCOPE_BY_ID[id]) ? MOOD_SCOPE_BY_ID[id] : 'BOTH';
+        chip.dataset.scope = (chip.dataset.scope && chip.dataset.scope.trim().length > 0)
+          ? chip.dataset.scope
+          : scope;
+      });
+
+      /* 4) 적용 함수 */
       function applyFilter(){
-        const val = typeSelect.value;
-        chips.forEach(ch => {
-          const name = ch.dataset.name;
+        const val = ((typeSelect && typeSelect.value) ? typeSelect.value : 'CAFE').toUpperCase();
+
+        // 종류(type) 필터
+        typeChips.forEach(ch => {
+          const name = ch ? ch.dataset.name : '';
           let show = true;
           if (val === 'CAFE') show = cafeType.has(name);
           else if (val === 'RESTAURANT') show = restType.has(name);
-          ch.classList.toggle('hidden', !show);
-          if (!show) ch.querySelector('input').checked = false;
+          toggleHidden(ch, show);
         });
+
+        // 무드(mood) 필터
+        moodChips.forEach(ch => {
+          const scope = (ch && ch.dataset.scope) ? ch.dataset.scope.toUpperCase() : 'BOTH';
+          const show = (scope === 'BOTH') || (scope === val);
+          toggleHidden(ch, show);
+        });
+
+        // 다른 카테고리(amenities/reservation/priority)는 손대지 않음
       }
-      typeSelect.addEventListener('change', applyFilter);
+
+      typeSelect && typeSelect.addEventListener('change', applyFilter);
       applyFilter();
     });
 </script>
+
 </body>
 </html>

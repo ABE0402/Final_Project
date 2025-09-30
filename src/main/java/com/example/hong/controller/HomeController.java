@@ -4,9 +4,9 @@ package com.example.hong.controller;
 import com.example.hong.repository.TagRepository;
 import com.example.hong.service.MainSectionService;
 import com.example.hong.service.PlaceQueryService;
-import com.example.hong.service.PlaceQueryService;
-import com.example.hong.service.TagService;
+import com.example.hong.service.auth.AppUserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +23,14 @@ public class HomeController {
     @GetMapping("/")
     public String home(@RequestParam(defaultValue = "all") String category,   // all | cafe | restaurant
                        @RequestParam(defaultValue = "recommend") String sort,  // recommend | rating | review
+                       @AuthenticationPrincipal AppUserPrincipal userPrincipal,
                        Model model) {
         int page = 0;
         int size = 12; // 첫 페이지 카드 개수 (그리드 3x4 등)
+
+        if (userPrincipal != null) {
+            model.addAttribute("user", userPrincipal);
+        }
 
         model.addAttribute("category", category);
         model.addAttribute("sort", sort);

@@ -3,8 +3,11 @@ package com.example.hong.controller;
 import com.example.hong.dto.CafeSummaryResponseDto;
 import com.example.hong.service.CafeService;
 import com.example.hong.service.RecommendationService;
+import com.example.hong.service.auth.AppUserPrincipal; // Principal 클래스 import
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus; // HttpStatus import
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal; // 어노테이션 import
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,30 +22,32 @@ import java.util.stream.Collectors;
 public class RecommendationController {
 
     private final RecommendationService recommendationService;
-    private final CafeService cafeService; // 추천된 ID로 실제 카페 정보를 조회하기 위해 주입
+    private final CafeService cafeService;
 
-    /**
-     * API: 현재 로그인한 사용자에게 맞춤 카페 목록을 추천
-     * HTTP Method: GET
-     * URL: /api/recommend/cafes
-     */
     @GetMapping("/cafes")
     public ResponseEntity<List<CafeSummaryResponseDto>> recommendCafes(
-            @RequestParam(defaultValue = "10") int topN) { // 추천 개수 (기본 10개)
+            @RequestParam(defaultValue = "10") int topN,
+            @AuthenticationPrincipal AppUserPrincipal userPrincipal // [수정됨] 로그인 정보 받아오기
+    ) {
+        // [수정됨] 비로그인 사용자 접근 제어
+        if (userPrincipal == null) {
+            // 로그인하지 않은 사용자에게는 권한 없음(401) 또는 빈 리스트를 반환할 수 있습니다.
+            // 개인화 추천이므로 권한 없음을 알리는 것이 더 명확합니다.
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        // TODO: 로그인 기능 구현 후 실제 사용자 ID를 가져와야 합니다. (현재는 임시 ID 1 사용)
-        Long currentUserId = 1L;
+        // [수정됨] 임시 ID 대신 실제 로그인한 사용자의 ID를 사용
+        Long currentUserId = userPrincipal.getId();
 
-        // 1. RecommendationService를 호출하여 추천 카페 ID 목록을 받습니다.
+        // --- (이하 로직은 동일) ---
         List<Long> recommendedCafeIds = recommendationService.recommendCafes(currentUserId, topN);
 
         if (recommendedCafeIds.isEmpty()) {
-            return ResponseEntity.ok(List.of()); // 추천 결과가 없으면 빈 리스트 반환
+            return ResponseEntity.ok(List.of());
         }
 
-        // 2. ID 목록을 이용해 실제 카페 정보를 DTO 리스트로 조회합니다.
         List<CafeSummaryResponseDto> recommendedCafes = recommendedCafeIds.stream()
-                .map(cafeId -> cafeService.getCafeSummaryById(cafeId)) // ID로 간략 정보 조회
+                .map(cafeId -> cafeService.getCafeSummaryById(cafeId))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(recommendedCafes);

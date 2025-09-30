@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 기능 2 초기화: 검색창의 상세 필터 모달 기능 실행
     initSearchFilterModal();
+
+    // [추가됨] 맞춤 추천 목록을 불러오는 함수 호출
+        loadRecommendations();
 });
 
 
@@ -115,45 +118,17 @@ function initSearchFilterModal() {
 
     const filterData = {
         cafe: {
-                title: '☕ 카페 상세 필터',
-                groups: [
-                    { id: 'companion', title: '동반인', multi: true, options: [
-                        { value: '1인', text: '👤 1인' },
-                        { value: '친구', text: '🎉 친구' },
-                        { value: '커플', text: '💖 커플' },
-                        { value: '가족', text: '👨‍👩‍👧‍👦 가족' },
-                        { value: '단체', text: '🏢 단체' }
-                    ]},
-                    { id: 'mood', title: '분위기', multi: true, options: [
-                        { value: '조용한', text: '🤫 조용한' },
-                        { value: '대화하기 좋은', text: '💬 대화하기 좋은' },
-                        { value: '신나는', text: '🎉 신나는' },
-                        { value: '카공하기 좋은', text: '📚 카공하기 좋은' },
-                        { value: '분위기 좋은', text: '🍷 분위기 좋은' },
-                        { value: '데이트하기 좋은', text: '💖 데이트하기 좋은' },
-                        { value: '사진 맛집', text: '📸 사진 맛집' }
-                    ]},
-                    { id: 'amenities', title: '편의 및 서비스', multi: true, options: [
-                        { value: '주차장', text: '🚗 주차장' },
-                        { value: '화장실', text: '🚻 화장실' },
-                        { value: '반려동물 가능', text: '🐾 반려동물' },
-                        { value: '대기실', text: '🛌 대기실' },
-                        { value: '포장', text: '🥡 포장' }
-                    ]},
-                    // ... (days, type 등 나머지 그룹들도 동일한 방식으로 value를 DB의 name과 일치시켜 주세요)
-                    { id: 'reservation', title: '예약 여부', multi: false, default: 'any', options: [
-
-                        { value: '가능', text: '✅ 가능' },
-                        { value: '불가능', text: '❌ 불가능' }
-                    ]},
-                    { id: 'sort', title: '우선순위 (정렬)', multi: false, default: 'hits', options: [
-                        { value: 'hits', text: '⭐ 많이 찾는 순' },
-                        { value: 'reviews', text: '📝 리뷰 많은 순' },
-                        { value: 'rating', text: '👍 평점 높은 순' },
-                        { value: 'like', text: '⭐️ 즐겨찾기 많은 순' }
-                    ]},
-                ]
-            },
+            title: '☕ 카페 상세 필터',
+            groups: [
+                { id: 'companion', title: '동반인', multi: true, options: [ { value: '1인', text: '👤 1인' }, { value: '친구', text: '🎉 친구' }, { value: '커플', text: '💖 커플' }, { value: '가족', text: '👨‍👩‍👧‍👦 가족' }, { value: '단체', text: '🏢 단체' } ] },
+                { id: 'mood', title: '분위기', multi: true, options: [ { value: '조용한', text: '🤫 조용한' }, { value: '대화하기 좋은', text: '💬 대화하기 좋은' }, { value: '신나는', text: '🎉 신나는' }, { value: '카공하기 좋은', text: '📚 카공하기 좋은' }, { value: '분위기 좋은', text: '🍷 분위기 좋은' }, { value: '데이트하기 좋은', text: '💖 데이트하기 좋은' }, { value: '사진 맛집', text: '📸 사진 맛집' } ] },
+                { id: 'amenities', title: '편의 및 서비스', multi: true, options: [ { value: '주차장', text: '🚗 주차장' }, { value: '화장실', text: '🚻 화장실' }, { value: '반려동물 동반 가능', text: '🐾 반려동물' }, { value: '대기실', text: '🛌 대기실' }, { value: '포장', text: '🥡 포장' } ] },
+                { id: 'type', title: '종류', multi: true, options: [ { value: '디저트 전문', text: '🍰 디저트 전문' }, { value: '커피 전문', text: '☕ 커피 전문' }, { value: '인테리어 맛집', text: '🛋️ 인테리어 맛집' } ] },
+                // [수정됨] 닫는 중괄호와 쉼표 추가
+                { id: 'reservation', title: '예약 여부', multi: false, default: 'any', options: [ { value: 'any', text: '상관없음' }, { value: '가능', text: '✅ 가능' }, { value: '불가능', text: '❌ 불가능' } ] },
+                { id: 'sort', title: '우선순위 (정렬)', multi: false, default: 'hits', options: [ { value: 'hits', text: '⭐ 많이 찾는 순' }, { value: 'reviews', text: '📝 리뷰 많은 순' }, { value: 'rating', text: '👍 평점 높은 순' }, { value: 'like', text: '⭐️ 즐겨찾기 많은 순' } ] },
+            ]
+        },
         restaurant: {
             title: '🍽️ 식당 상세 필터',
             groups: [
@@ -246,5 +221,59 @@ function initSearchFilterModal() {
     });
 
     document.getElementById('reset-filters').addEventListener('click', initializeFilters);
+}
+
+// =======================================================================
+// [추가됨] 기능 3: 맞춤 추천 목록 불러오기
+// =======================================================================
+function loadRecommendations() {
+    const recommendationContainer = document.getElementById('recommendation-cards');
+    // 추천 섹션이 없으면 (비로그인 상태 등) 함수를 실행하지 않음
+    if (!recommendationContainer) {
+        return;
+    }
+
+    // fetch API를 사용해 백엔드에 데이터를 요청
+    fetch('/api/recommend/cafes?topN=4') // 상위 4개만 가져오도록 요청
+        .then(response => {
+            // 401 Unauthorized 등 에러 응답 처리
+            if (!response.ok) {
+                // 로그인하지 않았거나 오류가 발생하면 추천 섹션을 숨김
+                document.getElementById('recommendation-section').style.display = 'none';
+                return;
+            }
+            return response.json(); // 응답을 JSON으로 변환
+        })
+        .then(cafes => {
+            if (!cafes || cafes.length === 0) {
+                recommendationContainer.innerHTML = '<div class="col-12"><p class="text-muted">추천할 만한 카페를 찾지 못했어요. 검색을 더 해보세요!</p></div>';
+                return;
+            }
+
+            // 받아온 데이터로 HTML 카드 생성
+            let cardsHtml = '';
+            cafes.forEach(cafe => {
+                cardsHtml += `
+                    <div class="col">
+                        <a class="card h-100 text-decoration-none text-reset" href="/cafes/${cafe.id}">
+                            <div class="ratio ratio-16x9 bg-light card-img-top"
+                                 style="background-image:url('${cafe.heroImageUrl || '/images/placeholder_shop.jpg'}')"></div>
+                            <div class="card-body">
+                                <h6 class="card-title text-truncate">${cafe.name}</h6>
+                                <div class="small text-muted text-truncate">${cafe.addressRoad}</div>
+                                <div class="mt-2 small">⭐ ${cafe.averageRating} · 리뷰 ${cafe.reviewCount}</div>
+                            </div>
+                        </a>
+                    </div>
+                `;
+            });
+
+            // 생성된 HTML 카드를 컨테이너에 삽입
+            recommendationContainer.innerHTML = cardsHtml;
+        })
+        .catch(error => {
+            console.error('추천 목록을 불러오는 중 오류 발생:', error);
+            recommendationContainer.innerHTML = '<div class="col-12"><p class="text-danger">추천 목록을 불러오는 데 실패했습니다.</p></div>';
+        });
 }
 

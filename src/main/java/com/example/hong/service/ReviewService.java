@@ -3,10 +3,7 @@ package com.example.hong.service;
 import com.example.hong.dto.AspectScoreDto;
 import com.example.hong.dto.HateSpeechResponseDto;
 import com.example.hong.dto.ReviewItemDto;
-import com.example.hong.entity.Cafe;
-import com.example.hong.entity.Review;
-import com.example.hong.entity.ReviewAspectScore;
-import com.example.hong.entity.User;
+import com.example.hong.entity.*;
 import com.example.hong.repository.CafeRepository;
 import com.example.hong.repository.ReviewAspectScoreRepository;
 import com.example.hong.repository.ReviewRepository;
@@ -25,11 +22,14 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -211,12 +211,24 @@ public class ReviewService {
         String created = (r.getCreatedAt() == null) ? "" : r.getCreatedAt().format(DT_FMT);
         String nickname = resolveNickname(r.getUser()); // fetch join으로 세션 밖에서도 안전
 
-        // [추가된 부분]
+
         // 1. Review 엔티티에 연결된 감성 분석 점수 목록을 가져옵니다.
         //    (Review 엔티티에 getReviewAspectScores() 메소드가 있어야 합니다.)
         List<AspectScoreDto> aspectScores = r.getReviewAspectScores().stream()
                 .map(score -> new AspectScoreDto(score.getAspect(), score.getScore()))
                 .toList();
+
+        String replyContent = null;
+        String replyUpdatedAt = null;
+        OwnerReply reply = r.getReply(); // Review 엔티티에서 답글을 가져옴 (Fetch Join 덕분에 가능)
+        if (reply != null) {
+            replyContent = reply.getContent();
+            LocalDateTime updatedAt = reply.getUpdatedAt() != null ? reply.getUpdatedAt() : reply.getCreatedAt();
+            if (updatedAt != null) {
+                replyUpdatedAt = updatedAt.format(DT_FMT);
+            }
+        }
+
 
         // 2. builder()를 사용하여 DTO를 생성할 때, aspectScores 리스트를 추가합니다.
         return ReviewItemDto.builder()
@@ -230,7 +242,9 @@ public class ReviewService {
                 .imageUrl3(r.getImageUrl3())
                 .imageUrl4(r.getImageUrl4())
                 .imageUrl5(r.getImageUrl5())
-                .aspectScores(aspectScores) // [추가] 감성 분석 점수 리스트를 DTO에 포함
+                .aspectScores(aspectScores)
+                .replyContent(replyContent)
+                .replyUpdatedAt(replyUpdatedAt)
                 .build();
     }
 
@@ -253,9 +267,57 @@ public class ReviewService {
 
     @Transactional
     public void deleteMyReview(Long userId, Long reviewId) {
-        var r = reviewRepo.findByIdAndUserIdAndDeletedFalse(reviewId, userId)
+        Review r = reviewRepo.findByIdAndUserId(reviewId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("삭제 권한이 없습니다."));
-        r.setDeleted(true);
+
+        Long cafeId = (r.getCafe() != null) ? r.getCafe().getId() : null;
+
+        // 1) 업로드 이미지 파일 물리 삭제
+        deleteReviewImages(r);
+
+
+        // 2) 리뷰 하드 삭제 (연관 자식은 FK ON DELETE CASCADE가 해줌)
+        reviewRepo.delete(r);
+
+        // 3) 집계 재계산 (평균/카운트)
+        if (cafeId != null) recalcCafeStats(cafeId);
+        // if (restaurantId != null) recalcRestaurantStats(restaurantId);
+    }
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void recalcCafeStats(Long cafeId) {
+        long cnt = reviewRepo.countByCafeId(cafeId);
+        Double avg = reviewRepo.avgRatingByCafeId(cafeId);
+
+        cafeRepo.findById(cafeId).ifPresent(c -> {
+            c.setReviewCount((int) cnt);
+            BigDecimal avgBD = (avg == null)
+                    ? BigDecimal.ZERO
+                    : BigDecimal.valueOf(avg).setScale(2, RoundingMode.HALF_UP);
+            c.setAverageRating(avgBD); //
+        });
+    }
+    private void deleteReviewImages(Review r) {
+        // URL들이 null이어도 안전하게 필터링
+        var urls = Stream.of(r.getImageUrl1(), r.getImageUrl2(), r.getImageUrl3(), r.getImageUrl4(), r.getImageUrl5())
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+
+        for (String url : urls) {
+            try {
+                Path p = toLocalReviewImagePath(url); // URL → 로컬 저장 경로
+                Files.deleteIfExists(p);
+            } catch (Exception e) {
+                log.warn("리뷰 이미지 삭제 실패(url={}): {}", url, e.toString());
+            }
+        }
+    }
+    private Path toLocalReviewImagePath(String url) {
+        // 예: "/uploads/reviews/abc.png" → "abc.png"
+        String norm = url.replace("\\", "/");
+        String filename = norm.substring(norm.lastIndexOf('/') + 1);
+        return Paths.get(uploadRoot, REVIEW_DIR, filename);
     }
 
     /* ================== 내부 유틸 ================== */

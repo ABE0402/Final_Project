@@ -36,6 +36,7 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                         전체
                     </button>
+
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item main-category-item" href="#" data-value="all">전체</a></li>
                         <li><a class="dropdown-item main-category-item" href="#" data-value="restaurant">🍽️ 식당</a></li>
@@ -66,11 +67,6 @@
             <button class="btn btn-sm {{#isRestaurant}}btn-olive{{/isRestaurant}} {{^isRestaurant}}btn-outline-olive{{/isRestaurant}} cat-btn" data-category="restaurant">식당</button>
         </div>
 
-        <div class="d-flex gap-2 justify-content-center mt-2">
-            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_recommend}}active{{/sort_recommend}}" data-sort="recommend">추천순</button>
-            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_rating}}active{{/sort_rating}}" data-sort="rating">평점순</button>
-            <button class="btn btn-outline-secondary btn-sm sort-btn {{#sort_review}}active{{/sort_review}}" data-sort="review">리뷰순</button>
-        </div>
     </div>
 
     <div class="container mt-4" id="card-container">

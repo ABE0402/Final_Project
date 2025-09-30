@@ -24,12 +24,21 @@ public class CafeRepositoryCustomImpl implements CafeRepositoryCustom {
 
     @Override
     public List<Cafe> search(SearchRequestDto condition, List<String> tagNames) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        // 매장 이름만 검색
+        BooleanExpression keywordCond = keywordContains(condition.getQuery());
+        if (keywordCond != null) {
+            builder.and(keywordCond);
+        }
+
+        if (tagNames != null && !tagNames.isEmpty()) {
+            builder.and(hasAnyTag(tagNames));
+        }
+
         return queryFactory
                 .selectFrom(cafe)
-                .where(
-                        keywordContains(condition.getQuery()),
-                        hasAnyTag(tagNames) // 태그 조건을 OR로 필터링
-                )
+                .where(builder)
                 .fetch();
     }
 

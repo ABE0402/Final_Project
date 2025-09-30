@@ -1,6 +1,7 @@
 package com.example.hong.controller;
 
 import com.example.hong.domain.ApprovalStatus;
+import com.example.hong.domain.TagAppliesTo;
 import com.example.hong.dto.ShopCreateRequestDto;
 import com.example.hong.entity.Cafe;
 import com.example.hong.repository.CafeRepository;
@@ -37,14 +38,19 @@ public class OwnerShopController {
 
     /** 태그 리스트를 뷰 모델로 가공 (selected 플래그 포함) */
     private List<Map<String, Object>> tagListVm(String category, Set<Integer> selected) {
-        return tagRepository.findByCategoryOrderByNameAsc(category)
+        Collection<TagAppliesTo> scopes = EnumSet.of(TagAppliesTo.CAFE, TagAppliesTo.BOTH);
+
+        return tagRepository.findByCategoryAndAppliesToInOrderByDisplayOrderAscNameAsc(category, scopes)
                 .stream()
-                .map(t -> Map.<String, Object>of(
-                        "id", t.getId(),
-                        "name", t.getName(),
-                        "selected", selected != null && selected.contains(t.getId())
-                ))
-                .collect(Collectors.toList());
+                .map(t -> {
+                    Map<String, Object> m = new HashMap<>();
+                        m.put("id", t.getId());
+                        m.put("name", t.getName());
+                        m.put("selected", selected != null && selected.contains(t.getId()));
+                        m.put("scope", t.getAppliesTo().name());
+                        return m;
+                })
+                        .toList();
     }
 
     /** 폼에 뿌릴 태그 선택지 (선택 상태 반영) */
@@ -112,18 +118,36 @@ public class OwnerShopController {
     }
 
     /** 수정 폼 */
+//    @GetMapping("/{id}/edit")
+//    public String editForm(@PathVariable Long id, Authentication auth, Model model) {
+//        var vm = ownerShopService.getShopForEdit(meId(auth), id);
+//        model.addAttribute("tabOwnerShops", true);
+//        model.addAttribute("form", vm);
+//
+//        // 선택된 태그 id 집합
+//        @SuppressWarnings("unchecked")
+//        var sel = (List<Integer>) vm.getOrDefault("selectedTagIds", List.of());
+//        var selectedIds = new HashSet<>(sel);
+//
+//        populateTagLists(model, selectedIds); // 선택 반영
+//        return "owner/shops_edit";
+//    }
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Authentication auth, Model model) {
         var vm = ownerShopService.getShopForEdit(meId(auth), id);
+        vm.putIfAbsent("addressRoad", "");
+        // select 표시용 플래그(원하면)
+        String type = String.valueOf(vm.getOrDefault("type", "CAFE"));
+        vm.put("typeIsCafe", "CAFE".equalsIgnoreCase(type));
+        vm.put("typeIsRestaurant", "RESTAURANT".equalsIgnoreCase(type));
         model.addAttribute("tabOwnerShops", true);
         model.addAttribute("form", vm);
 
         // 선택된 태그 id 집합
         @SuppressWarnings("unchecked")
         var sel = (List<Integer>) vm.getOrDefault("selectedTagIds", List.of());
-        var selectedIds = new HashSet<>(sel);
 
-        populateTagLists(model, selectedIds); // 선택 반영
+        populateTagLists(model, new HashSet<>(sel));// 선택 반영
         return "owner/shops_edit";
     }
 
@@ -143,4 +167,12 @@ public class OwnerShopController {
         ra.addAttribute("msg", "폐업(숨김) 처리되었습니다.");
         return "redirect:/owner/shops";
     }
+
+    @PostMapping("/{id}/reopen")
+    public String reopen(@PathVariable Long id, Authentication auth, RedirectAttributes ra) {
+        ownerShopService.reopen(meId(auth), id);
+        ra.addAttribute("msg", "재오픈(표시) 처리되었습니다.");
+        return "redirect:/owner/shops";
+    }
+
 }

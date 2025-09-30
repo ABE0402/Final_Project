@@ -45,41 +45,65 @@ public class SearchService {
         }
     }
 
+
+    //검색
     @Transactional
     public List<CafeSearchResultDto> searchCafesAndLog(SearchRequestDto request, Long userId) {
-        // 1. 검색 이벤트 로그 저장
+        // 1) 로그/태그 확장
         SearchEvent event = logSearchEvent(request, userId);
-
-        // 2. 사용자가 선택한 원본 태그 추출 및 로그 기록
         List<String> originalTags = extractAllTagNames(request);
         if (event != null && !originalTags.isEmpty()) {
             logTagSelections(event, originalTags);
         }
-
-        // 3. 연관 태그를 포함하여 검색할 전체 태그 목록 확장
         List<String> expandedTags = expandTags(originalTags);
 
-        // 4. DB에서 1차 후보군 필터링 (키워드 + OR 조건 태그)
+        // 2) DB 후보군 조회
         List<Cafe> candidates = cafeRepository.search(request, expandedTags);
 
-        // 5. Java에서 자카드 유사도 계산 및 최종 랭킹
-        Set<String> userTagSet = new HashSet<>(originalTags); // 유사도 계산은 '원본' 태그 기준
+        // 디버그 로그: 후보 수, 태그, 쿼리 확인
+        String query = StringUtils.hasText(request.getQuery()) ? request.getQuery().trim() : "";
+        log.info("searchCafesAndLog: candidates={}, originalTags={}, expandedTags={}, query='{}'",
+                candidates.size(), originalTags, expandedTags, query);
+
+        boolean hasTags = !originalTags.isEmpty();
+        Set<String> userTagSet = new HashSet<>(originalTags);
 
         return candidates.stream()
                 .map(cafe -> {
-                    Set<String> cafeTags = cafe.getCafeTags().stream()
-                            .map(cafeTag -> cafeTag.getTag().getName())
-                            .collect(Collectors.toSet());
+                    double similarity;
+                    // (A) 태그가 있으면 기존 Jaccard 계산
+                    if (hasTags) {
+                        Set<String> cafeTags = cafe.getCafeTags().stream()
+                                .map(ct -> ct.getTag().getName())
+                                .collect(Collectors.toSet());
+                        similarity = jaccard(userTagSet, cafeTags);
+                    } else if (StringUtils.hasText(query)) {
+                        // (B) 태그가 없고 텍스트 쿼리만 있을 때는 텍스트 매칭 점수로 대체
+                        String q = query.toLowerCase();
+                        String name = (cafe.getName() == null ? "" : cafe.getName().toLowerCase());
+                        String desc = (cafe.getDescription() == null ? "" : cafe.getDescription().toLowerCase());
+                        String addr = (cafe.getAddressRoad() == null ? "" : cafe.getAddressRoad().toLowerCase());
 
-                    double similarity = jaccard(userTagSet, cafeTags);
+                        if (name.contains(q)) similarity = 1.0;
+                        else if (desc.contains(q) || addr.contains(q)) similarity = 0.5;
+                        else similarity = 0.0;
+                    } else {
+                        // (C) 태그도 없고 쿼리도 없으면 기본 0.0 (혹은 다른 비즈니스 룰)
+                        similarity = 0.0;
+                    }
 
                     CafeSearchResultDto dto = CafeSearchResultDto.fromEntity(cafe);
-                    dto.setSimilarity(similarity); // 계산된 유사도 점수를 DTO에 저장
+                    dto.setSimilarity(similarity);
                     return dto;
                 })
-                // 유사도 0.1 이상인 결과만 필터링 (선택 사항)
-                .filter(dto -> dto.getSimilarity() >= 0.1)
-                // 유사도가 높은 순으로 최종 정렬
+                // 필터는 '태그 검색'을 한 경우에만 유사도 기준으로 적용
+                .filter(dto -> {
+                    if (hasTags) {
+                        return dto.getSimilarity() >= 0.1;
+                    } else {
+                        return true; // 텍스트 검색일 땐 필터 패스
+                    }
+                })
                 .sorted(Comparator.comparing(CafeSearchResultDto::getSimilarity).reversed())
                 .collect(Collectors.toList());
     }
@@ -178,7 +202,7 @@ public class SearchService {
 //     *  SearchEvent 테이블을 사용하여 인기 검색어를 조회합니다. 나중에 구현할거
 //     */
 //    public List<String> getTopKeywords() {
-//        // SearchEventRepository에 findTop5SearchQueries() 메소드를 추가해야 합니다.
+//        // SearchEventRepository에 findTop5SearchQueries() 메소드를 추가
 //        return searchEventRepository.findTop5SearchQueries();
 //    }
 //

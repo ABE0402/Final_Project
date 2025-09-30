@@ -1,8 +1,11 @@
 package com.example.hong.controller;
 
+import com.example.hong.domain.ApprovalStatus;
 import com.example.hong.domain.TagAppliesTo;
 import com.example.hong.dto.PlaceCardDto;
+import com.example.hong.entity.Cafe;
 import com.example.hong.entity.User;
+import com.example.hong.repository.CafeRepository;
 import com.example.hong.repository.TagRepository;
 import com.example.hong.repository.UserRepository;
 import com.example.hong.service.MainSectionService;
@@ -17,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class HomeController {
 
     private final SegmentRecommendationService segmentRecommendationService;
     private final UserRepository userRepository;
+    private final CafeRepository cafeRepository;
 
     // 화면 최초 진입
     @GetMapping("/")
@@ -81,6 +86,7 @@ public class HomeController {
         if ("cafe".equalsIgnoreCase(place)) {
             currentUser(auth).ifPresent(user -> {
                 Map<String, List<PlaceCardDto>> rec = segmentRecommendationService.sectionsFor(user, 12);
+                rec = filterApprovedVisible(rec);
                 rec.forEach((title, cards) -> sections.add(toSection(title, cards)));
             });
         }
@@ -166,5 +172,32 @@ public class HomeController {
         section.put("sortLabel", "추천순");
         section.put("sortSelected", Map.of("recommend", true, "rating", false, "review", false, "favorite", false));
         return section;
+    }
+    private Map<String, List<PlaceCardDto>> filterApprovedVisible(Map<String, List<PlaceCardDto>> sections) {
+        // 1) 모든 카드 id 수집
+        List<Long> allIds = sections.values().stream()
+                .flatMap(List::stream)
+                .map(PlaceCardDto::getId)
+                .distinct()
+                .toList();
+
+        if (allIds.isEmpty()) return sections;
+
+        // 2) 승인&표시 카페 id 집합 조회
+        var allowedIdSet = cafeRepository
+                .findByIdInAndApprovalStatusAndIsVisible(allIds, ApprovalStatus.APPROVED, true)
+                .stream()
+                .map(Cafe::getId)
+                .collect(Collectors.toSet());
+
+        // 3) 섹션별 카드 필터링
+        Map<String, List<PlaceCardDto>> filtered = new LinkedHashMap<>();
+        sections.forEach((title, cards) -> {
+            var kept = cards.stream()
+                    .filter(c -> allowedIdSet.contains(c.getId()))
+                    .toList();
+            if (!kept.isEmpty()) filtered.put(title, kept);
+        });
+        return filtered;
     }
 }

@@ -45,4 +45,21 @@ public class NotificationService {
     public void markRead(Long userId, Long notificationId) {
         notificationRepository.markOneRead(userId, notificationId);
     }
+
+    // 보이는 알림(전달받은 ids)만 삭제
+    @Transactional
+    public int deleteByIds(Long userId, List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return 0;
+        return notificationRepository.deleteByUser_IdAndIdIn(userId, ids);
+    }
+
+    // 내 알림 전부 삭제
+    @Transactional
+    public int deleteAll(Long userId) {
+        return notificationRepository.deleteByUser_Id(userId);
+    }
+
+
+
+
 }

@@ -130,61 +130,62 @@ public class CafeController {
                 ));
         model.addAttribute("tags", byCat); // tags.companion / tags.mood / tags.amenities / tags.reservation / tags.type
 
-        var reviewDtos = reviewService.listForCafeDtos(id);
-        if (reviewDtos == null || reviewDtos.isEmpty()) {
-            model.addAttribute("reviews", Collections.emptyList());
-        } else {
-            List<Long> reviewIds = reviewDtos.stream()
-                    .map(dto -> {
-                        try { return (Long) invoke(dto, "getId"); } catch (Exception e) { return null; }
-                    })
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-
-            var replies = ownerReplyRepository.findByReview_IdIn(reviewIds);
-            Map<Long, com.example.hong.entity.OwnerReply> replyMap = replies.stream()
-                    .collect(Collectors.toMap(
-                            or -> or.getReview().getId(),
-                            or -> or,
-                            (a,b)->{
-                                var ta = a.getUpdatedAt()!=null? a.getUpdatedAt():a.getCreatedAt();
-                                var tb = b.getUpdatedAt()!=null? b.getUpdatedAt():b.getCreatedAt();
-                                if (ta==null) return b; if (tb==null) return a;
-                                return ta.isAfter(tb)? a:b;
-                            }
-                    ));
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            List<Map<String,Object>> viewReviews = new ArrayList<>();
-            for (Object dto : reviewDtos) {
-                Map<String,Object> m = new HashMap<>();
-                try {
-                    m.put("id",         invoke(dto, "getId"));
-                    m.put("rating",     invoke(dto, "getRating"));
-                    m.put("createdAt",  invokeStrOr(dto, "getCreatedAt", fmt));
-                    m.put("nickname",   invoke(dto, "getNickname"));
-                    m.put("content",    invoke(dto, "getContent"));
-                    m.put("imageUrl1",  invoke(dto, "getImageUrl1"));
-                    m.put("imageUrl2",  invoke(dto, "getImageUrl2"));
-                    m.put("imageUrl3",  invoke(dto, "getImageUrl3"));
-                    m.put("imageUrl4",  invoke(dto, "getImageUrl4"));
-                    m.put("imageUrl5",  invoke(dto, "getImageUrl5"));
-                } catch (Exception ignored) {}
-                Long rid = (Long)m.get("id");
-                var rep = (rid!=null)? replyMap.get(rid) : null;
-                if (rep != null) {
-                    var ts = rep.getUpdatedAt()!=null? rep.getUpdatedAt(): rep.getCreatedAt();
-                    String uts = (ts!=null)? ts.format(fmt) : null;
-                    Map<String,Object> ownerReplyVm = new HashMap<>();
-                    ownerReplyVm.put("content", rep.getContent());
-                    if (uts!=null) ownerReplyVm.put("updatedAt", uts);
-                    m.put("ownerReply", ownerReplyVm);
-                    m.put("replyContent", rep.getContent());
-                    if (uts!=null) m.put("replyUpdatedAt", uts);
-                }
-                viewReviews.add(m);
-            }
-            model.addAttribute("reviews", reviewService.listForCafeDtos(id));
-        }
+        model.addAttribute("reviews", reviewService.listForCafeDtos(id));
+//        var reviewDtos = reviewService.listForCafeDtos(id);
+//        if (reviewDtos == null || reviewDtos.isEmpty()) {
+//            model.addAttribute("reviews", Collections.emptyList());
+//        } else {
+//            List<Long> reviewIds = reviewDtos.stream()
+//                    .map(dto -> {
+//                        try { return (Long) invoke(dto, "getId"); } catch (Exception e) { return null; }
+//                    })
+//                    .filter(Objects::nonNull)
+//                    .collect(Collectors.toList());
+//
+//            var replies = ownerReplyRepository.findByReview_IdIn(reviewIds);
+//            Map<Long, com.example.hong.entity.OwnerReply> replyMap = replies.stream()
+//                    .collect(Collectors.toMap(
+//                            or -> or.getReview().getId(),
+//                            or -> or,
+//                            (a,b)->{
+//                                var ta = a.getUpdatedAt()!=null? a.getUpdatedAt():a.getCreatedAt();
+//                                var tb = b.getUpdatedAt()!=null? b.getUpdatedAt():b.getCreatedAt();
+//                                if (ta==null) return b; if (tb==null) return a;
+//                                return ta.isAfter(tb)? a:b;
+//                            }
+//                    ));
+//            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//            List<Map<String,Object>> viewReviews = new ArrayList<>();
+//            for (Object dto : reviewDtos) {
+//                Map<String,Object> m = new HashMap<>();
+//                try {
+//                    m.put("id",         invoke(dto, "getId"));
+//                    m.put("rating",     invoke(dto, "getRating"));
+//                    m.put("createdAt",  invokeStrOr(dto, "getCreatedAt", fmt));
+//                    m.put("nickname",   invoke(dto, "getNickname"));
+//                    m.put("content",    invoke(dto, "getContent"));
+//                    m.put("imageUrl1",  invoke(dto, "getImageUrl1"));
+//                    m.put("imageUrl2",  invoke(dto, "getImageUrl2"));
+//                    m.put("imageUrl3",  invoke(dto, "getImageUrl3"));
+//                    m.put("imageUrl4",  invoke(dto, "getImageUrl4"));
+//                    m.put("imageUrl5",  invoke(dto, "getImageUrl5"));
+//                } catch (Exception ignored) {}
+//                Long rid = (Long)m.get("id");
+//                var rep = (rid!=null)? replyMap.get(rid) : null;
+//                if (rep != null) {
+//                    var ts = rep.getUpdatedAt()!=null? rep.getUpdatedAt(): rep.getCreatedAt();
+//                    String uts = (ts!=null)? ts.format(fmt) : null;
+//                    Map<String,Object> ownerReplyVm = new HashMap<>();
+//                    ownerReplyVm.put("content", rep.getContent());
+//                    if (uts!=null) ownerReplyVm.put("updatedAt", uts);
+//                    m.put("ownerReply", ownerReplyVm);
+//                    m.put("replyContent", rep.getContent());
+//                    if (uts!=null) m.put("replyUpdatedAt", uts);
+//                }
+//                viewReviews.add(m);
+//            }
+//            model.addAttribute("reviews", reviewService.listForCafeDtos(id));
+//        }
 
         boolean isFav = (uid != null) && favoriteService.isFavorite(uid, id);
         model.addAttribute("isFav", isFav);

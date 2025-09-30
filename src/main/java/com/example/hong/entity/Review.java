@@ -34,7 +34,7 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name="user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name="cafe_id")
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="cafe_id")
     private Cafe cafe;
 
     @ManyToOne(fetch = FetchType.LAZY)

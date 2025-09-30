@@ -183,7 +183,7 @@ public class CafeController {
                 }
                 viewReviews.add(m);
             }
-            model.addAttribute("reviews", viewReviews);
+            model.addAttribute("reviews", reviewService.listForCafeDtos(id));
         }
 
         boolean isFav = (uid != null) && favoriteService.isFavorite(uid, id);

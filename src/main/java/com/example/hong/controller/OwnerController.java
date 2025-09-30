@@ -28,11 +28,10 @@ public class OwnerController {
 
     // 점주 메인(리뷰 탭 기본)
     @GetMapping({"","/"})
-    public String home(Model model) {
-        model.addAttribute("tabOwnerReviews", true);
-        model.addAttribute("reviews", java.util.Collections.emptyList()); // TODO: 서비스 연동
-        return "owner/index";
+    public String home() {
+        return "redirect:/owner/reviews";
     }
+
 
     // 점주 리뷰 관리(대댓글)
     @GetMapping("/reviews")

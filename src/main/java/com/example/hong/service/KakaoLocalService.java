@@ -35,7 +35,7 @@ public class KakaoLocalService {
         if (size != null)     builder.queryParam("size", size);
         if (sort != null)     builder.queryParam("sort", sort);
 
-        var uri = builder.encode()  // ❗ 한글/공백 인코딩
+        var uri = builder.encode()
                 .build()
                 .toUri();
 
@@ -50,7 +50,7 @@ public class KakaoLocalService {
     // 좌표 보관용 레코드
     public record Coordinate(double lat, double lng) {}
 
-    // (A) 주소 지오코딩: 도로명/지번 → 좌표
+    // 주소 지오코딩 (도로명/지번 -> 좌표)
     public Coordinate geocodeByAddress(String roadAddress) {
         String q = sanitize(roadAddress);
         if (q == null) return null;
@@ -82,7 +82,7 @@ public class KakaoLocalService {
         }
     }
 
-    // (B) 키워드 지오코딩: 상호/지명 → 좌표
+    // 키워드 지오코딩: (상호/지명 → 좌표)
     public Coordinate geocodeFirst(String query) {
         String q = sanitize(query);
         if (q == null) return null;

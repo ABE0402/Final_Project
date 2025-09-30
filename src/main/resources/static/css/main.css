@@ -299,3 +299,41 @@ form[action="/search"] .dropdown-menu .dropdown-item{
   z-index: 3;
   pointer-events: auto;
 }
+
+form[action="/search"] {
+  position: relative;
+  z-index: 10;
+}
+
+/* 드롭다운이 열렸을 때(btn-group.show) 검색바가 모든 섹션보다 위로 오게 */
+form[action="/search"] .btn-group.show {
+  position: relative;
+  z-index: 6000; /* 섹션, 캐러셀, 정렬옵션보다 높게 */
+}
+
+/* 실제 드롭다운 레이어 최상단 */
+form[action="/search"] .btn-group.show .dropdown-menu {
+  z-index: 7000; /* .sort-options(2100)도 확실히 넘김 */
+}
+
+/* 섹션들이 transform으로 새 스택을 만들더라도, z-index 낮춰 검색바를 넘지 못하게 */
+.tag-section {
+  position: relative;
+  z-index: 0;
+}
+.tag-section:hover {
+  z-index: 0; /* hover시에도 검색바보다 낮게 유지 */
+}
+
+/* 혹시 부모 오버플로로 잘리는 경우를 방지(이미 있으나 재보강) */
+form[action="/search"] .input-group.input-group-lg {
+  position: relative;
+  overflow: visible !important;
+  z-index: 1; /* 드롭다운 기준점보다만 낮게 */
+}
+
+/* 드롭다운 자체 레이어 튀어나오도록(사파리 등 렌더러 보정) */
+form[action="/search"] .dropdown-menu {
+  position: absolute; /* Bootstrap 기본 유지 */
+  will-change: transform;
+}

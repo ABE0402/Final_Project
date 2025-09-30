@@ -29,7 +29,7 @@ public class SegmentScoringService {
     private final UserEventRepository userEventRepository;
     private final CafeSegmentScoreRepository cafeSegmentScoreRepository;
 
-    // === 가중치 & half-life(일) ===
+
     private static final Map<EventAction, Integer> HALF_LIFE = Map.of(
             EventAction.CLICK, 7,
             EventAction.FAVORITE, 30,
@@ -43,7 +43,6 @@ public class SegmentScoringService {
             EventAction.REVIEW, 8.0
     );
 
-    /** 수동 호출용 + 스케줄러용 (30분마다) */
     @Transactional
     @Scheduled(cron = "0 */30 * * * *") // 매 30분
     public void recomputeScores() {
@@ -81,7 +80,6 @@ public class SegmentScoringService {
 
             Long cafeId = e.getCafe().getId();
 
-            // AGE 세그먼트
             if (age != null) {
                 var id = CafeSegmentScore.Id.builder()
                         .segmentType(SegmentType.AGE)
@@ -90,18 +88,16 @@ public class SegmentScoringService {
                         .build();
                 acc.merge(id, plus, Double::sum);
             }
-            // GENDER 세그먼트
             if (genderOk) {
                 var id = CafeSegmentScore.Id.builder()
                         .segmentType(SegmentType.GENDER)
-                        .segmentValue(g.name()) // "MALE"/"FEMALE"
+                        .segmentValue(g.name())
                         .cafeId(cafeId)
                         .build();
                 acc.merge(id, plus, Double::sum);
             }
         }
 
-        // upsert
         List<CafeSegmentScore> upserts = new ArrayList<>(acc.size());
         acc.forEach((id, score) -> upserts.add(
                 CafeSegmentScore.builder().id(id).score30d(score).build()

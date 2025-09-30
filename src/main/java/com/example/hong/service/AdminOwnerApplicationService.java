@@ -34,10 +34,8 @@ public class AdminOwnerApplicationService {
         app.setReviewedAt(LocalDateTime.now());
         app.setRejectionReason(null);
 
-        // ROLE 변경
         User u = userRepo.findById(app.getUserId()).orElseThrow();
         u.setRole(com.example.hong.domain.UserRole.OWNER);
-        // dirty checking
     }
 
     @Transactional

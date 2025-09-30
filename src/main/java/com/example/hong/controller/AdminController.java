@@ -11,7 +11,7 @@ public class AdminController {
 
     @GetMapping
     public String adminHome() {
-        return "admin/index"; // templates/admin/index.mustache
+        return "admin/index";
     }
 
 }

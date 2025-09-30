@@ -36,7 +36,7 @@ public class RecommendationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // [수정됨] 임시 ID 대신 실제 로그인한 사용자의 ID를 사용
+        // 실제 로그인한 사용자의 ID
         Long currentUserId = userPrincipal.getId();
 
         // --- (이하 로직은 동일) ---

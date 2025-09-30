@@ -27,7 +27,6 @@ public class AppUserPrincipal implements UserDetails {
         this.authorities = authorities;
     }
 
-    // Spring Security uses this as “username” internally → 우리는 이메일 사용
     @Override public String getUsername() { return email; }
     @Override public String getPassword() { return password; }
     @Override public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }

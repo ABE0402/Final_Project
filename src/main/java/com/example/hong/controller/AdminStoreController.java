@@ -39,7 +39,7 @@ public class AdminStoreController {
                           @RequestParam(required=false) String note) {
         Long adminId = ((AppUserPrincipal) auth.getPrincipal()).getId();
         service.approve(id, adminId, note);
-        return "redirect:/admin/stores_pending?msg=승인되었습니다";
+        return "redirect:/admin/stores/pending";
     }
 
     @PostMapping("/pending/{id}/reject")
@@ -47,7 +47,7 @@ public class AdminStoreController {
                          @RequestParam String reason) {
         Long adminId = ((AppUserPrincipal) auth.getPrincipal()).getId();
         service.reject(id, adminId, reason);
-        return "redirect:/admin/stores_pending/"+id+"?rejected=1";
+        return "redirect:/admin/stores/pending";
     }
 
 }

@@ -103,10 +103,9 @@ public class UserService {
             String url = storeProfileImage(photo);
             user.setProfileImageUrl(url);
         }
-        // @Transactional로 자동 flush
     }
 
-    /* ================= 이미지 저장 헬퍼 ================= */
+
     private String storeProfileImage(MultipartFile file) {
         try {
             // 1) 이미지 MIME만 허용 (예: image/jpeg, image/png, image/webp, image/gif 등)
@@ -115,7 +114,6 @@ public class UserService {
                 throw new IllegalArgumentException("이미지 파일만 업로드할 수 있습니다.");
             }
 
-            // 2) 원본 파일명/확장자 처리
             String original = file.getOriginalFilename();
             String ext = "";
             if (original != null) {
@@ -125,7 +123,6 @@ public class UserService {
                 }
             }
 
-            // 3) 위험 확장자 차단
             if (!ext.isBlank() && BLOCKED_EXT.contains(ext)) {
                 throw new IllegalArgumentException("지원하지 않는 이미지 형식입니다.");
             }
@@ -141,7 +138,6 @@ public class UserService {
                 }
             }
 
-            // 5) 저장
             String filename = UUID.randomUUID() + "." + ext;
             Path dir = Paths.get(uploadDir, PROFILE_DIR).toAbsolutePath().normalize();
             Files.createDirectories(dir);

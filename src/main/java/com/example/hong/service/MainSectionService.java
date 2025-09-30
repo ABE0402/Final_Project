@@ -23,29 +23,23 @@ public class MainSectionService {
 
     private static final int TAGS_PER_PAGE = 4;
 
-    /** ✅ 다중 카테고리(type → mood 순)로 섹션을 합쳐서 페이징 */
+    //카테고리(type -> mood 순으로) 합쳐서 페이징함
     public List<Map<String, Object>> fetchSectionsCombined(List<String> tagCategories, String sort, int page, String place) {
         var scopes = scopesFor(place);
-
-        // 1) 카테고리별 태그 리스트 조회 후 순서대로 합치기
         List<Tag> combined = new ArrayList<>();
         for (String cat : tagCategories) {
             combined.addAll(tagRepository.findByCategoryAndAppliesToInOrderByDisplayOrderAscNameAsc(cat, scopes));
         }
 
-        // 2) 페이지 슬라이스
         int from = page * TAGS_PER_PAGE;
         int to = Math.min(combined.size(), from + TAGS_PER_PAGE);
         if (from >= to) return List.of();
 
         List<Tag> pageTags = combined.subList(from, to);
-
-        // 3) 각 태그 → 아이템(현재 카페 중심) 구성
         List<Map<String, Object>> sections = new ArrayList<>();
         for (Tag t : pageTags) {
             List<Map<String, Object>> items = new ArrayList<>();
 
-            // place가 restaurant가 아닌 경우: 카페 아이템 채우기
             if (!"restaurant".equalsIgnoreCase(place)) {
                 List<Long> cafeIds = cafeTagRepository.findCafeIdsByTagId(t.getId());
                 if (!cafeIds.isEmpty()) {
@@ -84,9 +78,6 @@ public class MainSectionService {
                 }
             }
 
-            // (추가 예정) place가 cafe가 아닌 경우엔 식당 아이템도 같은 방식으로 append
-
-            // 아이템 없으면 섹션 스킵
             if (items.isEmpty()) continue;
 
             Map<String, Object> section = new LinkedHashMap<>();

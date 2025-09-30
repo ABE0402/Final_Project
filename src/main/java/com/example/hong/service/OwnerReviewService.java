@@ -25,11 +25,9 @@ public class OwnerReviewService {
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
 
-    /** 점주: 내 매장(카페+레스토랑) 리뷰 + 답글 DTO */
+    // 내 매장의 리뷰에 대한 답글 DTO
     public List<OwnerReviewDto> listForOwner(Long ownerId) {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        // 내 매장
         List<Cafe> cafes = cafeRepository.findByOwner_Id(ownerId);
         List<Restaurant> rests = restaurantRepository.findByOwner_Id(ownerId);
 
@@ -44,7 +42,7 @@ public class OwnerReviewService {
         }
         if (all.isEmpty()) return Collections.emptyList();
 
-        // 답글 일괄 로딩 (리뷰당 답글 1개 가정, 혹시 중복 있으면 최신 것만 유지)
+
         Map<Long, OwnerReply> replyMap = ownerReplyRepository
                 .findByReview_IdIn(all.stream().map(Review::getId).collect(Collectors.toList()))
                 .stream()
@@ -60,7 +58,6 @@ public class OwnerReviewService {
                         }
                 ));
 
-        // 이름 맵
         Map<Long, String> cafeName = cafes.stream().collect(Collectors.toMap(Cafe::getId, Cafe::getName));
         Map<Long, String> restName = rests.stream().collect(Collectors.toMap(Restaurant::getId, Restaurant::getName));
 
@@ -100,20 +97,19 @@ public class OwnerReviewService {
         return "사용자";
     }
 
-    /** updatedAt 우선, 없으면 createdAt 사용해서 포맷팅 (둘 다 null이면 null) */
     private static String formatTs(LocalDateTime primary, LocalDateTime fallback, DateTimeFormatter fmt) {
         LocalDateTime ts = (primary != null) ? primary : fallback;
         return (ts != null) ? ts.format(fmt) : null;
     }
 
-    /** 점주 소유권 검사 (카페/레스토랑 모두) */
+    // 점주 소유권 검사
     private boolean canManage(Long ownerId, Review rv) {
         if (rv.getCafe() != null)       return cafeRepository.existsByIdAndOwner_Id(rv.getCafe().getId(), ownerId);
         if (rv.getRestaurant() != null) return restaurantRepository.existsByIdAndOwner_Id(rv.getRestaurant().getId(), ownerId);
         return false;
     }
 
-    /** 답글 업서트 */
+    //답급 업서트
     @Transactional
     public void upsertReply(Long ownerId, Long reviewId, String content) {
         if (content == null || content.isBlank())
@@ -138,7 +134,7 @@ public class OwnerReviewService {
         ownerReplyRepository.save(reply); // @PrePersist/@PreUpdate로 createdAt/updatedAt 관리
     }
 
-    /** 답글 삭제 */
+    //댓글 삭제
     @Transactional
     public void deleteReply(Long ownerId, Long reviewId) {
         Review rv = reviewRepository.findByIdAndDeletedFalse(reviewId)

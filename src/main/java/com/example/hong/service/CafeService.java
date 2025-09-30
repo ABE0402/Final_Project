@@ -21,41 +21,28 @@ public class CafeService {
     private final CafeRepository cafeRepository;
     private final UserRepository userRepository; // User를 조회하기 위해 주입
 
-    /**
-     * 새로운 카페를 등록하는 메서드
-     */
+    //새로운 카페 등록
     @Transactional
     public Long createCafe(CafeCreateRequestDto requestDto, Long ownerId) {
-        // 1. DTO로부터 가게 주인의 User 엔티티를 조회합니다.
         User owner = userRepository.findById(ownerId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. id=" + ownerId));
-
-        // 2. DTO를 Cafe 엔티티로 변환합니다. (owner 정보 포함)
         Cafe cafe = requestDto.toEntity(owner);
-
-        // 3. Cafe 엔티티를 DB에 저장하고 생성된 ID를 반환합니다.
         return cafeRepository.save(cafe).getId();
     }
 
-    /**
-     * 특정 카페의 상세 정보를 조회하는 메서드
-     */
+   //특정 카페 조회
     @Transactional(readOnly = true)
     public CafeDetailResponseDto getCafeById(Long cafeId) {
         Cafe cafe = cafeRepository.findById(cafeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카페를 찾을 수 없습니다. id=" + cafeId));
-
-        // 조회한 Cafe 엔티티를 CafeDetailResponseDto로 변환하여 반환합니다.
         return CafeDetailResponseDto.from(cafe);
     }
 
-    /**
-     * 전체 카페 목록을 간략하게 조회하는 메서드
-     */
+    //전체 카페 조회
     @Transactional(readOnly = true)
     public List<CafeSummaryResponseDto> getAllCafes() {
         return cafeRepository.findAll().stream()
-                .map(CafeSummaryResponseDto::from) // 각 Cafe 엔티티를 DTO로 변환
+                .map(CafeSummaryResponseDto::from)
                 .collect(Collectors.toList());
     }
 

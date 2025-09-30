@@ -27,7 +27,7 @@ public class AdminOwnerController {
                 userRepository.findAllByRoleOrderByCreatedAtDesc(UserRole.OWNER));
         if (msg != null) model.addAttribute("msg", msg);
         if (err != null) model.addAttribute("err", err);
-        return "admin/owners"; // 새로운 템플릿
+        return "admin/owners";
     }
 
     @PostMapping("/{userId}/demote")

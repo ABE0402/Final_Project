@@ -104,6 +104,7 @@
         <button data-cat="FD6">식당</button>
     </div>
     <div style="font-size:13px;color:#666;">내 위치 기준 반경 500m (지도 중심 고정)</div>
+    <div id="amenity-icon-showcase" class="d-flex gap-2 align-items-center ms-3"></div>
     <div class="legend">
     <span style="display:inline-flex; align-items:center; gap:6px;">
       <span class="dot" style="background:#2D7DF6"></span> 카페
@@ -116,8 +117,11 @@
 
 <div class="content" id="mainContent">
     <aside class="sidebar">
-        <h3>내 리스트</h3>
-        <div id="searchNotice" style="display:none; margin-bottom:8px; font-size:13px; color:#555;"></div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="m-0">내 리스트</h3>
+            <div id="list-amenity-filters" class="d-flex gap-2"></div>
+        </div>
+        <div id="searchNotice" ...></div>
         <div id="myList" class="list"></div>
     </aside>
     <section class="mapwrap">
@@ -233,6 +237,30 @@
       takeout: () => `<svg viewBox="0 0 24 24" fill="none" stroke="${IColor.stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h10l2 12H5L7 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>`,
       reserve: () => `<svg viewBox="0 0 24 24" fill="none" stroke="${IColor.stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 9h18"></path><path d="M8 13h4"></path></svg>`
     };
+    function displayAllAmenityIcons() {
+    const container = document.getElementById('amenity-icon-showcase');
+    if (!container) return;
+
+    // 아이콘 종류 정의 (기존 코드 재사용)
+    const entries = [
+        ['parking','주차장', Icons.parking],
+        ['restroom','화장실', Icons.restroom],
+        ['waiting','대기공간', Icons.waiting],
+        ['pets','반려동물', Icons.pets],
+        ['takeout','포장가능', Icons.takeout],
+        ['reserve','예약가능', Icons.reserve],
+    ];
+
+    // 각 아이콘을 생성하여 컨테이너에 추가
+    entries.forEach(([key, title, iconFn]) => {
+        const iconWrapper = document.createElement('span');
+        // 기존 .amenity 스타일을 재사용하여 디자인 통일
+        iconWrapper.className = 'amenity';
+        iconWrapper.title = title;
+        iconWrapper.innerHTML = iconFn();
+        container.appendChild(iconWrapper);
+    });
+}
     function renderAmenityChips(p){
       const up = (arr)=> (arr||[]).map(x=>String(x).toUpperCase());
       const a = {
@@ -679,6 +707,7 @@ function renderInfoHtml(p) {
       initMap(baseLat, baseLng);
       bindCategoryToggle();
       bindListClick();
+      displayAllAmenityIcons();
       bindGalleryClick();
       bindHeaderSearch();
       geocoder  = new kakao.maps.services.Geocoder();

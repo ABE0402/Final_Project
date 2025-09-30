@@ -1,4 +1,3 @@
-// src/main/java/com/example/hong/controller/AdminReviewController.java
 package com.example.hong.controller;
 
 import com.example.hong.service.AdminReviewService;
@@ -17,7 +16,7 @@ public class AdminReviewController {
 
     private final AdminReviewService adminReviewService;
 
-    // 목록 + 필터(q:검색, target: CAFE/RESTAURANT/ALL, status: ACTIVE/DELETED/ALL)
+    // 목록 + 필터
     @GetMapping({"", "/"})
     public String list(@RequestParam(value = "q", required = false) String q,
                        @RequestParam(value = "target", required = false, defaultValue = "ALL") String target,
@@ -31,7 +30,7 @@ public class AdminReviewController {
         model.addAttribute("target", target);
         model.addAttribute("status", status);
 
-        // 드롭다운 선택 유지 플래그
+
         model.addAttribute("equalsCafe", "CAFE".equalsIgnoreCase(target));
         model.addAttribute("equalsRestaurant", "RESTAURANT".equalsIgnoreCase(target));
         model.addAttribute("equalsAllTarget", !"CAFE".equalsIgnoreCase(target) && !"RESTAURANT".equalsIgnoreCase(target));

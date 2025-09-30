@@ -20,7 +20,7 @@ public class SegmentRealtimeService {
 
     private final CafeSegmentScoreRepository scoreRepo;
 
-    // ✅ 가중치: 스케줄 재계산(반감기 적용)과 동일 기조 유지
+
     private static double weight(EventAction a) {
         return switch (a) {
             case CLICK    -> 1.0;
@@ -30,7 +30,6 @@ public class SegmentRealtimeService {
         };
     }
 
-    /** 이벤트 저장 직후 호출 → 실시간으로 score_30d 가산(감쇠는 스케줄러에서 처리) */
     @Transactional
     public void apply(UserEvent e) {
         User u = e.getUser();
@@ -38,7 +37,7 @@ public class SegmentRealtimeService {
 
         double delta = weight(e.getAction());
         if (e.getAction() == EventAction.REVIEW && e.getRatingValue() != null) {
-            // 리뷰 별점 보너스(3.5 초과만)
+
             delta += Math.max(0, 2.0 * (e.getRatingValue() - 3.5));
         }
 
@@ -56,10 +55,10 @@ public class SegmentRealtimeService {
 
     private void addDelta(SegmentType type, String val, Long cafeId, double delta) {
         try {
-            // MySQL ON DUPLICATE KEY
+
             scoreRepo.addScoreDelta(type.name(), val, cafeId, delta);
         } catch (DataAccessException | UnsupportedOperationException ex) {
-            // ✅ JPA 폴백 (H2 등) — find→add→save
+
             var id = new CafeSegmentScore.Id(type, val, cafeId);
             var row = scoreRepo.findById(id).orElseGet(() ->
                     CafeSegmentScore.builder().id(id).score30d(0.0).build()

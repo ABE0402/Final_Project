@@ -45,7 +45,7 @@ public class ReviewService {
     @Value("${app.upload.dir:./uploads}")
     private String uploadRoot;
 
-    @Value("${python.api.predict-url}") // [추가] application.properties에서 API 주소 가져오기
+    @Value("${python.api.predict-url}")
     private String predictApiUrl;
 
     private static final String REVIEW_DIR = "reviews";
@@ -53,12 +53,13 @@ public class ReviewService {
     private static final Set<String> IMG_EXT = Set.of("jpg","jpeg","png","gif","webp","bmp");
     private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    /* ================== 생성 ================== */
+    //사진 생성
     @Transactional
     public void addWithImages(Long userId, Long cafeId, int rating, String content, List<MultipartFile> images) {
         HateSpeechResponseDto validationResult = validateReviewContent(content);
         if (validationResult.isHateSpeech()) {
-            // 부적절한 내용이 감지되면 예외를 발생시켜 리뷰 저장을 중단
+
+            // (욕설 필터링)
             String labels = String.join(", ", validationResult.getPredictedLabels());
             throw new IllegalArgumentException("부적절한 내용이 포함되어 리뷰를 등록할 수 없습니다. (감지된 유형: " + labels + ")");
         }
@@ -88,18 +89,17 @@ public class ReviewService {
         if (urls.size() > 3) b.imageUrl4(urls.get(3));
         if (urls.size() > 4) b.imageUrl5(urls.get(4));
 
-        // [수정됨] 저장된 리뷰 객체를 받아옴
         Review savedReview = reviewRepo.save(b.build());
 
-        // [추가됨] 리뷰 저장 후, 비동기적으로 감성 분석 실행 및 결과 저장
+        // 리뷰 저장 후, 비동기적으로 감성 분석 실행 및 결과 저장
         try {
             analyzeAndSaveAspectScores(savedReview);
         } catch (Exception e) {
-            // 감성 분석 실패가 리뷰 생성 자체에 영향을 주지 않도록 예외 처리
+
             log.error("리뷰 감성 분석 실패 (리뷰 ID: {}): {}", savedReview.getId(), e.getMessage());
         }
     }
-    //Python API를 호출하는 private 헬퍼 메소드
+    //Python API 호출
     private HateSpeechResponseDto validateReviewContent(String content) {
         try {
             // 1. Python API로 보낼 요청 본문(body) 생성
@@ -110,16 +110,16 @@ public class ReviewService {
 
         } catch (Exception e) {
             log.error("혐오 표현 분석 API 호출 실패: {}", e.getMessage());
-            // API 서버에 문제가 생겼을 경우, 우선 리뷰는 통과시키도록 처리 (정책에 따라 변경 가능)
+
             HateSpeechResponseDto fallbackResponse = new HateSpeechResponseDto();
             fallbackResponse.setHateSpeech(false);
             return fallbackResponse;
         }
     }
 
-    // Python 감성 분석 스크립트를 실행하고 결과를 DB에 저장하는 메소드
+    // Python 감성 분석 스크립트를 실행하고 결과를 DB에 저장
     private void analyzeAndSaveAspectScores(Review review) throws Exception {
-        // Python 가상환경 실행 파일과 스크립트 경로 (사용자 환경에 맞게 수정 필수)
+        // Python 가상환경 실행 파일과 스크립트 경로(프로젝트 인원 경로 확인하세요)
         String pythonExecutable = "C:\\Users\\cnrrn\\Desktop\\project10\\project10\\project5\\python-classifier\\venv\\Scripts\\python.exe";
         String pythonScript = "C:\\Users\\cnrrn\\Desktop\\project10\\project10\\project5\\python-classifier\\Postive.py";
 
@@ -132,7 +132,6 @@ public class ReviewService {
         processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
 
-        // 파이썬 스크립트의 print 출력을 읽어옴
         StringBuilder output = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 process.getInputStream(), StandardCharsets.UTF_8))) {
@@ -150,26 +149,26 @@ public class ReviewService {
             throw new RuntimeException("Python 스크립트 실행 실패: " + output);
         }
 
-// =======================================================
-// [수정된 부분] 전체 출력에서 JSON만 추출하기
-// =======================================================
+
+    //  전체 출력에서 JSON만 추출하기
+
         String rawOutput = output.toString();
         int jsonStart = rawOutput.indexOf('{'); // 첫 '{' 위치 찾기
         int jsonEnd = rawOutput.lastIndexOf('}'); // 마지막 '}' 위치 찾기
 
-// JSON 부분을 찾을 수 없거나 형식이 이상하면 예외 처리
+    // JSON 부분을 찾을 수 없거나 형식이 이상하면 예외 처리
         if (jsonStart == -1 || jsonEnd == -1 || jsonStart > jsonEnd) {
             throw new RuntimeException("Python 스크립트에서 유효한 JSON 출력을 찾을 수 없습니다: " + rawOutput);
         }
 
-// 첫 '{'부터 마지막 '}'까지 잘라내어 순수한 JSON 문자열을 만듦
+    // 첫 '{'부터 마지막 '}'까지 잘라내어 순수한 JSON 문자열을 만듦
         String jsonOutput = rawOutput.substring(jsonStart, jsonEnd + 1);
         log.info("추출된 JSON: '{}'", jsonOutput); // 잘라낸 결과 로그 확인
 
-// JSON 결과를 Map으로 변환
+    // JSON 결과를 Map으로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> aspectScores = objectMapper.readValue(jsonOutput, new TypeReference<>() {});
-// =======================================================
+
 
         log.info("파싱된 점수 Map: {}", aspectScores);
 
@@ -193,7 +192,7 @@ public class ReviewService {
         }
     }
 
-    /* ================== 조회: 카페 상세용 ================== */
+    //카페 상세 조회
     @Transactional(Transactional.TxType.SUPPORTS) // readOnly 성격
     public List<ReviewItemDto> listForCafeDtos(Long cafeId) {
         return reviewRepo.findForCafeWithUser(cafeId).stream()
@@ -201,7 +200,6 @@ public class ReviewService {
                 .toList();
     }
 
-    // (기존 시그니처를 이미 컨트롤러에서 쓰고 있으면 유지하고 내부에서 DTO로 대체)
     @Transactional(Transactional.TxType.SUPPORTS)
     public List<ReviewItemDto> listForCafe(Long cafeId) {
         return listForCafeDtos(cafeId);
@@ -212,15 +210,14 @@ public class ReviewService {
         String nickname = resolveNickname(r.getUser()); // fetch join으로 세션 밖에서도 안전
 
 
-        // 1. Review 엔티티에 연결된 감성 분석 점수 목록을 가져옵니다.
-        //    (Review 엔티티에 getReviewAspectScores() 메소드가 있어야 합니다.)
+        // 감성 분석 점수 목록
         List<AspectScoreDto> aspectScores = r.getReviewAspectScores().stream()
                 .map(score -> new AspectScoreDto(score.getAspect(), score.getScore()))
                 .toList();
 
         String replyContent = null;
         String replyUpdatedAt = null;
-        OwnerReply reply = r.getReply(); // Review 엔티티에서 답글을 가져옴 (Fetch Join 덕분에 가능)
+        OwnerReply reply = r.getReply();
         if (reply != null) {
             replyContent = reply.getContent();
             LocalDateTime updatedAt = reply.getUpdatedAt() != null ? reply.getUpdatedAt() : reply.getCreatedAt();
@@ -230,7 +227,6 @@ public class ReviewService {
         }
 
 
-        // 2. builder()를 사용하여 DTO를 생성할 때, aspectScores 리스트를 추가합니다.
         return ReviewItemDto.builder()
                 .id(r.getId())
                 .rating(r.getRating())
@@ -248,7 +244,7 @@ public class ReviewService {
                 .build();
     }
 
-    /* ================== 조회: 마이페이지용 ================== */
+    //마이 페이지 조회
     @Transactional(Transactional.TxType.SUPPORTS)
     public List<ReviewItemDto> myReviews(Long userId) {
         return reviewRepo.findByUserIdWithUser(userId).stream()
@@ -256,7 +252,7 @@ public class ReviewService {
                 .toList();
     }
 
-    /* ================== 수정/삭제 ================== */
+    // 리뷰 수정
     @Transactional
     public void updateMyReview(Long userId, Long reviewId, String content, Integer rating) {
         var r = reviewRepo.findByIdAndUserIdAndDeletedFalse(reviewId, userId)
@@ -265,24 +261,19 @@ public class ReviewService {
         if (content != null) r.setContent(content);
     }
 
+
+    //리뷰 삭제
     @Transactional
     public void deleteMyReview(Long userId, Long reviewId) {
         Review r = reviewRepo.findByIdAndUserId(reviewId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("삭제 권한이 없습니다."));
-
         Long cafeId = (r.getCafe() != null) ? r.getCafe().getId() : null;
-
-        // 1) 업로드 이미지 파일 물리 삭제
         deleteReviewImages(r);
-
-
-        // 2) 리뷰 하드 삭제 (연관 자식은 FK ON DELETE CASCADE가 해줌)
         reviewRepo.delete(r);
-
-        // 3) 집계 재계산 (평균/카운트)
         if (cafeId != null) recalcCafeStats(cafeId);
-        // if (restaurantId != null) recalcRestaurantStats(restaurantId);
     }
+
+
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void recalcCafeStats(Long cafeId) {
         long cnt = reviewRepo.countByCafeId(cafeId);
@@ -297,7 +288,6 @@ public class ReviewService {
         });
     }
     private void deleteReviewImages(Review r) {
-        // URL들이 null이어도 안전하게 필터링
         var urls = Stream.of(r.getImageUrl1(), r.getImageUrl2(), r.getImageUrl3(), r.getImageUrl4(), r.getImageUrl5())
                 .filter(Objects::nonNull)
                 .map(String::trim)
@@ -306,7 +296,7 @@ public class ReviewService {
 
         for (String url : urls) {
             try {
-                Path p = toLocalReviewImagePath(url); // URL → 로컬 저장 경로
+                Path p = toLocalReviewImagePath(url);
                 Files.deleteIfExists(p);
             } catch (Exception e) {
                 log.warn("리뷰 이미지 삭제 실패(url={}): {}", url, e.toString());
@@ -314,13 +304,12 @@ public class ReviewService {
         }
     }
     private Path toLocalReviewImagePath(String url) {
-        // 예: "/uploads/reviews/abc.png" → "abc.png"
         String norm = url.replace("\\", "/");
         String filename = norm.substring(norm.lastIndexOf('/') + 1);
         return Paths.get(uploadRoot, REVIEW_DIR, filename);
     }
 
-    /* ================== 내부 유틸 ================== */
+
     private List<String> saveUpToFive(List<MultipartFile> images) {
         List<String> urls = new ArrayList<>();
         if (images == null) return urls;

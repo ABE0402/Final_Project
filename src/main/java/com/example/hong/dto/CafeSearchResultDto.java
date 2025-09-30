@@ -32,6 +32,7 @@ public class CafeSearchResultDto {
     private List<String> menuImageUrls;
     private List<String> tags;
     private List<MenuDto> menus;
+    private double similarity; // 자카드 유사도 점수를 저장할 필드
 
     // Entity를 DTO로 변환하는 정적 팩토리 메서드 (로직은 동일)
     public static CafeSearchResultDto fromEntity(Cafe cafe) {

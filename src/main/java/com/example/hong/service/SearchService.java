@@ -32,7 +32,7 @@ public class SearchService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private Map<String, List<String>> relatedTagsMap;
 
-    // 생성자에서 연관 태그 파일을 로드
+
     @PostConstruct
     public void init() {
         try {
@@ -49,7 +49,7 @@ public class SearchService {
     //검색
     @Transactional
     public List<CafeSearchResultDto> searchCafesAndLog(SearchRequestDto request, Long userId) {
-        // 1) 로그/태그 확장
+
         SearchEvent event = logSearchEvent(request, userId);
         List<String> originalTags = extractAllTagNames(request);
         if (event != null && !originalTags.isEmpty()) {
@@ -57,10 +57,9 @@ public class SearchService {
         }
         List<String> expandedTags = expandTags(originalTags);
 
-        // 2) DB 후보군 조회
+
         List<Cafe> candidates = cafeRepository.search(request, expandedTags);
 
-        // 디버그 로그: 후보 수, 태그, 쿼리 확인
         String query = StringUtils.hasText(request.getQuery()) ? request.getQuery().trim() : "";
         log.info("searchCafesAndLog: candidates={}, originalTags={}, expandedTags={}, query='{}'",
                 candidates.size(), originalTags, expandedTags, query);
@@ -71,14 +70,12 @@ public class SearchService {
         return candidates.stream()
                 .map(cafe -> {
                     double similarity;
-                    // (A) 태그가 있으면 기존 Jaccard 계산
                     if (hasTags) {
                         Set<String> cafeTags = cafe.getCafeTags().stream()
                                 .map(ct -> ct.getTag().getName())
                                 .collect(Collectors.toSet());
                         similarity = jaccard(userTagSet, cafeTags);
                     } else if (StringUtils.hasText(query)) {
-                        // (B) 태그가 없고 텍스트 쿼리만 있을 때는 텍스트 매칭 점수로 대체
                         String q = query.toLowerCase();
                         String name = (cafe.getName() == null ? "" : cafe.getName().toLowerCase());
                         String desc = (cafe.getDescription() == null ? "" : cafe.getDescription().toLowerCase());
@@ -88,7 +85,6 @@ public class SearchService {
                         else if (desc.contains(q) || addr.contains(q)) similarity = 0.5;
                         else similarity = 0.0;
                     } else {
-                        // (C) 태그도 없고 쿼리도 없으면 기본 0.0 (혹은 다른 비즈니스 룰)
                         similarity = 0.0;
                     }
 
@@ -96,12 +92,13 @@ public class SearchService {
                     dto.setSimilarity(similarity);
                     return dto;
                 })
+
                 // 필터는 '태그 검색'을 한 경우에만 유사도 기준으로 적용
                 .filter(dto -> {
                     if (hasTags) {
                         return dto.getSimilarity() >= 0.1;
                     } else {
-                        return true; // 텍스트 검색일 땐 필터 패스
+                        return true;
                     }
                 })
                 .sorted(Comparator.comparing(CafeSearchResultDto::getSimilarity).reversed())
@@ -121,7 +118,7 @@ public class SearchService {
 
 
 
-    // [추가됨] 태그 목록을 확장하는 헬퍼 메소드
+    //  태그 목록을 확장하는 헬퍼 메소드
     private List<String> expandTags(List<String> originalTags) {
         if (relatedTagsMap.isEmpty()) {
             return originalTags;
@@ -136,13 +133,13 @@ public class SearchService {
         return new ArrayList<>(expanded);
     }
 
-    /**
-     * [수정됨] SearchEvent 로그를 생성하고, 저장된 객체를 반환합니다.
-     */
+
+    // SearchEvent 로그를 생성하고, 저장된 객체를 반환합니다.
+
     private SearchEvent logSearchEvent(SearchRequestDto request, Long userId) {
         boolean hasTextQuery = StringUtils.hasText(request.getQuery());
         if (!hasTextQuery && extractAllTagNames(request).isEmpty()) {
-            return null; // 검색 조건이 아무것도 없으면 로깅하지 않고 null 반환
+            return null;
         }
 
         SearchEvent.SearchType type = hasTextQuery ? SearchEvent.SearchType.TEXT : SearchEvent.SearchType.CATEGORY;
@@ -153,20 +150,18 @@ public class SearchService {
                 .searchQuery(request.getQuery())
                 .build();
 
-        // 저장된 엔티티를 반환하여 FK로 사용할 수 있도록 함
+
         return searchEventRepository.save(event);
     }
 
-    /**
-     * 선택된 태그들의 로그(SearchEventSelection)를 저장합니다.
-     */
+
     private void logTagSelections(SearchEvent event, List<String> tagNames) {
-        // [디버깅 로그 추가 2] 이 메소드가 실제로 호출되었는지 확인
+
         log.info("### logTagSelections 메소드 실행됨. 전달받은 태그: {}", tagNames);
 
         List<Tag> tags = tagRepository.findByNameIn(tagNames);
 
-        // [디버깅 로그 추가 3] DB에서 태그를 제대로 찾아왔는지 확인 (가장 중요!)
+
         log.info("### DB에서 조회된 Tag 엔티티 개수: {}개", tags.size());
         if (!tags.isEmpty()) {
             log.info("### 조회된 태그 ID: {}", tags.stream().map(Tag::getId).toList());
@@ -180,9 +175,6 @@ public class SearchService {
         }
     }
 
-    /**
-     * [수정됨] SearchRequestDto의 모든 태그 필드를 하나의 리스트로 안전하게 합칩니다.
-     */
     private List<String> extractAllTagNames(SearchRequestDto request) {
         return Stream.of(
                         request.getCompanion(),

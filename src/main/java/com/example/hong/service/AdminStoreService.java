@@ -18,13 +18,14 @@ public class AdminStoreService {
 
     private final CafeRepository cafeRepository;
 
-    /* ========= Pending(승인 대기) ========= */
+    //승인 대기
     @Transactional
     public List<Map<String,Object>> pendingList() {
         var list = cafeRepository.findByApprovalStatusOrderByCreatedAtAsc(ApprovalStatus.PENDING);
         return list.stream().map(this::toVm).toList();
     }
 
+    //승인 검토
     @Transactional
     public Map<String,Object> pendingDetail(Long id) {
         Cafe c = get(id);
@@ -40,7 +41,6 @@ public class AdminStoreService {
         c.setApprovalStatus(ApprovalStatus.APPROVED);
         c.setRejectionReason(null);
         c.setVisible(true);
-        // 필요하면 감사 로그 남기기(생략)
     }
 
     @Transactional
@@ -54,7 +54,7 @@ public class AdminStoreService {
         c.setVisible(false);
     }
 
-    /* ========= Approved 관리 ========= */
+    //상태 관리
     @Transactional
     public List<Map<String,Object>> approvedList(Boolean visible) {
         List<Cafe> list;
@@ -82,7 +82,6 @@ public class AdminStoreService {
         c.setVisible(false);
     }
 
-    /* ========= Helper ========= */
     private Cafe get(Long id) {
         return cafeRepository.findById(id).orElseThrow(() -> new NoSuchElementException("가게를 찾을 수 없습니다."));
     }

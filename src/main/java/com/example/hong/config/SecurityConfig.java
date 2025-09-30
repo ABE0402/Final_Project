@@ -24,7 +24,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // ✅ CSRF 활성화 (템플릿에서 _csrf 사용 중)
+
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -68,7 +68,7 @@ public class SecurityConfig {
             Set<String> roles = authentication.getAuthorities()
                     .stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
             if (roles.contains("ROLE_ADMIN")) {
-                response.sendRedirect("/admin");   // ✅ 관리자면 /admin
+                response.sendRedirect("/admin");   //  관리자면 /admin
             } else {
                 response.sendRedirect("/");        // 일반/점주면 /
             }

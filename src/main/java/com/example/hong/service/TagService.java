@@ -24,7 +24,6 @@ public class TagService {
     private final CafeRepository cafeRepository;
     private final CafeTagRepository cafeTagRepository;
 
-    /** 메인: 페이지 단위(태그 1페이지= N개)로 섹션 리스트 */
     public List<TagSectionDto> getTagSectionsByCategoryPageAndSort(String category, int page, String sort) {
         int tagsPerPage = 5; // 한 번에 섹션 5개씩
         Page<Tag> tagPage = tagRepository.findByCategoryOrderByNameAsc(
@@ -33,10 +32,10 @@ public class TagService {
 
         return tagPage.getContent().stream()
                 .map(tag -> {
-                    // 섹션당 카페 8개
+
                     List<Cafe> cafes = findCafesByTagAndSort(tag, sort, 8);
 
-                    // 카페들에 대한 해시태그 맵 구성
+
                     Map<Long, String> hashtagsMap = buildHashtagsMap(cafes);
 
                     var cards = cafes.stream()
@@ -52,7 +51,6 @@ public class TagService {
                 .toList();
     }
 
-    /** 메인: 단일 태그만 새로고침(정렬 변경 시) */
     public List<TagSectionDto> getTagSectionByTagAndSort(String category, String tagName, String sort) {
         Tag tag = tagRepository.findByCategoryAndName(category, tagName)
                 .orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다: " + tagName));
@@ -71,7 +69,6 @@ public class TagService {
                 .build());
     }
 
-    /* ================= 내부 ================= */
 
     private List<Cafe> findCafesByTagAndSort(Tag tag, String sort, int limit) {
         Sort order = switch (safe(sort)) {
@@ -91,16 +88,14 @@ public class TagService {
         ).getContent();
     }
 
-    /** 카페 목록 → 해시태그 문자열 맵 (cafeId -> "#1인 #반려동물가능") */
     private Map<Long, String> buildHashtagsMap(List<Cafe> cafes) {
         if (cafes == null || cafes.isEmpty()) return Collections.emptyMap();
 
         List<Long> ids = cafes.stream().map(Cafe::getId).toList();
 
-        // ✅ 중첩 프로젝션 타입 사용
+
         List<CafeTagRepository.CafeIdTagName> rows = cafeTagRepository.findTagNamesByCafeIds(ids);
 
-        // cafeId -> ["1인","반려동물 가능", ...]
         Map<Long, List<String>> nameMap = rows.stream()
                 .collect(Collectors.groupingBy(
                         CafeTagRepository.CafeIdTagName::getCafeId,
@@ -108,7 +103,6 @@ public class TagService {
                         Collectors.mapping(CafeTagRepository.CafeIdTagName::getName, Collectors.toList())
                 ));
 
-        // cafeId -> "#1인 #반려동물가능"
         Map<Long, String> hashtags = new HashMap<>();
         for (Long id : ids) {
             List<String> names = nameMap.getOrDefault(id, List.of());
@@ -132,7 +126,7 @@ public class TagService {
                 .averageRating(c.getAverageRating() == null ? 0.0 : c.getAverageRating().doubleValue())
                 .reviewCount(c.getReviewCount())
                 .pathSegment("cafes")
-                .hashtags(hashtags) // ← 해시태그 표시용
+                .hashtags(hashtags)
                 .build();
     }
 }

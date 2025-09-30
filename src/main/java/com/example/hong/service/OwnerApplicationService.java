@@ -26,8 +26,6 @@ public class OwnerApplicationService {
         if (isBlank(req.getOwnerRealName())) throw new IllegalArgumentException("본명을 입력해 주세요.");
         if (isBlank(req.getContactPhone())) throw new IllegalArgumentException("연락처를 입력해 주세요.");
         if (isBlank(req.getStoreAddress())) throw new IllegalArgumentException("가게 주소를 입력해 주세요.");
-
-        // 이미 대기중인 신청이 있으면 제한 (선택)
         if (appRepo.existsByUserIdAndStatus(userId, ApprovalStatus.PENDING)) {
             throw new IllegalStateException("승인 대기 중인 신청이 이미 있습니다.");
         }

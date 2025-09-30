@@ -35,8 +35,6 @@ public class OwnerShopService {
     private final CafeRepository cafeRepository;
     private final TagRepository tagRepository;
     private final CafeTagRepository cafeTagRepository;
-
-    // ★ 카카오 지오코딩 서비스 주입
     private final KakaoLocalService kakaoLocalService;
 
     @Value("${app.upload.dir:./uploads}")
@@ -48,14 +46,14 @@ public class OwnerShopService {
     private static final String URL_PREFIX_MENU = "/uploads/menus";
     private static final Set<String> ALLOWED_EXT = Set.of("jpg","jpeg","png","gif","webp","bmp");
 
-    /** 카테고리별 선택 제한 */
+    //태그별 선택 제한 개수
     private static final Map<String, Integer> CATEGORY_LIMITS = Map.of(
-            "companion",   2,
-            "mood",        2,
-            "amenities",   2,
+            "companion",   3,
+            "mood",        3,
+            "amenities",   10,
             "reservation", 1,
             "priority",    2,
-            "type",        2
+            "type",        3
     );
 
     @Transactional
@@ -72,7 +70,6 @@ public class OwnerShopService {
     }
 
     private Long createCafe(User owner, ShopCreateRequestDto req) {
-        // ===== 좌표 보정 (lat/lng 없으면 카카오 지오코딩으로 채우기) =====
         LatLng ll = resolveCoordinatesOrThrow(
                 req.getLat(), req.getLng(),
                 req.getAddressRoad(),
@@ -102,7 +99,7 @@ public class OwnerShopService {
         c.setOperatingHours(nvl(req.getOperatingHours()));
         c.setMenuText(nvl(req.getMenuText()));
 
-        // 메뉴 이미지(최대 5장)
+        // 메뉴 이미지
         applyMenuImages(c, req.getMenuImages());
 
         cafeRepository.save(c);
@@ -180,7 +177,7 @@ public class OwnerShopService {
         c.setAddressRoad(emptyToNull(req.getAddressRoad()));
         c.setDescription(emptyToNull(req.getDescription()));
 
-        // ===== 좌표 보정 (요청에 lat/lng 누락이거나 주소/이름 변경되면 재시도) =====
+
         Double reqLat = req.getLat();
         Double reqLng = req.getLng();
         boolean needResolve = (reqLat == null || reqLng == null);
@@ -188,7 +185,7 @@ public class OwnerShopService {
         if (needResolve) {
             LatLng ll = resolveCoordinatesOrThrow(
                     reqLat, reqLng,
-                    c.getAddressRoad(), // 변경 후 주소 기준
+                    c.getAddressRoad(),
                     c.getName()
             );
             c.setLat(BigDecimal.valueOf(ll.lat()));
@@ -201,31 +198,23 @@ public class OwnerShopService {
         if (req.getImage() != null && !req.getImage().isEmpty()) {
             c.setHeroImageUrl(storeImage(req.getImage(), CAFE_DIR, URL_PREFIX_CAFE));
         }
-
-        // 운영시간/메뉴 텍스트 갱신
         if (req.getOperatingHours() != null) c.setOperatingHours(req.getOperatingHours());
         if (req.getMenuText() != null)      c.setMenuText(req.getMenuText());
-
-        // 메뉴 이미지 새 업로드가 있으면 교체
         if (req.getMenuImages() != null && req.getMenuImages().stream().anyMatch(f -> f != null && !f.isEmpty())) {
             clearMenuImages(c);
             applyMenuImages(c, req.getMenuImages());
         }
 
-        // 태그 교체
+
         replaceTags(c, req.getTagIds());
     }
 
 
-    /* ================= 좌표 보정 헬퍼 ================= */
 
+    // 좌표 보정
     private record LatLng(double lat, double lng) {}
 
-    /**
-     * lat/lng가 있으면 그대로 사용.
-     * 없으면 (1) 도로명주소 지오코딩 → (2) 키워드(상호+주소) 지오코딩.
-     * 둘 다 실패하면 400(Bad Request)에 해당하는 IllegalArgumentException 발생.
-     */
+    //lat,lag 가 없으면 지오코딩
     private LatLng resolveCoordinatesOrThrow(Double lat, Double lng, String roadAddress, String name) {
         if (lat != null && lng != null) {
             return new LatLng(lat, lng);
@@ -250,8 +239,8 @@ public class OwnerShopService {
         return new LatLng(c.lat(), c.lng());
     }
 
-    /* ================= 이미지 유틸 ================= */
 
+    //가게 이미지
     private String storeImage(MultipartFile file, String dirName, String urlPrefix) {
         try {
             String orig = file.getOriginalFilename();
@@ -294,7 +283,7 @@ public class OwnerShopService {
         c.setMenuImageUrl5(null);
     }
 
-    /* ================= 태그 유틸 ================= */
+    //태그
 
     private void attachTags(Cafe cafe, List<Integer> tagIds) {
         if (tagIds == null || tagIds.isEmpty()) return;
@@ -322,7 +311,6 @@ public class OwnerShopService {
         });
     }
 
-    /* ================= 공통 ================= */
 
     private void verifyOwner(Cafe c, Long ownerId) {
         if (c.getOwner() == null || c.getOwner().getId() == null || !Objects.equals(c.getOwner().getId(), ownerId)) {

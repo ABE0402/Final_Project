@@ -28,11 +28,9 @@ public class OwnerService {
     private final RestaurantRepository restaurantRepository;
     private final NotificationService notificationService;
 
-    /** 점주: 내 매장(카페+레스토랑) 예약을 단일 DTO 리스트로 반환 */
+    //예약 DTO로 변환
     public List<OwnerReservationDto> listReservations(Long ownerId) {
         var fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        // 소유 매장 id 수집
         List<Cafe> cafes = cafeRepository.findByOwner_Id(ownerId);
         List<Restaurant> rests = restaurantRepository.findByOwner_Id(ownerId);
 
@@ -74,7 +72,6 @@ public class OwnerService {
             out.addAll(list);
         }
 
-        // yyyy-MM-dd HH:mm 포맷은 문자열 정렬 == 시간 역순 정렬이므로 그대로 사용 가능
         out.sort(Comparator.comparing(OwnerReservationDto::getReservationAt).reversed());
         return out;
     }
@@ -102,7 +99,7 @@ public class OwnerService {
         var fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String when = r.getReservationAt().format(fmt);
 
-        // ✅ 사용자 알림(문구 통일)
+        // 사용자 알림
         notificationService.push(
                 r.getUser().getId(),
                 "‘" + targetName + "’ 예약이 승인되었습니다. (" + when + ")",
@@ -127,7 +124,7 @@ public class OwnerService {
         var fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String when = r.getReservationAt().format(fmt);
 
-        // ✅ 사용자 알림(문구 통일)
+        //사용자 알림
         notificationService.push(
                 r.getUser().getId(),
                 "‘" + targetName + "’ 예약이 취소되었습니다. (" + when + ")",

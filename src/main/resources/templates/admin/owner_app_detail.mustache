@@ -25,13 +25,13 @@
     </div>
 
     <div class="d-flex gap-2">
-        <form method="post" action="/admin/owner-applications/{{app.id}}/approve">
+        <form method="post" action="/admin/owner_applications/{{app.id}}/approve">
             {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
             <input type="hidden" name="note" value="">
             <button class="btn btn-success" type="submit">승인</button>
         </form>
 
-        <form method="post" action="/admin/owner-applications/{{app.id}}/reject" class="d-flex gap-2">
+        <form method="post" action="/admin/owner_applications/{{app.id}}/reject" class="d-flex gap-2">
             {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
             <input type="text" name="reason" class="form-control" placeholder="반려 사유" required>
             <button class="btn btn-danger" type="submit">반려</button>

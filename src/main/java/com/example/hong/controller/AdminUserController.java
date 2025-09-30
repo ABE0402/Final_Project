@@ -38,7 +38,7 @@ public class AdminUserController {
         String statusVal = status == null ? "" : status;
         String roleVal = role == null ? "" : role;
 
-        // 드롭다운 선택 유지용
+
         model.addAttribute("q", qVal);
         model.addAttribute("status", statusVal);
         model.addAttribute("role", roleVal);
@@ -56,7 +56,7 @@ public class AdminUserController {
 
         List<User> list = adminUserService.search(qVal, statusFilter, roleFilter);
 
-        // ✅ Mustache가 바로 쓸 수 있도록 플래그/기본값 포함한 맵으로 변환
+        // Mustache가 바로 쓸 수 있도록 기본값 포함한 맵으로 변환
         List<Map<String, Object>> rows = new ArrayList<>();
         for (User u : list) {
             Map<String, Object> m = new HashMap<>();
@@ -76,7 +76,7 @@ public class AdminUserController {
             // 버튼 노출 조건
             boolean isAdmin = u.getRole() == UserRole.ADMIN;
             m.put("canSuspend", isActive && !isAdmin);
-            m.put("canResume", isSuspended); // 필요시 자기 자신/관리자 예외 추가 가능
+            m.put("canResume", isSuspended);
 
             rows.add(m);
         }

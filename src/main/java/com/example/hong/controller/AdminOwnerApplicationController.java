@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/owner-applications")
+@RequestMapping("/admin/owner_applications")
 public class AdminOwnerApplicationController {
 
     private final AdminOwnerApplicationService service;
@@ -33,18 +33,27 @@ public class AdminOwnerApplicationController {
     }
 
     @PostMapping("/{id}/approve")
-    public String approve(@PathVariable Long id, Authentication auth,
-                          @RequestParam(required=false) String note) {
+    public String approve(@PathVariable Long id,
+                          Authentication auth,
+                          @RequestParam(required=false) String note,
+                          @RequestHeader(value="referer", required=false) String referer,
+                          org.springframework.web.servlet.mvc.support.RedirectAttributes ra) {
         Long adminId = ((AppUserPrincipal) auth.getPrincipal()).getId();
         service.approve(id, adminId, note);
+        ra.addFlashAttribute("flashMsg", "승인 처리 완료");
         return "redirect:/admin/owner_applications";
     }
 
+
     @PostMapping("/{id}/reject")
-    public String reject(@PathVariable Long id, Authentication auth,
-                         @RequestParam String reason) {
+    public String reject(@PathVariable Long id,
+                         Authentication auth,
+                         @RequestParam String reason,
+                         @RequestHeader(value="referer", required=false) String referer,
+                         org.springframework.web.servlet.mvc.support.RedirectAttributes ra) {
         Long adminId = ((AppUserPrincipal) auth.getPrincipal()).getId();
         service.reject(id, adminId, reason);
-        return "redirect:/admin/owner_applications/" + id + "?rejected=1";
+        ra.addFlashAttribute("flashMsg", "반려 처리 완료");
+        return  "redirect:/admin/owner_applications";
     }
 }

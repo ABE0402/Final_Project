@@ -5,14 +5,14 @@ from datetime import datetime
 app = Flask(__name__)
 
 # ====== 설정 ======
-# 현재 스크립트 파일(이 파일)이 있는 폴더의 절대 경로를 계산합니다.
+# 현재 스크립트 파일(이 파일)이 있는 폴더의 절대 경로를 계산
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# 위에서 계산한 폴더 경로와 파일 이름을 합쳐서 완전한 파일 경로를 만듭니다.
+# 위에서 계산한 폴더 경로와 파일 이름을 합쳐서 완전한 파일 경로 생성
 MODEL_FILE = os.path.join(BASE_DIR, 'hate_speech_classifier.pkl')
 ABUSE_DB_FILE = os.path.join(BASE_DIR, 'final_abuse_db.json')
 REQUIRE_API_KEY = os.getenv("REQUIRE_API_KEY", "false").lower() == "true"
 API_KEY = os.getenv("API_KEY", "")
-THRESHOLD = float(os.getenv("THRESHOLD", "0.5"))  # (모델이 predict_proba 지원 시 사용 예정)
+THRESHOLD = float(os.getenv("THRESHOLD", "0.5"))
 
 def check_key():
     if REQUIRE_API_KEY:
@@ -47,7 +47,7 @@ if ABUSE_DB:
 
 abuse_terms = sorted(set(abuse_terms), key=len, reverse=True)
 if abuse_terms:
-    # 캡처그룹 사용 (group(0)로 읽어도 됨)
+    # 캡처그룹 사용
     abuse_regex = re.compile("(" + "|".join(abuse_terms) + ")", re.IGNORECASE)
     print(f"[OK] 욕설 정규식 패턴 {len(abuse_terms)}개 생성")
 else:

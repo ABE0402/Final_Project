@@ -27,7 +27,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final CafeRepository cafeRepository;
-    private final RestaurantRepository restaurantRepository; // 레스토랑 리포지토리
+    private final RestaurantRepository restaurantRepository;
 
     private final NotificationService notificationService;
 
@@ -40,7 +40,7 @@ public class ReservationService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "사용자를 찾을 수 없습니다."));
 
-        // 대상 존재 검증 + 이름 반환 (알림 메시지에 사용)
+
         String targetName = switch (targetType) {
             case CAFE -> cafeRepository.findById(targetId)
                     .map(Cafe::getName).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "카페가 없습니다."));
@@ -59,7 +59,7 @@ public class ReservationService {
                         .targetId(targetId)
                         .reservationAt(at)
                         .partySize(partySize)
-                        .status(ReservationStatus.PENDING) // 필요 시 정책에 따라 바로 CONFIRMED로
+                        .status(ReservationStatus.PENDING)
                         .build()
         );
 
@@ -71,7 +71,7 @@ public class ReservationService {
                 "/mypage/reservations"
         );
 
-        // (옵션) 점주에게도 새 예약 알림 보내려면 아래 주석 해제
+
         Long ownerId = (targetType == ReserveTargetType.CAFE)
                 ? cafeRepository.findById(targetId).map(c -> c.getOwner().getId()).orElse(null)
                 : restaurantRepository.findById(targetId).map(r -> r.getOwner().getId()).orElse(null);

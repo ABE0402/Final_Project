@@ -26,20 +26,20 @@ public class SegmentRecommendationService {
 
     private final CafeSegmentScoreRepository scoreRepo;
     private final CafeRepository cafeRepo;
-    private final ReviewRepository reviewRepository;            // ✅ 추가
+    private final ReviewRepository reviewRepository;
 
     public Map<String, List<PlaceCardDto>> sectionsFor(User user, int topN){
         Map<String, List<PlaceCardDto>> map = new LinkedHashMap<>();
         if (user == null) return map;
 
-        // AGE
+
         AgeBucket age = AgeBucket.fromBirthDate(user.getBirthDate());
         if (age != null) {
             var ageScores = scoreRepo.findTop50ById_SegmentTypeAndId_SegmentValueOrderByScore30dDesc(
                     SegmentType.AGE, age.code());
             map.put(age.code() + "가 선호하는 카페", toCards(ageScores, topN));
         }
-        // GENDER
+
         if (user.getGender() == Gender.MALE || user.getGender() == Gender.FEMALE) {
             var gScores = scoreRepo.findTop50ById_SegmentTypeAndId_SegmentValueOrderByScore30dDesc(
                     SegmentType.GENDER, user.getGender().name());
@@ -49,7 +49,7 @@ public class SegmentRecommendationService {
     }
 
     private List<PlaceCardDto> toCards(List<CafeSegmentScore> scores, int topN){
-        // 1) 점수에서 cafeId 모으기
+
         List<Long> ids = scores.stream()
                 .map(s -> s.getId().getCafeId())
                 .distinct()
@@ -58,11 +58,11 @@ public class SegmentRecommendationService {
 
         if (ids.isEmpty()) return List.of();
 
-        // 2) 일괄 조회: Cafe, 리뷰 개수
+
         Map<Long, Cafe> cafeMap = cafeRepo.findAllById(ids).stream()
                 .collect(Collectors.toMap(Cafe::getId, c -> c));
 
-        Map<Long, Integer> reviewCounts = reviewRepository.countByCafeIds(ids).stream()  // ✅ 여기서 집계
+        Map<Long, Integer> reviewCounts = reviewRepository.countByCafeIds(ids).stream()
                 .collect(Collectors.toMap(
                         ReviewRepository.CafeReviewCount::getCafeId,
                         rc -> Math.toIntExact(rc.getCnt())
@@ -83,7 +83,7 @@ public class SegmentRecommendationService {
                     .address(c.getAddressRoad())
                     .heroImageUrl(c.getHeroImageUrl())
                     .averageRating(c.getAverageRating()==null?0.0:c.getAverageRating().doubleValue())
-                    .reviewCount(reviewCounts.getOrDefault(cafeId, 0))              // ✅ 수정 포인트
+                    .reviewCount(reviewCounts.getOrDefault(cafeId, 0))
                     .build());
 
             if (list.size() >= topN) break;

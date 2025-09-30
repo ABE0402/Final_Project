@@ -99,7 +99,7 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
     List<Cafe> findByOwner_Id(Long ownerId);
     boolean existsByIdAndOwner_Id(Long id, Long ownerId);
 
-//    /* 오수현씨의 검색 기능 */
+    //    /* 오수현씨의 검색 기능 */
 //    @Query("""
 //        SELECT DISTINCT c
 //        FROM Cafe c
@@ -112,5 +112,16 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
     //LEFT JOIN → 메뉴까지 검색 가능
     //DISTINCT → 하나의 카페가 여러 메뉴에 걸쳐 중복 출력되는 것 방지
     List<Cafe> findByIdInAndApprovalStatusAndIsVisible(List<Long> ids, ApprovalStatus approvalStatus, boolean isVisible);
+
+    @Query("""
+        select distinct c
+        from Cafe c
+        left join fetch c.cafeTags ct
+        left join fetch ct.tag
+        where c.approvalStatus = :status
+    """)
+    List<Cafe> findAllWithTagsByStatus(@Param("status") ApprovalStatus status);
+
+    boolean existsByIdAndApprovalStatus(Long id, ApprovalStatus status);
 
 }

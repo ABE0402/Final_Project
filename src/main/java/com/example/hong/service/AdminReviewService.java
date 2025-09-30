@@ -67,7 +67,6 @@ public class AdminReviewService {
         var r = reviewRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("리뷰를 찾을 수 없습니다."));
         if (!r.isDeleted()) {
             r.setDeleted(true);
-            // flush는 트랜잭션 경계에서 처리(JPA @Transactional 필요 시 Service 클래스/메서드에 추가)
         }
     }
 

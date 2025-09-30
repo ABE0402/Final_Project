@@ -3,7 +3,7 @@ import torch
 import kss
 import os
 import json
-import sys # sys 라이브러리 import
+import sys
 
 # 1. 모델과 토크나이저 로딩
 model_name = "tabularisai/multilingual-sentiment-analysis"
@@ -22,7 +22,7 @@ def predict_sentiment_score(text):
 
 # 2. JSON 파일에서 키워드 불러오기
 try:
-    # 스크립트 파일의 현재 위치를 기준으로 keywords.json 파일의 절대 경로를 계산
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     json_path = os.path.join(script_dir, 'keywords.json')
 
@@ -42,7 +42,7 @@ def analyze_aspect_sentiment_korean(review_text):
             scores = [predict_sentiment_score(s) for s in relevant_sentences]
             average_score = round(sum(scores) / len(scores), 1)
             results[aspect] = average_score
-        # '언급 없음'은 결과에 포함시키지 않음 (Java에서 처리하기 더 용이)
+
     return results
 
 # 3. Java 호출을 위한 메인 실행 블록

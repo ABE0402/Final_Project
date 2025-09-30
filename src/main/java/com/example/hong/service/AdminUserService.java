@@ -15,7 +15,7 @@ import java.util.List;
 public class AdminUserService {
     private final UserRepository userRepository;
 
-    /** OWNER → USER 권한 회수 */
+    //점주 유저 권한 회수
     @Transactional
     public void demoteOwnerToUser(Long userId, String reason) {
         User u = userRepository.findById(userId)
@@ -24,11 +24,9 @@ public class AdminUserService {
             throw new IllegalStateException("관리자 권한은 이 화면에서 변경할 수 없습니다.");
         }
         if (u.getRole() != UserRole.OWNER) {
-            // 이미 점주가 아니면 무시(또는 예외)
             return;
         }
         u.setRole(UserRole.USER);
-        // TODO: reason을 저장하려면 AdminAudit 같은 테이블을 추가해 보관
     }
 
 

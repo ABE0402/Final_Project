@@ -18,9 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     List<User> findAllByRoleOrderByCreatedAtDesc(UserRole role);
-    List<User> findAllByRoleNotOrderByCreatedAtDesc(UserRole role); // ADMIN 제외 기본목록
+    List<User> findAllByRoleNotOrderByCreatedAtDesc(UserRole role);
 
-    // 검색 + 필터 (ADMIN 제외)
     @Query("""
       SELECT u FROM User u
       WHERE u.role <> com.example.hong.domain.UserRole.ADMIN

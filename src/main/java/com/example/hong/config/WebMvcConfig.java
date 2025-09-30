@@ -17,13 +17,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 예: file:/C:/Users/you/HONGAROUND/uploads/
+
         String fileUri = Paths.get(uploadDir).toAbsolutePath().toUri().toString();
-        // 꼭 슬래시로 끝나도록 (Spring이 디렉터리로 인식)
+
         if (!fileUri.endsWith("/")) fileUri = fileUri + "/";
 
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations(fileUri) // 예: file:/C:/.../uploads/
+                .addResourceLocations(fileUri)
                 .setCacheControl(CacheControl.maxAge(Duration.ofDays(7)).cachePublic());
     }
 }

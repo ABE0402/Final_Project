@@ -35,6 +35,9 @@ public class OwnerShopService {
     private final TagRepository tagRepository;
     private final CafeTagRepository cafeTagRepository;
 
+    // ★ 카카오 지오코딩 서비스 주입
+    private final KakaoLocalService kakaoLocalService;
+
     @Value("${app.upload.dir:./uploads}")
     private String uploadRoot;
 
@@ -49,7 +52,7 @@ public class OwnerShopService {
             "companion",   2,
             "mood",        2,
             "amenities",   2,
-            "reservation", 1, // ★ 예약여부는 1개만
+            "reservation", 1,
             "priority",    2,
             "type",        2
     );
@@ -68,8 +71,12 @@ public class OwnerShopService {
     }
 
     private Long createCafe(User owner, ShopCreateRequestDto req) {
-        BigDecimal lat = req.getLat() == null ? null : BigDecimal.valueOf(req.getLat());
-        BigDecimal lng = req.getLng() == null ? null : BigDecimal.valueOf(req.getLng());
+        // ===== 좌표 보정 (lat/lng 없으면 카카오 지오코딩으로 채우기) =====
+        LatLng ll = resolveCoordinatesOrThrow(
+                req.getLat(), req.getLng(),
+                req.getAddressRoad(),
+                req.getName()
+        );
 
         Cafe c = Cafe.builder()
                 .owner(owner)
@@ -78,8 +85,8 @@ public class OwnerShopService {
                 .addressRoad(req.getAddressRoad())
                 .postcode(emptyToNull(req.getPostcode()))
                 .description(emptyToNull(req.getDescription()))
-                .lat(lat)
-                .lng(lng)
+                .lat(BigDecimal.valueOf(ll.lat()))
+                .lng(BigDecimal.valueOf(ll.lng()))
                 .build();
 
         // 사업자번호
@@ -153,8 +160,23 @@ public class OwnerShopService {
         c.setAddressRoad(emptyToNull(req.getAddressRoad()));
         c.setDescription(emptyToNull(req.getDescription()));
 
-        if (req.getLat() != null) c.setLat(BigDecimal.valueOf(req.getLat()));
-        if (req.getLng() != null) c.setLng(BigDecimal.valueOf(req.getLng()));
+        // ===== 좌표 보정 (요청에 lat/lng 누락이거나 주소/이름 변경되면 재시도) =====
+        Double reqLat = req.getLat();
+        Double reqLng = req.getLng();
+        boolean needResolve = (reqLat == null || reqLng == null);
+
+        if (needResolve) {
+            LatLng ll = resolveCoordinatesOrThrow(
+                    reqLat, reqLng,
+                    c.getAddressRoad(), // 변경 후 주소 기준
+                    c.getName()
+            );
+            c.setLat(BigDecimal.valueOf(ll.lat()));
+            c.setLng(BigDecimal.valueOf(ll.lng()));
+        } else {
+            c.setLat(BigDecimal.valueOf(reqLat));
+            c.setLng(BigDecimal.valueOf(reqLng));
+        }
 
         if (req.getImage() != null && !req.getImage().isEmpty()) {
             c.setHeroImageUrl(storeImage(req.getImage(), CAFE_DIR, URL_PREFIX_CAFE));
@@ -182,6 +204,39 @@ public class OwnerShopService {
         c.setVisible(false);
     }
 
+    /* ================= 좌표 보정 헬퍼 ================= */
+
+    private record LatLng(double lat, double lng) {}
+
+    /**
+     * lat/lng가 있으면 그대로 사용.
+     * 없으면 (1) 도로명주소 지오코딩 → (2) 키워드(상호+주소) 지오코딩.
+     * 둘 다 실패하면 400(Bad Request)에 해당하는 IllegalArgumentException 발생.
+     */
+    private LatLng resolveCoordinatesOrThrow(Double lat, Double lng, String roadAddress, String name) {
+        if (lat != null && lng != null) {
+            return new LatLng(lat, lng);
+        }
+
+        KakaoLocalService.Coordinate c = null;
+        try {
+            if (roadAddress != null && !roadAddress.isBlank()) {
+                c = kakaoLocalService.geocodeByAddress(roadAddress.trim());
+            }
+            if (c == null) {
+                String q = ((name == null ? "" : name) + " " + (roadAddress == null ? "" : roadAddress)).trim();
+                if (!q.isBlank()) c = kakaoLocalService.geocodeFirst(q);
+            }
+        } catch (Exception e) {
+            log.warn("Geocoding failed: {}", e.getMessage());
+        }
+
+        if (c == null) {
+            throw new IllegalArgumentException("좌표를 찾을 수 없습니다. 주소/가게명을 확인해 주세요.");
+        }
+        return new LatLng(c.lat(), c.lng());
+    }
+
     /* ================= 이미지 유틸 ================= */
 
     private String storeImage(MultipartFile file, String dirName, String urlPrefix) {
@@ -196,7 +251,6 @@ public class OwnerShopService {
             Path dir = Paths.get(uploadRoot, dirName);
             Files.createDirectories(dir);
             Files.copy(file.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-            // 정적 자원 매핑이 /uploads/** → {uploadRoot} 라고 가정
             return ("/uploads/" + dirName + "/" + filename).replace("\\","/");
         } catch (Exception e) {
             log.error("storeImage failed", e);

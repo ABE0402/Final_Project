@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>주변 카페·식당 보기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root{ --olive:#3a7d44; --olive-600:#2f6a39; }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:#111; }
+        .text-olive{ color:var(--olive)!important; }
+        .btn-olive{ background:var(--olive); color:#fff; border:1px solid var(--olive); }
+        .btn-olive:hover{ background:var(--olive-600); border-color:var(--olive-600); color:#fff; }
+        .btn.btn-outline-olive{ border-color:var(--olive); color:var(--olive); }
+        .btn.btn-outline-olive:hover{ background:var(--olive); color:#fff; }
+        .brand-mark{ width:22px; height:22px; background:var(--olive); display:inline-block; }
+        .topbar { display:flex; gap:12px; padding:12px 16px; align-items:center; border-bottom:1px solid #eee; }
+        .segmented { display:inline-flex; border:1px solid #ddd; border-radius:999px; overflow:hidden; }
+        .segmented button { padding:8px 14px; border:0; background:#fff; cursor:pointer; font-weight:600; }
+        .segmented button.active { background:#111; color:#fff; }
+        .legend { margin-left:auto; display:flex; gap:12px; align-items:center; font-size:12px; color:#666 }
+        .legend .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+        .content { display:grid; grid-template-columns: 1.2fr 2.8fr; }
+        .sidebar { min-width:360px; max-width:680px; padding:16px; border-right:1px solid #eee; overflow:auto; }
+        .sidebar h3 { margin:6px 0 14px; font-size:16px; }
+        .list { display:flex; flex-direction:column; gap:14px; }
+        .item { position: relative; display:flex; flex-direction:column; gap:10px; padding:16px; border:1px solid #e6e6e6; border-radius:14px; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.03); }
+        .item.highlight { border-color:#c9e4ff; box-shadow:0 1px 6px rgba(0,113,227,.12); }
+        .title { font-weight:800; font-size:17px; line-height:1.35; padding-right:112px; }
+        .desc { font-size:14px; color:#444; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+        .btn-view-top { position:absolute; top:12px; right:12px; z-index:2; padding:8px 12px; border:none; border-radius:10px; background:#111; color:#fff; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+        .btn-view-top:hover { filter:brightness(1.05); }
+        .amenities { display:flex; gap:8px; flex-wrap:wrap; margin-top:2px; }
+        .amenity { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:#f5f7fb; border:1px solid #e7ebf3; box-shadow:0 1px 1px rgba(0,0,0,.02); }
+        .amenity svg { width:16px; height:16px; display:block; }
+        .gallery { display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:2px; }
+        .gallery img { width:100%; height:110px; object-fit:cover; border-radius:10px; background:#f3f3f3; }
+        .actions { margin-top:6px; display:flex; gap:10px; }
+        .btn { padding:8px 12px; border:1px solid #ddd; background:#fafafa; border-radius:10px; cursor:pointer; text-decoration:none; color:#111; font-weight:600; font-size:13px; }
+        .mapwrap { position:relative; }
+        #map { position:absolute; inset:0; }
+        @media (max-width: 980px) {
+          .content { grid-template-columns: 1fr; }
+          .mapwrap { height: 480px; }
+          #map { position:relative; height:100%; }
+          .sidebar { min-width: unset; }
+          .title { padding-right:96px; }
+          .btn-view-top { top:10px; right:10px; padding:7px 10px; }
+          .legend { display:none; }
+        }
+    </style>
+</head>
+<body>
+
+<header id="siteHeader" class="site-header border-bottom bg-white">
+    <nav class="container d-flex align-items-center justify-content-between py-3 gap-3">
+        <a href="/" class="brand d-inline-flex align-items-center text-decoration-none">
+            <span class="brand-mark rounded-2 me-2"></span>
+            <span class="fw-bold text-olive">Hong Around</span>
+        </a>
+        <form id="globalSearchForm" class="d-none d-md-block flex-grow-1 mx-3" action="/search" method="get" style="max-width:560px;">
+            <div class="input-group input-group-sm shadow-sm">
+                <input id="globalSearchInput" type="search" name="q" class="form-control" placeholder="카페/식당명, 지역, 메뉴로 검색" aria-label="검색">
+                <button class="btn btn-outline-olive" type="submit">검색</button>
+            </div>
+        </form>
+        <div class="d-flex align-items-center gap-2">
+            {{#auth.isLoggedIn}}
+                {{#auth.isOwner}}
+                    <a href="/owner" class="badge text-bg-success text-decoration-none">점주</a>
+                    <a href="/owner/shops/new" class="btn btn-sm btn-outline-olive">가게 등록</a>
+                {{/auth.isOwner}}
+                {{#auth.isAdmin}}
+                    <a class="btn btn-warning btn-sm" href="/admin">관리자</a>
+                {{/auth.isAdmin}}
+                <a class="btn btn-sm btn-outline-olive" href="/mypage">마이페이지</a>
+                <form method="post" action="/logout" class="m-0">
+                    {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">로그아웃</button>
+                </form>
+            {{/auth.isLoggedIn}}
+            {{^auth.isLoggedIn}}
+                <a class="btn btn-sm btn-outline-olive" href="/login">로그인</a>
+                <a class="btn btn-sm btn-olive" href="/signup">회원가입</a>
+            {{/auth.isLoggedIn}}
+        </div>
+    </nav>
+    <div class="container d-md-none pb-3">
+        <form id="mobileSearchForm" action="/search" method="get">
+            <div class="input-group input-group-sm shadow-sm">
+                <input id="mobileSearchInput" type="search" name="q" class="form-control" placeholder="검색">
+                <button class="btn btn-outline-olive" type="submit">검색</button>
+            </div>
+        </form>
+    </div>
+</header>
+
+<div class="topbar" id="topBar">
+    <div class="segmented" id="catToggle">
+        <button data-cat="CE7" class="active">카페</button>
+        <button data-cat="FD6">식당</button>
+    </div>
+    <div style="font-size:13px;color:#666;">내 위치 기준 반경 500m (지도 중심 고정)</div>
+    <div class="legend">
+    <span style="display:inline-flex; align-items:center; gap:6px;">
+      <span class="dot" style="background:#2D7DF6"></span> 카페
+    </span>
+        <span style="display:inline-flex; align-items:center; gap:6px;">
+      <span class="dot" style="background:#FF8A00"></span> 식당
+    </span>
+    </div>
+</div>
+
+<div class="content" id="mainContent">
+    <aside class="sidebar">
+        <h3>내 리스트</h3>
+        <div id="searchNotice" style="display:none; margin-bottom:8px; font-size:13px; color:#555;"></div>
+        <div id="myList" class="list"></div>
+    </aside>
+    <section class="mapwrap">
+        <div id="map"></div>
+    </section>
+</div>
+<div class="modal fade" id="image-modal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="image-modal-title">이미지 보기</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="modal-carousel" class="carousel slide">
+                    <div class="carousel-inner" id="modal-carousel-inner">
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#modal-carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#modal-carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey={{kakaoJsKey}}&libraries=services,clusterer&autoload=false"></script>
+<script>
+    // ===== Config
+    const RADIUS_M = 500;
+    const FOCUS_RADIUS_M = 100;
+    let selectedCat = 'CE7';
+    const AUTO_FIT_PADDING = 12;
+    const CARD = { WIDTH: 360, COVER_H: 200, THUMB: 64 };
+
+    function adjustContentHeight(){
+      const header = document.getElementById('siteHeader');
+      const topbar = document.getElementById('topBar');
+      const mc = document.getElementById('mainContent');
+      const hh = header ? header.offsetHeight : 0;
+      const th = topbar ? topbar.offsetHeight : 0;
+      mc.style.height = `calc(100vh - ${hh + th}px)`;
+    }
+    window.addEventListener('resize', adjustContentHeight);
+
+    // ===== State
+    let map, circle, myClusterer;
+    let geocoder, placesSvc;
+    let sharedIW = null, currentInfoMarker = null;
+
+    const allServerData = {{{allCafesJson}}};
+    let myPlaces = allServerData;
+
+    const myPlaceCoords = new Map();
+    const myMarkers = new Map();
+    let userCenter = null;
+
+    // ===== Utils
+    const norm = s => (s||'').toString().trim().toLowerCase();
+    function normalizeImages(p) {
+      if (Array.isArray(p.images) && p.images.length) return p.images.filter(Boolean);
+      if (Array.isArray(p.imageUrls) && p.imageUrls.length) return p.imageUrls.filter(Boolean);
+      if (p.heroImageUrl) return [p.heroImageUrl];
+      if (p.image) return [p.image];
+      return [];
+    }
+    function getDesc(p){ return (p.description || p.desc || '').toString(); }
+    function joinAddress(p){
+      if (p.address) return p.address;
+      const road = p.addressRoad || ''; const det = p.addressDetail || '';
+      return (road + (det ? ' ' + det : '')).trim();
+    }
+    function distanceMeters(lat1, lng1, lat2, lng2) {
+      const toRad = d => d * Math.PI / 180;
+      const R = 6371000;
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a = Math.sin(dLat/2)**2 +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLng/2)**2;
+      return 2 * R * Math.asin(Math.sqrt(a));
+    }
+    function longestCommonSubstringLen(a, b){
+      a = norm(a); b = norm(b);
+      const n=a.length, m=b.length;
+      if(!n || !m) return 0;
+      let prev = new Array(m+1).fill(0), best = 0;
+      for(let i=1;i<=n;i++){
+        const cur = new Array(m+1).fill(0);
+        for(let j=1;j<=m;j++){
+          if(a[i-1] === b[j-1]){
+            cur[j] = prev[j-1] + 1;
+            if(cur[j] > best) best = cur[j];
+          }
+        }
+        prev = cur;
+      }
+      return best;
+    }
+
+    // ===== 편의시설 아이콘
+    const IColor = { stroke: '#334155', fill: '#334155' };
+    const Icons = {
+      parking: () => `<svg viewBox="0 0 24 24" fill="none" stroke="${IColor.stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6h-4"></path></svg>`,
+      restroom: () => `<svg viewBox="0 0 24 24" fill="none" stroke="${IColor.stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12M8 7v10m8-10v10M6 17h12"></path><text x="12" y="14" text-anchor="middle" font-size="7" fill="${IColor.fill}" font-family="system-ui, -apple-system, Segoe UI, Roboto">WC</text></svg>`,
+      waiting: () => `<svg viewBox="0 0 24 24" fill="none" stroke="${IColor.stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h12M8 18l1-5h6l1 5"></path><rect x="9" y="6" width="6" height="5" rx="2"></rect></svg>`,
+      pets: () => `<svg viewBox="0 0 24 24" fill="${IColor.fill}" stroke="none"><circle cx="7.5" cy="8" r="1.6"/><circle cx="12" cy="6.6" r="1.6"/><circle cx="16.5" cy="8" r="1.6"/><circle cx="9.6" cy="11.5" r="1.6"/><path d="M12 12c3 0 4.8 1.8 4.8 3.8 0 2-1.7 3.2-3.8 3.2h-2c-2.1 0-3.8-1.2-3.8-3.2 0-2 1.8-3.8 4.8-3.8z"/></svg>`,
+      takeout: () => `<svg viewBox="0 0 24 24" fill="none" stroke="${IColor.stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h10l2 12H5L7 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>`,
+      reserve: () => `<svg viewBox="0 0 24 24" fill="none" stroke="${IColor.stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 9h18"></path><path d="M8 13h4"></path></svg>`
+    };
+    function renderAmenityChips(p){
+      const up = (arr)=> (arr||[]).map(x=>String(x).toUpperCase());
+      const a = {
+        parking: p.has_parking || p.hasParking || up(p.amenities).includes('PARKING'),
+        restroom: p.has_restroom || p.hasRestroom || p.restroomAvailable || up(p.amenities).includes('RESTROOM'),
+        waiting: p.has_waiting_room || p.hasWaitingRoom || up(p.amenities).includes('WAITING'),
+        pets: p.allows_pets || p.allowsPets || up(p.amenities).includes('PETS'),
+        takeout: p.takeout_available || p.takeoutAvailable || up(p.amenities).includes('TAKEOUT'),
+        reserve: p.reservation_available || p.reservationAvailable || up(p.amenities).includes('RESERVATION'),
+      };
+      const entries = [
+        ['parking','주차장', Icons.parking],
+        ['restroom','화장실', Icons.restroom],
+        ['waiting','대기공간', Icons.waiting],
+        ['pets','반려동물', Icons.pets],
+        ['takeout','포장가능', Icons.takeout],
+        ['reserve','예약가능', Icons.reserve],
+      ];
+      const chips = entries.filter(([k])=>a[k]).map(([,title,icon])=>`<span class="amenity" title="${title}">${icon()}</span>`);
+      return chips.length ? `<div class="amenities">${chips.join('')}</div>` : '';
+    }
+
+    // ▼▼▼ 수정된 부분 (누락된 함수들 추가) ▼▼▼
+    // 마커 SVG
+    const _svgDataUrl = (svg) => 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+
+    function svgCafePin({ fill = '#2D7DF6', stroke = '#0B56C4' } = {}) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 56 80">
+          <path d="M28 2c-12.15 0-22 9.85-22 22 0 16.2 16.2 29.9 21.2 52.7a1.6 1.6 0 0 0 1.6 1.3
+                   1.6 1.6 0 0 0 1.6-1.3C33.8 53.9 50 40.2 50 24 50 11.85 40.15 2 28 2z"
+                fill="${fill}" stroke="${stroke}" stroke-width="2"/>
+          <circle cx="28" cy="24" r="8.5" fill="#fff"/>
+          <g transform="translate(28 24) scale(0.7) translate(-28 -24)">
+            <rect x="21" y="19" width="14" height="8" rx="2" ry="2" fill="${stroke}" opacity=".9"/>
+            <rect x="34" y="20.5" width="5.5" height="5" rx="2.5" fill="${stroke}" opacity=".9"/>
+            <rect x="23" y="28" width="10" height="2.6" rx="1.3" fill="${stroke}" opacity=".9"/>
+          </g>
+        </svg>`;
+      return _svgDataUrl(svg);
+    }
+
+    function svgFoodPin({ fill = '#FF8A00', stroke = '#C96A00' } = {}) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 56 80">
+          <path d="M28 6 L50 28 L28 50 L6 28 Z" fill="${fill}" stroke="${stroke}" stroke-width="2"/>
+          <path d="M28 50 L35 66 L21 66 Z" fill="${fill}" stroke="${stroke}" stroke-width="2"/>
+          <g stroke="#fff" stroke-width="2.3" stroke-linecap="round">
+            <path d="M23 22 v14" />
+            <path d="M20.7 22 v6" />
+            <path d="M25.3 22 v6" />
+            <path d="M33 22 v14" />
+            <path d="M33 22 q4 4 -1 8" />
+          </g>
+        </svg>`;
+      return _svgDataUrl(svg);
+    }
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+    function markerImgForType(type){
+      const t = (type||'').toUpperCase();
+      const imgUrl = (t === 'CAFE') ? svgCafePin({ fill:'#2D7DF6', stroke:'#0B56C4' })
+                                    : svgFoodPin({ fill:'#FF8A00', stroke:'#C96A00' });
+      return new kakao.maps.MarkerImage(imgUrl, new kakao.maps.Size(28, 40), { offset: new kakao.maps.Point(14, 40) });
+    }
+
+    // 지도/클러스터/파란 원
+    function initMap(lat, lng) {
+      map = new kakao.maps.Map(document.getElementById('map'), {
+        center: new kakao.maps.LatLng(lat, lng), level: 5
+      });
+      resetClustererForSelected();
+      setTimeout(()=>{ map.relayout(); fitCircleNow(); adjustContentHeight(); },0);
+      window.addEventListener('resize', () => {
+        map.relayout();
+        setTimeout(()=>{ fitCircleNow(); adjustContentHeight(); },0);
+      });
+    }
+    function resetClustererForSelected(){
+      try { myClusterer.clear(); } catch(_) {}
+      const isCafe = (selectedCat === 'CE7');
+      myClusterer = new kakao.maps.MarkerClusterer({
+        map, averageCenter:true, minLevel:6,
+        styles:[{ width:'38px', height:'38px', background: isCafe ? '#2D7DF6' : '#FF8A00',
+          color:'#fff', borderRadius:'50%', lineHeight:'38px', textAlign:'center',
+          fontWeight:'700', fontSize:'13px', boxShadow:'0 1px 3px rgba(0,0,0,.2)'}]
+      });
+    }
+    function drawUserRadius() {
+      if (!userCenter) return;
+      if (circle) circle.setMap(null);
+      circle = new kakao.maps.Circle({
+        center: new kakao.maps.LatLng(userCenter.lat, userCenter.lng),
+        radius: RADIUS_M,
+        strokeWeight: 2, strokeColor: '#0052cc', strokeOpacity: 0.8,
+        strokeStyle: 'solid', fillColor: '#0052cc', fillOpacity: 0.12
+      });
+      circle.setMap(map);
+    }
+    function fitMapToCircle(lat, lng, radiusMeters, paddingPx = AUTO_FIT_PADDING) {
+      const dLat = radiusMeters / 111320;
+      const rad = Math.PI / 180;
+      const dLng = radiusMeters / (111320 * Math.cos(lat * rad));
+      const sw = new kakao.maps.LatLng(lat - dLat, lng - dLng);
+      const ne = new kakao.maps.LatLng(lat + dLat, lng + dLng);
+      const bounds = new kakao.maps.LatLngBounds(sw, ne);
+      try { map.setBounds(bounds, paddingPx); } catch (_) { map.setBounds(bounds); }
+    }
+    function fitCircleNow(padding = AUTO_FIT_PADDING){
+      if (!userCenter) return;
+      fitMapToCircle(userCenter.lat, userCenter.lng, RADIUS_M, padding);
+    }
+
+    // 좌표
+    async function ensureCoords(p) {
+      if (myPlaceCoords.has(p.id)) return myPlaceCoords.get(p.id);
+      if (Number.isFinite(p.lat) && Number.isFinite(p.lng)) {
+        const v = { lat: Number(p.lat), lng: Number(p.lng) };
+        myPlaceCoords.set(p.id, v); return v;
+      }
+      const addr = p.address || p.addressRoad || '';
+      const kw   = [p.name, p.location].filter(Boolean).join(' ');
+      const byAddress = await new Promise(res => {
+        if (!addr) return res(null);
+        geocoder.addressSearch(addr, (r, status) => {
+          if (status === kakao.maps.services.Status.OK && r[0]) {
+            res({ lat: parseFloat(r[0].y), lng: parseFloat(r[0].x) });
+          } else res(null);
+        });
+      });
+      if (byAddress) { myPlaceCoords.set(p.id, byAddress); return byAddress; }
+      const byKeyword = await new Promise(res => {
+        if (!kw) return res(null);
+        placesSvc.keywordSearch(
+          kw,
+          (r, status) => {
+            if (status === kakao.maps.services.Status.OK && r[0]) {
+              res({ lat: parseFloat(r[0].y), lng: parseFloat(r[0].x) });
+            } else res(null);
+          },
+          userCenter ? { x: userCenter.lng, y: userCenter.lat } : undefined
+        );
+      });
+      if (byKeyword) myPlaceCoords.set(p.id, byKeyword);
+      return byKeyword;
+    }
+
+    // 인포윈도우
+function renderInfoHtml(p) {
+    const imgs = normalizeImages(p);
+    const cover = imgs[0];
+    const others = imgs.slice(1, 4);
+    const desc = (p.description || p.desc || '') + '';
+    const addr = joinAddress(p);
+
+    const titleHtml = String(p.id).startsWith('json_')
+        ? `<div style="font-weight:800;font-size:16px;margin-top:10px;word-break:keep-all;overflow-wrap:anywhere;">${p.name || ''}</div>`
+        : `<a href="/cafes/${p.id}" style="text-decoration:none; color:inherit;">
+               <div style="font-weight:800;font-size:16px;margin-top:10px;word-break:keep-all;overflow-wrap:anywhere;">${p.name || ''}</div>
+           </a>`;
+
+    const thumbs = others.map(u => `
+    <img src="${u}" alt=""
+         style="width:${CARD.THUMB}px;height:${CARD.THUMB}px;object-fit:cover;border-radius:8px;background:#f2f2f2"
+         loading="lazy"/>
+    `).join('');
+
+    return `
+    <div style="width:${CARD.WIDTH}px;padding:10px;line-height:1.45;overflow:hidden;">
+      ${cover ? `<img src="${cover}" alt="" style="width:100%;height:${CARD.COVER_H}px;object-fit:cover;border-radius:10px;background:#f2f2f2" loading="lazy" />` : ``}
+      ${titleHtml}
+      ${desc ? `<div style="font-size:13px;color:#555;margin-top:6px;">${desc}</div>` : ``}
+      ${addr ? `<div style="font-size:12px;color:#888;margin-top:6px;">${addr}</div>` : ``}
+      ${renderAmenityChips(p)}
+      ${others.length ? `<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:nowrap;">${thumbs}</div>` : ``}
+    </div>
+    `;
+}
+
+    // 타입 헬퍼/리스트 렌더
+    function wantTypeNow(){ return (selectedCat === 'CE7') ? 'CAFE' : 'RESTAURANT'; }
+    function renderList(orderIds = []) {
+    const wrap = document.getElementById('myList');
+    const notice = document.getElementById('searchNotice');
+    wrap.innerHTML = '';
+    const wantType = wantTypeNow();
+    const want = myPlaces.filter(p => (p.type || '').toUpperCase() === wantType);
+
+    const orderSet = new Set(orderIds);
+    const ordered = [
+        ...want.filter(p => orderSet.has(p.id)),
+        ...want.filter(p => !orderSet.has(p.id))
+    ];
+
+    if (orderIds.length) {
+        notice.style.display = 'block';
+        notice.textContent = `검색 결과 ${orderIds.length}건이 상단에 노출되었습니다.`;
+    } else {
+        notice.style.display = 'none';
+        notice.textContent = '';
+    }
+
+    for (const p of ordered) {
+        const imgs = normalizeImages(p).slice(0, 3);
+        const desc = getDesc(p);
+        const isTop = orderSet.has(p.id);
+
+        const titleHtml = String(p.id).startsWith('json_')
+            ? `<div class="title">${p.name || ''}</div>`
+            : `<a href="/cafes/${p.id}" class="title text-decoration-none text-reset">${p.name || ''}</a>`;
+
+        const item = document.createElement('div');
+        item.className = 'item' + (isTop ? ' highlight' : '');
+        item.innerHTML = `
+          <button class="btn-view-top btn-view" data-id="${p.id}">지도에서 보기</button>
+          ${titleHtml}
+          ${desc ? `<div class="desc">${desc}</div>` : `<div class="desc" style="color:#888">소개가 아직 없어요</div>`}
+          ${renderAmenityChips(p)}
+          <div class="gallery">
+            ${imgs.length ? imgs.map(u => `<img src="${u}" alt="" loading="lazy" />`).join('') :
+            `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='200'><rect width='100%' height='100%' fill='%23f3f3f3'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='14'>이미지 없음</text></svg>" alt="" />`}
+          </div>
+          <div class="actions">
+            ${p.url ? `<a class="btn" href="${p.url}" target="_blank">링크</a>` : ``}
+          </div>
+        `;
+        wrap.appendChild(item);
+    }
+}
+
+    // 마커
+    async function refreshMyMarkers() {
+      if (!userCenter) return;
+      resetClustererForSelected();
+      const showMarkers = [];
+      const wantType = wantTypeNow();
+      for (const p of myPlaces) {
+        if ((p.type || '').toUpperCase() !== wantType) {
+          const mk0 = myMarkers.get(p.id); if (mk0 && mk0.getMap()) mk0.setMap(null);
+          continue;
+        }
+        const coord = await ensureCoords(p);
+        if (!coord) { const mk0 = myMarkers.get(p.id); if (mk0 && mk0.getMap()) mk0.setMap(null); continue; }
+        const dist = distanceMeters(userCenter.lat, userCenter.lng, coord.lat, coord.lng);
+        const inside = dist <= RADIUS_M;
+        let mk = myMarkers.get(p.id);
+        if (!mk) {
+          const img = markerImgForType(p.type);
+          const coordCopy = { ...coord };
+          mk = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(coord.lat, coord.lng),
+            title: p.name,
+            image: img
+          });
+          kakao.maps.event.addListener(mk, 'click', () => {
+            const html = renderInfoHtml(p);
+            if (currentInfoMarker === mk) { sharedIW.close(); currentInfoMarker = null; return; }
+            sharedIW.setContent(html);
+            sharedIW.open(map, mk);
+            currentInfoMarker = mk;
+            fitMapToCircle(coordCopy.lat, coordCopy.lng, FOCUS_RADIUS_M);
+          });
+          myMarkers.set(p.id, mk);
+        } else {
+          mk.setPosition(new kakao.maps.LatLng(coord.lat, coord.lng));
+          mk.setImage(markerImgForType(p.type));
+        }
+        if (inside) {
+          if (!mk.getMap()) mk.setMap(map);
+          showMarkers.push(mk);
+        } else {
+          if (mk.getMap()) mk.setMap(null);
+        }
+      }
+      if (showMarkers.length) myClusterer.addMarkers(showMarkers);
+    }
+
+    // 카테고리 토글
+    function bindCategoryToggle() {
+      const wrap = document.getElementById('catToggle');
+      wrap.addEventListener('click', async (e) => {
+        const btn = e.target.closest('button'); if (!btn) return;
+        wrap.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedCat = btn.dataset.cat;
+        renderList([]);
+        await refreshMyMarkers();
+        fitCircleNow();
+      });
+    }
+
+    // 리스트 “지도에서 보기”
+    function bindListClick(){
+      const wrap = document.getElementById('myList');
+      wrap.onclick = async (e) => {
+        const btn = e.target.closest('.btn-view'); if (!btn) return;
+
+        const id = btn.dataset.id;
+        const item = myPlaces.find(x => x.id == id);
+
+        if (!item) { alert('가게 정보를 찾을 수 없습니다.'); return; }
+
+        const coord = await ensureCoords(item);
+        if (!coord) { alert('좌표를 찾지 못했어. 이름/주소를 확인해줘.'); return; }
+
+        const mk = myMarkers.get(id);
+        const html = renderInfoHtml(item);
+        sharedIW.setContent(html);
+        if (mk) { sharedIW.open(map, mk); currentInfoMarker = mk; }
+        else { sharedIW.setPosition(new kakao.maps.LatLng(coord.lat, coord.lng)); sharedIW.open(map); currentInfoMarker = null; }
+        fitMapToCircle(coord.lat, coord.lng, FOCUS_RADIUS_M);
+      };
+    }
+    async function highlightCafe(cafeId) {
+    const item = myPlaces.find(p => p.id == cafeId);
+    if (!item) {
+        console.warn(`ID [${cafeId}]에 해당하는 카페를 찾을 수 없습니다.`);
+        return;
+    }
+
+    const coord = await ensureCoords(item);
+    if (!coord) return;
+
+    const mk = myMarkers.get(item.id);
+    const html = renderInfoHtml(item);
+    sharedIW.setContent(html);
+
+    if (mk) {
+        sharedIW.open(map, mk);
+        currentInfoMarker = mk;
+    } else {
+        sharedIW.setPosition(new kakao.maps.LatLng(coord.lat, coord.lng));
+        sharedIW.open(map);
+        currentInfoMarker = null;
+    }
+
+    fitMapToCircle(coord.lat, coord.lng, FOCUS_RADIUS_M);
+    }
+    function bindGalleryClick() {
+    const listWrap = document.getElementById('myList');
+    const imageModalEl = document.getElementById('image-modal');
+    const imageModal = new bootstrap.Modal(imageModalEl);
+    const modalTitle = document.getElementById('image-modal-title');
+    const carouselInner = document.getElementById('modal-carousel-inner');
+
+    listWrap.addEventListener('click', function(e) {
+        if (!e.target.closest('.gallery img')) return;
+
+        const itemEl = e.target.closest('.item');
+        if (!itemEl) return;
+
+        const id = itemEl.querySelector('.btn-view').dataset.id;
+        const cafe = myPlaces.find(p => p.id == id);
+        if (!cafe) return;
+
+        const images = normalizeImages(cafe);
+        if (images.length === 0) return;
+
+        modalTitle.textContent = cafe.name;
+        carouselInner.innerHTML = images.map((imgUrl, index) => `
+            <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                <img src="${imgUrl}" class="d-block w-100" alt="카페 이미지">
+            </div>
+        `).join('');
+
+        imageModal.show();
+    });
+}
+
+    // 검색
+    function bindHeaderSearch(){
+      const forms = [
+        document.getElementById('globalSearchForm'),
+        document.getElementById('mobileSearchForm')
+      ].filter(Boolean);
+      const getQuery = () => {
+        const gi = document.getElementById('globalSearchInput');
+        const mi = document.getElementById('mobileSearchInput');
+        return (gi?.value || mi?.value || '').trim();
+      };
+      forms.forEach(f => f.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const q = getQuery();
+        if(q.length < 2){
+          alert('검색어를 2글자 이상 입력해 주세요.');
+          return;
+        }
+        const scoredAll = myPlaces
+          .map(p => ({ p, score: longestCommonSubstringLen(p.name||'', q) }))
+          .filter(x => x.score >= 2);
+        if(scoredAll.length === 0){
+          renderList([]);
+          const n = document.getElementById('searchNotice');
+          n.style.display = 'block';
+          n.textContent = '가게 이름을 찾을 수 없어요.';
+          alert('가게 이름을 찾을 수 없어요.');
+          fitCircleNow();
+          return;
+        }
+        scoredAll.sort((a,b) => {
+          if(b.score !== a.score) return b.score - a.score;
+          const ac = myPlaceCoords.get(a.p.id) || {lat:a.p.lat, lng:a.p.lng};
+          const bc = myPlaceCoords.get(b.p.id) || {lat:b.p.lat, lng:b.p.lng};
+          const ad = (ac?.lat && ac?.lng) ? distanceMeters(userCenter.lat, userCenter.lng, ac.lat, ac.lng) : Infinity;
+          const bd = (bc?.lat && bc?.lng) ? distanceMeters(userCenter.lat, userCenter.lng, bc.lat, bc.lng) : Infinity;
+          return ad - bd;
+        });
+        const best = scoredAll[0].p;
+        const bestType = (best.type || '').toUpperCase();
+        const targetCat = (bestType === 'CAFE') ? 'CE7' : 'FD6';
+        if(selectedCat !== targetCat){
+          selectedCat = targetCat;
+          const wrap = document.getElementById('catToggle');
+          wrap.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          const btn = wrap.querySelector(`button[data-cat="${targetCat}"]`);
+          if (btn) btn.classList.add('active');
+          renderList([]);
+          await refreshMyMarkers();
+        }
+        const wantType = wantTypeNow();
+        const topIds = scoredAll
+          .filter(x => (x.p.type||'').toUpperCase() === wantType)
+          .map(x => x.p.id);
+        renderList(topIds);
+        const coord = await ensureCoords(best);
+        if(!coord){
+          alert('선택한 가게 좌표를 찾지 못했습니다.');
+          fitCircleNow();
+          return;
+        }
+        const mk = myMarkers.get(best.id);
+        const html = renderInfoHtml(best);
+        sharedIW.setContent(html);
+        if (mk) { sharedIW.open(map, mk); currentInfoMarker = mk; }
+        else { sharedIW.setPosition(new kakao.maps.LatLng(coord.lat, coord.lng)); sharedIW.open(map); currentInfoMarker = null; }
+        fitMapToCircle(coord.lat, coord.lng, FOCUS_RADIUS_M);
+      }));
+    }
+
+    // ===== Start
+    function init() {
+      const baseLat = 37.55694, baseLng = 126.92391;
+      adjustContentHeight();
+      initMap(baseLat, baseLng);
+      bindCategoryToggle();
+      bindListClick();
+      bindGalleryClick();
+      bindHeaderSearch();
+      geocoder  = new kakao.maps.services.Geocoder();
+      placesSvc = new kakao.maps.services.Places();
+      sharedIW  = new kakao.maps.InfoWindow({ removable: true, zIndex: 3 });
+      kakao.maps.event.addListener(map, 'click', () => {
+        sharedIW.close(); currentInfoMarker = null;
+        fitCircleNow();
+      });
+      // mainMap.mustache 의 <script> 태그 안
+
+const start = async (lat, lng) => {
+    userCenter = { lat, lng };
+    initMap(lat, lng);
+    geocoder  = new kakao.maps.services.Geocoder();
+    placesSvc = new kakao.maps.services.Places();
+    sharedIW  = new kakao.maps.InfoWindow({ removable: true, zIndex: 3 });
+    kakao.maps.event.addListener(map, 'click', () => {
+        sharedIW.close(); currentInfoMarker = null;
+        fitCircleNow();
+    });
+
+    drawUserRadius();
+    renderList([]);
+    await refreshMyMarkers();
+    fitCircleNow();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlightId = urlParams.get('highlight');
+
+    if (highlightId) {
+        setTimeout(() => {
+            highlightCafe(highlightId);
+        }, 500); // 0.5초 딜레이
+    }
+};
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => start(pos.coords.latitude, pos.coords.longitude),
+          ()  => start(baseLat, baseLng),
+          { enableHighAccuracy:true, timeout:5000 }
+        );
+      } else {
+        start(baseLat, baseLng);
+      }
+    }
+
+    window.addEventListener('load', () => kakao.maps.load(init));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

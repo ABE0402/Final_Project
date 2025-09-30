@@ -5,6 +5,8 @@ import com.example.hong.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class CafeCreateRequestDto {
@@ -15,15 +17,24 @@ public class CafeCreateRequestDto {
     private String postcode;
     private String description;
 
-    // DTO를 Entity로 변환하는 메서드
+
+    private Double lat;   // 위도
+    private Double lng;   // 경도
+
+    // DTO -> Entity
     public Cafe toEntity(User owner) {
-        return Cafe.builder()
+        Cafe.CafeBuilder builder = Cafe.builder()
                 .name(this.name)
                 .phone(this.phone)
                 .addressRoad(this.addressRoad)
                 .postcode(this.postcode)
                 .description(this.description)
-                .owner(owner) // 가게 주인(User) 정보 설정
-                .build();
+                .owner(owner);
+
+
+        if (this.lat != null) builder.lat(BigDecimal.valueOf(this.lat));
+        if (this.lng != null) builder.lng(BigDecimal.valueOf(this.lng));
+
+        return builder.build();
     }
 }

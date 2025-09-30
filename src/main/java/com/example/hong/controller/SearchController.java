@@ -1,10 +1,14 @@
 package com.example.hong.controller;
 
 import com.example.hong.dto.CafeSearchResultDto;
+import com.example.hong.dto.MyPlaceDto;
 import com.example.hong.dto.SearchRequestDto;     // 요청을 담는 DTO
+import com.example.hong.service.MapService;
 import com.example.hong.service.SearchService;
 import com.example.hong.service.auth.AppUserPrincipal;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +23,22 @@ import java.util.List;
 public class SearchController {
 
     private final SearchService searchService;
+    private final MapService mapService;
+    private final ObjectMapper objectMapper;
+
+    @Value("${kakao.js-key}")
+    private String kakaoJsKey;
+
+    @GetMapping("/pages/mainMap")
+    public String mainMapPage(Model model) throws Exception {
+        List<MyPlaceDto> allCafes = mapService.getAllMapCafes();
+        String allCafesJson = objectMapper.writeValueAsString(allCafes);
+
+        model.addAttribute("allCafesJson", allCafesJson);
+        model.addAttribute("kakaoJsKey", kakaoJsKey);
+
+        return "pages/mainMap";
+    }
 
     @GetMapping("/search")
     public String search(

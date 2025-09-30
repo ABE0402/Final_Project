@@ -49,4 +49,43 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByRestaurant_IdInAndDeletedFalseOrderByCreatedAtDesc(Collection<Long> restaurantIds);
 
     Optional<Review> findByIdAndDeletedFalse(Long id);
+
+    @Query("""
+           select r.cafe.id as cafeId, count(r.id) as cnt
+             from Review r
+            where r.deleted = false
+              and r.cafe.id in :cafeIds
+            group by r.cafe.id
+           """)
+    List<CafeReviewCount> countByCafeIds(Collection<Long> cafeIds);
+
+    interface CafeReviewCount {
+        Long getCafeId();
+        Long getCnt();
+    }
+
+    @Query("""
+    select r from Review r
+    left join fetch r.cafe c
+    left join fetch r.restaurant rest
+    join fetch r.user u
+    where (:deleted is null or r.deleted = :deleted)
+    and (
+       :target is null
+       or (:target = 'CAFE' and c.id is not null)
+       or (:target = 'RESTAURANT' and rest.id is not null)
+       )
+    and (
+       :q = '' 
+       or lower(coalesce(r.content,'')) like lower(concat('%', :q, '%'))
+       or lower(coalesce(u.nickname,'')) like lower(concat('%', :q, '%'))
+       or lower(coalesce(u.email,'')) like lower(concat('%', :q, '%'))
+       or lower(coalesce(c.name,'')) like lower(concat('%', :q, '%'))
+       or lower(coalesce(rest.name,'')) like lower(concat('%', :q, '%'))
+    )
+    order by r.createdAt desc
+    """)
+    List<Review> adminSearch(@Param("q") String q,
+                             @Param("target") String target,   // null/CAFE/RESTAURANT
+                             @Param("deleted") Boolean deleted); // null/true/false
 }

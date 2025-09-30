@@ -37,7 +37,7 @@ public class AdminOwnerApplicationController {
                           @RequestParam(required=false) String note) {
         Long adminId = ((AppUserPrincipal) auth.getPrincipal()).getId();
         service.approve(id, adminId, note);
-        return "redirect:/admin/owner-applications";
+        return "redirect:/admin/owner_applications";
     }
 
     @PostMapping("/{id}/reject")
@@ -45,6 +45,6 @@ public class AdminOwnerApplicationController {
                          @RequestParam String reason) {
         Long adminId = ((AppUserPrincipal) auth.getPrincipal()).getId();
         service.reject(id, adminId, reason);
-        return "redirect:/admin/owner-applications/" + id + "?rejected=1";
+        return "redirect:/admin/owner_applications/" + id + "?rejected=1";
     }
 }

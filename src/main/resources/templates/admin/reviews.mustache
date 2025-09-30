@@ -1,0 +1,164 @@
+<!-- templates/admin/reviews.mustache -->
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"><title>리뷰 관리 - 관리자</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .clamp-2{
+          display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+          overflow:hidden; word-break:break-all;
+        }
+        .table thead th{ white-space:nowrap; }
+        .badge-target{ font-weight:600; }
+    </style>
+</head>
+<body class="bg-body-tertiary">
+{{> layout/header}}
+
+<main class="container py-5" style="max-width:1100px;">
+    <h4 class="mb-3">리뷰 관리</h4>
+
+    {{#msg}}<div class="alert alert-success">{{.}}</div>{{/msg}}
+    {{#err}}<div class="alert alert-danger">{{.}}</div>{{/err}}
+
+    <!-- 검색/필터 영역 -->
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <form class="row g-2 align-items-end" method="get" action="/admin/reviews">
+                <div class="col-md-3">
+                    <label class="form-label">대상</label>
+                    <select name="target" class="form-select">
+                        <option value="ALL" {{#equalsAllTarget}}selected{{/equalsAllTarget}}>전체</option>
+                        <option value="CAFE" {{#equalsCafe}}selected{{/equalsCafe}}>카페</option>
+                        <option value="RESTAURANT" {{#equalsRestaurant}}selected{{/equalsRestaurant}}>레스토랑</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">상태</label>
+                    <select name="status" class="form-select">
+                        <option value="ALL" {{#equalsAllStatus}}selected{{/equalsAllStatus}}>전체</option>
+                        <option value="ACTIVE" {{#equalsActive}}selected{{/equalsActive}}>활성</option>
+                        <option value="DELETED" {{#equalsDeleted}}selected{{/equalsDeleted}}>삭제됨</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">검색(내용/작성자/매장)</label>
+                    <input type="text" class="form-control" name="q" value="{{q}}" placeholder="키워드 입력">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">검색</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 결과 테이블 -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th style="width:70px;">ID</th>
+                        <th>대상</th>
+                        <th>매장명</th>
+                        <th>작성자</th>
+                        <th style="width:90px;">평점</th>
+                        <th>내용</th>
+                        <th style="width:160px;">작성일</th>
+                        <th style="width:110px;">상태</th>
+                        <th style="width:220px;">액션</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#reviews}}
+                        <tr class="{{#isDeleted}}table-danger{{/isDeleted}}">
+                            <td>{{id}}</td>
+                            <td>
+                                <span class="badge bg-secondary badge-target">{{targetType}}</span>
+                            </td>
+                            <td>
+                                <div class="fw-semibold">{{placeName}}</div>
+                                {{#imageUrl}}
+                                    <button type="button" class="btn btn-sm btn-outline-secondary mt-1"
+                                            data-bs-toggle="modal" data-bs-target="#imgModal"
+                                            data-img="{{imageUrl}}">이미지 보기</button>
+                                {{/imageUrl}}
+                            </td>
+                            <td>{{reviewer}}</td>
+                            <td>
+                                <span class="text-warning">★</span> {{rating}}
+                            </td>
+                            <td class="clamp-2" style="max-width: 360px;">{{content}}</td>
+                            <td>{{createdAt}}</td>
+                            <td>
+                                {{#isDeleted}}<span class="badge bg-danger">삭제됨</span>{{/isDeleted}}
+                                {{^isDeleted}}<span class="badge bg-success">활성</span>{{/isDeleted}}
+                            </td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {{#canDelete}}
+                                        <form method="post" action="/admin/reviews/{{id}}/delete" class="m-0 p-0">
+                                            {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                                            <button class="btn btn-sm btn-outline-danger" type="submit"
+                                                    onclick="return confirm('해당 리뷰를 삭제(숨김)할까요?');">삭제</button>
+                                        </form>
+                                    {{/canDelete}}
+
+                                    {{#canRestore}}
+                                        <form method="post" action="/admin/reviews/{{id}}/restore" class="m-0 p-0">
+                                            {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                                            <button class="btn btn-sm btn-outline-secondary" type="submit"
+                                                    onclick="return confirm('해당 리뷰를 복구할까요?');">복구</button>
+                                        </form>
+                                    {{/canRestore}}
+                                </div>
+                            </td>
+                        </tr>
+                    {{/reviews}}
+                    {{^reviews}}
+                        <tr><td colspan="9" class="text-center text-muted py-4">검색 결과가 없습니다.</td></tr>
+                    {{/reviews}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- 이미지 미리보기 모달 -->
+<div class="modal fade" id="imgModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <img id="imgModalEl" src="" class="img-fluid w-100" alt="review image"
+                     onerror="this.parentElement.innerHTML='<div class=\'p-4 text-center text-muted\'>이미지를 불러올 수 없습니다.</div>';">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> layout/footer}}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const imgModal = document.getElementById('imgModal');
+    if (imgModal) {
+      imgModal.addEventListener('show.bs.modal', evt => {
+        const btn = evt.relatedTarget;
+        const url = btn?.getAttribute('data-img');
+        const img = document.getElementById('imgModalEl');
+        if (img) img.src = url || '';
+      });
+      imgModal.addEventListener('hidden.bs.modal', () => {
+        const img = document.getElementById('imgModalEl');
+        if (img) img.src = '';
+      });
+    }
+</script>
+</body>
+</html>

@@ -60,7 +60,6 @@
         </form>
 
         <div class="d-flex gap-2 justify-content-center mt-3">
-            <button class="btn btn-sm {{#isAll}}btn-olive{{/isAll}} {{^isAll}}btn-outline-olive{{/isAll}} cat-btn" data-category="all">전체</button>
             <button class="btn btn-sm {{#isCafe}}btn-olive{{/isCafe}} {{^isCafe}}btn-outline-olive{{/isCafe}} cat-btn" data-category="cafe">카페</button>
             <button class="btn btn-sm {{#isRestaurant}}btn-olive{{/isRestaurant}} {{^isRestaurant}}btn-outline-olive{{/isRestaurant}} cat-btn" data-category="restaurant">식당</button>
         </div>
@@ -73,7 +72,7 @@
     </div>
 
     <div class="container mt-4" id="card-container">
-        {{> fragments/cards_grid}}
+        {{> fragments/fragment}}
     </div>
 
     <div id="scroll-end" class="py-3"></div>

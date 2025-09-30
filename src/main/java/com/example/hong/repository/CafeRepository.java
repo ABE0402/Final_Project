@@ -111,4 +111,6 @@ public interface CafeRepository extends JpaRepository<Cafe, Long>, CafeRepositor
     List<Cafe> searchByKeyword(@Param("keyword") String keyword);
     //LEFT JOIN → 메뉴까지 검색 가능
     //DISTINCT → 하나의 카페가 여러 메뉴에 걸쳐 중복 출력되는 것 방지
+    List<Cafe> findByIdInAndApprovalStatusAndIsVisible(List<Long> ids, ApprovalStatus approvalStatus, boolean isVisible);
+
 }

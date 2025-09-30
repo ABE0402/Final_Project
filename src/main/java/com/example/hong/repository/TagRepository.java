@@ -1,5 +1,6 @@
 package com.example.hong.repository;
 
+import com.example.hong.domain.TagAppliesTo;
 import com.example.hong.entity.Tag;
 import io.micrometer.observation.ObservationFilter;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,7 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
     List<Tag> findByIdIn(Collection<Integer> ids);
 
     List<Tag> findByCategoryAndAppliesToInOrderByDisplayOrderAscNameAsc(
-            String category, Collection<com.example.hong.domain.TagAppliesTo> appliesTo);
-
+            String category, Collection<TagAppliesTo> scopes
+    );
 
 }

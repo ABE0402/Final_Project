@@ -41,4 +41,15 @@ public class OwnerReply {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void onCreate() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (updatedAt == null) updatedAt = createdAt;   // ★ 생성 시 NPE 예방
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

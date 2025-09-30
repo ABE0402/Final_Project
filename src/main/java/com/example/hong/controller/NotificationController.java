@@ -63,4 +63,27 @@ public class NotificationController {
                 "createdAt", n.getCreatedAt().toString()
         );
     }
+
+    @DeleteMapping("/bulk")
+    public ResponseEntity<?> deleteBulk(@RequestBody IdsRequest req, Authentication auth) {
+        Long uid = meId(auth);
+        if (uid == null) return ResponseEntity.status(401).build();
+        if (req == null || req.ids() == null || req.ids().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("ok", false, "error", "empty_ids"));
+        }
+        int deleted = notificationService.deleteByIds(uid, req.ids());
+        return ResponseEntity.ok(Map.of("ok", true, "deleted", deleted));
+    }
+
+    /** 정말 전부 삭제하고 싶을 때 (패널에 안 보이는 예전 알림 포함) */
+    @DeleteMapping("/all")
+    public ResponseEntity<?> deleteAll(Authentication auth) {
+        Long uid = meId(auth);
+        if (uid == null) return ResponseEntity.status(401).build();
+        int deleted = notificationService.deleteAll(uid);
+        return ResponseEntity.ok(Map.of("ok", true, "deleted", deleted));
+    }
+
+    public record IdsRequest(List<Long> ids) {}
+
 }

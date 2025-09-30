@@ -1,6 +1,7 @@
 // src/main/java/com/example/hong/service/OwnerShopService.java
 package com.example.hong.service;
 
+import com.example.hong.domain.ApprovalStatus;
 import com.example.hong.domain.UserRole;
 import com.example.hong.dto.ShopCreateRequestDto;
 import com.example.hong.entity.Cafe;
@@ -148,6 +149,25 @@ public class OwnerShopService {
     }
 
     @Transactional
+    public void requestClose(Long ownerId, Long shopId) {
+        Cafe c = cafeRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
+        verifyOwner(c, ownerId);
+        c.setVisible(false);
+        c.setApprovalStatus(ApprovalStatus.PENDING);
+    }
+
+
+    @Transactional
+    public void reopen(Long ownerId, Long shopId) {
+        Cafe c = cafeRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
+        verifyOwner(c, ownerId);
+        c.setVisible(true);
+        c.setApprovalStatus(ApprovalStatus.APPROVED);
+    }
+
+    @Transactional
     public void updateShop(Long ownerId, Long shopId, ShopCreateRequestDto req) {
         Cafe c = cafeRepository.findById(shopId)
                 .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
@@ -196,13 +216,6 @@ public class OwnerShopService {
         replaceTags(c, req.getTagIds());
     }
 
-    @Transactional
-    public void requestClose(Long ownerId, Long shopId) {
-        Cafe c = cafeRepository.findById(shopId)
-                .orElseThrow(() -> new IllegalArgumentException("가게를 찾을 수 없습니다."));
-        verifyOwner(c, ownerId);
-        c.setVisible(false);
-    }
 
     /* ================= 좌표 보정 헬퍼 ================= */
 

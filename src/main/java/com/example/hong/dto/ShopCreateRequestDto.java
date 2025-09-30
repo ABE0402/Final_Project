@@ -16,7 +16,6 @@ public class ShopCreateRequestDto {
     private String postcode;        // 우편번호
     //사업자 번호
     private String addressRoad;     // 도로명 주소 (주입 필수)
-    private String addressDetail;   // 상세 주소 (선택)
 
     private Double lat;             // 선택(클라이언트가 채우면 백엔드 검증만)
     private Double lng;             // 선택      // -> Cafe.lng(BigDecimal)

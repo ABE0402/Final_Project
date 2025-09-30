@@ -63,27 +63,30 @@
                                 </div>
                             {{/hasReply}}
 
-                            <form class="mt-2" method="post" action="/owner/reviews/{{reviewId}}/reply">
+                            <form method="post" action="/owner/reviews/{{reviewId}}/reply" class="m-0">
                                 {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
                                 <div class="form-floating">
-                  <textarea class="form-control" id="reply-{{reviewId}}" name="content" style="height:100px"
-                            placeholder="답글을 입력하세요.">{{#hasReply}}{{replyContent}}{{/hasReply}}</textarea>
+                            <textarea class="form-control" id="reply-{{reviewId}}" name="content" style="height:100px"
+                                      placeholder="답글을 입력하세요.">{{#hasReply}}{{replyContent}}{{/hasReply}}</textarea>
                                     <label for="reply-{{reviewId}}">답글</label>
                                 </div>
-
-                                <div class="d-flex mt-2">
-                                    <button type="submit" class="btn btn-olive">{{#hasReply}}수정{{/hasReply}}{{^hasReply}}등록{{/hasReply}}</button>
-                                    {{#hasReply}}
-                                        <form method="post" action="/owner/reviews/{{reviewId}}/reply/delete" class="ms-2 m-0"
-                                              onsubmit="return confirm('답글을 삭제할까요?');">
-                                            {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
-                                            <button type="submit" class="btn btn-outline-danger">삭제</button>
-                                        </form>
-                                    {{/hasReply}}
-                                </div>
+                                <button type="submit" class="btn btn-olive mt-2">
+                                    {{#hasReply}}수정{{/hasReply}}{{^hasReply}}등록{{/hasReply}}
+                                </button>
                             </form>
+
+                            <!-- 삭제 폼 (hasReply일 때만 노출) -->
+                            {{#hasReply}}
+                                <form method="post" action="/owner/reviews/{{reviewId}}/reply/delete" class="m-0"
+                                      onsubmit="return confirm('답글을 삭제할까요?');">
+                                    {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                                    <button type="submit" class="btn btn-outline-danger mt-2">삭제</button>
+                                </form>
+                            {{/hasReply}}
                         </div>
+                        </form>
                     </div>
+                </div>
                 {{/reviews}}
 
                 {{^reviews}}
@@ -91,7 +94,7 @@
                 {{/reviews}}
 
             </div></div>
-        </section>
+    </section>
     </div>
 </main>
 

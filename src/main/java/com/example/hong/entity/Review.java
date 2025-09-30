@@ -16,7 +16,7 @@ import java.util.List;
                 @UniqueConstraint(name="uk_review_user_cafe", columnNames = {"user_id","cafe_id"}),
                 @UniqueConstraint(name="uk_review_user_restaurant",  columnNames = {"user_id","restaurant_id"})
         },
-indexes = {
+        indexes = {
                 @Index(name="idx_reviews_cafe", columnList = "cafe_id"),
                 @Index(name="idx_reviews_restaurant", columnList = "restaurant_id"),
                 @Index(name="idx_reviews_user", columnList = "user_id")
@@ -57,8 +57,12 @@ public class Review {
     private boolean deleted = false;
 
     // 리뷰 평가 ai 모델 점수
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewAspectScore> reviewAspectScores = new ArrayList<>();
+
+    // [추가됨] 점주 답글과의 일대일 관계
+    @OneToOne(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private OwnerReply reply;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

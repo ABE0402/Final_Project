@@ -1,6 +1,7 @@
 package com.example.hong.controller;
 
 import com.example.hong.domain.ApprovalStatus;
+import com.example.hong.domain.TagAppliesTo;
 import com.example.hong.dto.ShopCreateRequestDto;
 import com.example.hong.entity.Cafe;
 import com.example.hong.repository.CafeRepository;
@@ -37,15 +38,24 @@ public class OwnerShopController {
 
     /** 태그 리스트를 뷰 모델로 가공 (selected 플래그 포함) */
     private List<Map<String, Object>> tagListVm(String category, Set<Integer> selected) {
-        return tagRepository.findByCategoryOrderByNameAsc(category)
+        // Repository 시그니처가 Collection이므로 EnumSet 사용 (가볍고 타입 안전)
+        Collection<TagAppliesTo> scopes = EnumSet.of(TagAppliesTo.CAFE, TagAppliesTo.BOTH);
+
+        return tagRepository
+                .findByCategoryAndAppliesToInOrderByDisplayOrderAscNameAsc(category, scopes)
                 .stream()
-                .map(t -> Map.<String, Object>of(
-                        "id", t.getId(),
-                        "name", t.getName(),
-                        "selected", selected != null && selected.contains(t.getId())
-                ))
-                .collect(Collectors.toList());
+                .map(t -> {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("id", t.getId());
+                    m.put("name", t.getName());
+                    m.put("selected", selected != null && selected.contains(t.getId()));
+                    // 편집 화면 JS에서 data-scope를 쓰므로 함께 내려줌
+                    m.put("scope", t.getAppliesTo().name()); // CAFE / RESTAURANT / BOTH
+                    return m;
+                })
+                .toList();
     }
+
 
     /** 폼에 뿌릴 태그 선택지 (선택 상태 반영) */
     private void populateTagLists(Model model, Set<Integer> selected) {
@@ -144,14 +154,14 @@ public class OwnerShopController {
     @PostMapping("/{id}/close")
     public String close(@PathVariable Long id, Authentication auth, RedirectAttributes ra) {
         ownerShopService.requestClose(meId(auth), id);
-        ra.addAttribute("msg", "폐업(숨김) 처리되었습니다.");
+        ra.addAttribute("msg", "폐업 처리되었습니다.");
         return "redirect:/owner/shops";
     }
 
     @PostMapping("/{id}/reopen")
     public String reopen(@PathVariable Long id, Authentication auth, RedirectAttributes ra) {
         ownerShopService.reopen(meId(auth), id);
-        ra.addAttribute("msg", "재오픈(표시) 처리되었습니다.");
+        ra.addAttribute("msg", "재오픈 처리되었습니다.");
         return "redirect:/owner/shops";
     }
 }

@@ -47,16 +47,16 @@
                                 <a class="btn btn-sm btn-outline-secondary" href="/owner/shops/{{id}}/edit">정보 수정</a>
 
                                 {{#visible}}
-                                    <form method="post" action="/owner/shops/{{id}}/close" onsubmit="return confirm('폐업(숨김) 처리하시겠습니까?');">
+                                    <form method="post" action="/owner/shops/{{id}}/close" onsubmit="return confirm('정말 폐업하시겠습니까?');">
                                         {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
-                                        <button class="btn btn-sm btn-outline-danger" type="submit">폐업(숨김)</button>
+                                        <button class="btn btn-sm btn-outline-danger" type="submit">폐업</button>
                                     </form>
                                 {{/visible}}
 
                                 {{^visible}}
-                                    <form method="post" action="/owner/shops/{{id}}/reopen" onsubmit="return confirm('재오픈(표시) 하시겠습니까?');">
+                                    <form method="post" action="/owner/shops/{{id}}/reopen" onsubmit="return confirm('재오픈 하시겠습니까?');">
                                         {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
-                                        <button class="btn btn-sm btn-success" type="submit">재오픈(표시)</button>
+                                        <button class="btn btn-sm btn-success" type="submit">재오픈</button>
                                     </form>
                                 {{/visible}}
                             </div>

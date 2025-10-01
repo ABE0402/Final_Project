@@ -25,11 +25,13 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -57,6 +59,8 @@ public class ReviewService {
     @Transactional
     public void addWithImages(Long userId, Long cafeId, int rating, String content, List<MultipartFile> images) {
         HateSpeechResponseDto validationResult = validateReviewContent(content);
+
+
         if (validationResult.isHateSpeech()) {
             // 부적절한 내용이 감지되면 예외를 발생시켜 리뷰 저장을 중단
             String labels = String.join(", ", validationResult.getPredictedLabels());
@@ -70,7 +74,7 @@ public class ReviewService {
         if (cafe.getOwner() != null && cafe.getOwner().getId().equals(userId)) {
             throw new IllegalArgumentException("본인 매장에는 리뷰를 작성할 수 없습니다.");
         }
-        if (reviewRepo.existsByUserAndCafeAndDeletedFalse(user, cafe)) {
+        if (reviewRepo.existsByUserAndCafe(user, cafe)) {
             throw new IllegalArgumentException("이미 이 매장에 리뷰를 작성했습니다.");
         }
 
@@ -253,9 +257,58 @@ public class ReviewService {
 
     @Transactional
     public void deleteMyReview(Long userId, Long reviewId) {
-        var r = reviewRepo.findByIdAndUserIdAndDeletedFalse(reviewId, userId)
+        Review r = reviewRepo.findByIdAndUserId(reviewId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("삭제 권한이 없습니다."));
-        r.setDeleted(true);
+
+        Long cafeId = (r.getCafe() != null) ? r.getCafe().getId() : null;
+
+        // 1) 업로드 이미지 파일 물리 삭제
+        deleteReviewImages(r);
+
+
+        // 2) 리뷰 하드 삭제 (연관 자식은 FK ON DELETE CASCADE가 해줌)
+        reviewRepo.delete(r);
+
+        // 3) 집계 재계산 (평균/카운트)
+        if (cafeId != null) recalcCafeStats(cafeId);
+        // if (restaurantId != null) recalcRestaurantStats(restaurantId);
+    }
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void recalcCafeStats(Long cafeId) {
+        long cnt = reviewRepo.countByCafeId(cafeId);
+        Double avg = reviewRepo.avgRatingByCafeId(cafeId);
+
+        cafeRepo.findById(cafeId).ifPresent(c -> {
+            c.setReviewCount((int) cnt);
+            BigDecimal avgBD = (avg == null)
+                    ? BigDecimal.ZERO
+                    : BigDecimal.valueOf(avg).setScale(2, RoundingMode.HALF_UP);
+            c.setAverageRating(avgBD); //
+        });
+    }
+
+    private void deleteReviewImages(Review r) {
+        // URL들이 null이어도 안전하게 필터링
+        var urls = Stream.of(r.getImageUrl1(), r.getImageUrl2(), r.getImageUrl3(), r.getImageUrl4(), r.getImageUrl5())
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+
+        for (String url : urls) {
+            try {
+                Path p = toLocalReviewImagePath(url); // URL → 로컬 저장 경로
+                Files.deleteIfExists(p);
+            } catch (Exception e) {
+                log.warn("리뷰 이미지 삭제 실패(url={}): {}", url, e.toString());
+            }
+        }
+    }
+    private Path toLocalReviewImagePath(String url) {
+        // 예: "/uploads/reviews/abc.png" → "abc.png"
+        String norm = url.replace("\\", "/");
+        String filename = norm.substring(norm.lastIndexOf('/') + 1);
+        return Paths.get(uploadRoot, REVIEW_DIR, filename);
     }
 
     /* ================== 내부 유틸 ================== */

@@ -22,6 +22,20 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByUserIdAndDeletedFalseOrderByIdDesc(Long userId);
     Optional<Review> findByIdAndUserIdAndDeletedFalse(Long id, Long userId);
 
+    Optional<Review> findByIdAndUserId(Long id, Long userId);
+
+    // 등록 중 중복 체크도 soft-delete 전제 제거 (하드 삭제면 단순 존재여부면 충분)
+    boolean existsByUserAndCafe(User user, Cafe cafe);
+
+    // 마이페이지/카페 상세 조회가 커스텀이면 그대로 두고, 필요 시 soft-delete 조건 제거
+
+    // 집계 (평점/리뷰수 재계산)
+    @Query("select count(r) from Review r where r.cafe.id = :cafeId")
+    Integer countByCafeId(@Param("cafeId") Long cafeId);
+
+    @Query("select avg(r.rating) from Review r where r.cafe.id = :cafeId")
+    Double avgRatingByCafeId(@Param("cafeId") Long cafeId);
+
     @Query("""
     select r from Review r
     join fetch r.user u

@@ -77,4 +77,6 @@ public class Review {
             throw new IllegalStateException("리뷰 대상은 카페 또는 레스토랑 중 하나만 선택해야 합니다.");
         }
     }
+
+
 }

@@ -45,6 +45,6 @@ public class AdminOwnerApplicationController {
                          @RequestParam String reason) {
         Long adminId = ((AppUserPrincipal) auth.getPrincipal()).getId();
         service.reject(id, adminId, reason);
-        return "redirect:/admin/owner_applications/" + id + "?rejected=1";
+        return "redirect:/admin/owner_applications";
     }
 }

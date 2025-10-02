@@ -1,5 +1,6 @@
 package com.example.hong.service;
 
+import com.example.hong.domain.ApprovalStatus;
 import com.example.hong.dto.TagFrequencyDto;
 import com.example.hong.entity.Cafe;
 import com.example.hong.repository.CafeRepository;
@@ -37,6 +38,7 @@ public class RecommendationService {
                         TagFrequencyDto::getFrequency    // map.get("frequency") -> dto.getFrequency()
                 ));
     }
+
     /**
      * 모든 카페 각각의 태그 Set(카페 태그 벡터)을 생성합니다.
      * @return 카페 ID를 Key, 해당 카페의 태그 이름 Set을 Value로 갖는 Map
@@ -44,16 +46,17 @@ public class RecommendationService {
     @Transactional(readOnly = true)
     public Map<Long, Set<String>> getCafeTagVectors() {
         // 1. Fetch Join 쿼리를 호출하여 모든 카페와 태그 정보를 한 번에 가져옵니다.
-        List<Cafe> allCafesWithTags = cafeRepository.findAllWithTags();
+        List<Cafe> approvedCafesWithTags =
+                cafeRepository.findAllWithTagsByStatus(ApprovalStatus.APPROVED);
 
         // 2. List<Cafe>를 Map<Long, Set<String>> 형태로 변환합니다.
         // 이것이 바로 '카페별 태그 벡터'입니다.
-        return allCafesWithTags.stream()
+        return approvedCafesWithTags.stream()
                 .collect(Collectors.toMap(
-                        Cafe::getId, // Key: 카페의 ID
+                        Cafe::getId,  // Key: 카페 ID (Long)
                         cafe -> cafe.getCafeTags().stream()
-                                .map(cafeTag -> cafeTag.getTag().getName())
-                                .collect(Collectors.toSet()) // Value: 해당 카페의 태그 이름 Set
+                                .map(ct -> ct.getTag().getName())
+                                .collect(Collectors.toCollection(LinkedHashSet::new)) // Value: 태그명 집합
                 ));
     }
 

@@ -1,0 +1,163 @@
+/* ===== Theme tokens (fragment) ===== */
+:root{
+  --primary-green:#40916C;
+  --green-light:#52B788;
+  --green-lightest:#B7E4C7;
+  --stroke:#E7E7DF;
+  --shadow-soft:0 8px 24px rgba(20,70,50,.10);
+  --shadow-hover:0 12px 32px rgba(20,70,50,.16);
+  --page-bg:#F9F9F6; /* 아이보리 */
+}
+
+/* ===== 섹션 카드 ===== */
+.tag-section{
+  background:#fff;
+  border-radius:16px;
+  padding:20px 0;
+  box-shadow:var(--shadow-soft);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.tag-section:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-hover);
+}
+.tag-section .container{
+  overflow:visible; /* 내부 드롭다운/캐러셀 버튼이 잘리지 않도록 */
+}
+
+/* 섹션 타이틀 */
+.tag-section h5{
+  margin:0;
+  font-weight:700;
+}
+
+/* ===== 정렬 드롭다운(버튼 + 옵션) ===== */
+.tag-section .position-relative{ position:relative; overflow:visible; }
+
+.tag-section .sort-btn{
+  border-radius:999px;
+  padding:.35rem .8rem;
+  font-weight:700;
+  border:1px solid var(--stroke);
+  background:#fff;
+  color:#4a5650;
+  box-shadow:0 2px 8px rgba(64,145,108,.12);
+}
+.tag-section .sort-btn:hover{
+  background:#f4f7f5;
+}
+
+/* 옵션 박스 (JS가 display 제어함: 우리는 레이어/스타일만) */
+.sort-options{
+  position:absolute;
+  right:0;
+  top:100%;
+  margin-top:.4rem;
+  background:#fff;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  min-width:140px;
+  box-shadow:var(--shadow-soft);
+  z-index:2100;           /* 다른 요소 위로 */
+  padding:.4rem;
+}
+.sort-options li{
+  padding:.45rem .6rem;
+  border-radius:.5rem;
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+  white-space:nowrap;
+}
+.sort-options li:hover{
+  background:var(--green-lightest);
+}
+.sort-options li.selected{
+  background:var(--primary-green);
+  color:#fff;
+}
+
+/* ===== 캐러셀 ===== */
+.carousel-btn{
+  width:40px; height:40px;
+  border-radius:50%;
+  font-weight:800;
+  line-height:1;
+  background:#fff;
+  border:1px solid var(--stroke);
+  box-shadow:0 6px 16px rgba(0,0,0,.12);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  z-index:10; /* 카드 위로 */
+}
+.carousel-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 24px rgba(0,0,0,.16);
+  background:#f9fbf9;
+}
+.carousel-btn:active{
+  transform:translateY(0);
+}
+
+/* 가로 아이템 컨테이너 */
+.carousel-items{
+  gap:1rem;
+  will-change:transform; /* JS transform 성능 힌트 */
+}
+
+/* ===== 카드 아이템 ===== */
+.tag-section .card{
+  width:220px;             /* 템플릿 인라인 스타일과 동일 유지 */
+  border:0;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:var(--shadow-soft);
+  transition:transform .15s ease, box-shadow .15s ease;
+  background:#fff;
+}
+.tag-section .card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-hover);
+}
+
+/* ratio 이미지 상단 라운드 유지 */
+.tag-section .card .ratio{
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+  background:#f3f3f3 center/cover no-repeat;
+}
+
+/* 카드 바디/텍스트 */
+.tag-section .card .card-body{
+  padding:.6rem .6rem .7rem;
+}
+.tag-section .card .card-title{
+  font-weight:700;
+}
+.tag-section .badge{
+  background:rgba(64,145,108,.12);
+  color:#2D6A4F;
+  border:1px solid rgba(64,145,108,.25);
+  font-weight:700;
+  border-radius:999px;
+}
+
+/* ===== 빈 상태 ===== */
+.empty-message{
+  color:#6c757d;
+  background:#f8f9fa;
+  border:1px solid #dee2e6;
+  border-radius:.75rem;
+  padding:1.25rem;
+}
+
+/* ===== 인터랙션 보장 (레이어/클릭) ===== */
+/* 섹션 안 요소들이 다른 요소에 가려지지 않도록 */
+.tag-section, .tag-section *{ pointer-events:auto; }
+.tag-section .sort-options{ pointer-events:auto; }
+
+/* ===== 반응형 ===== */
+@media (max-width: 576px){
+  .tag-section{ border-radius:14px; }
+  .tag-section .card{ width:200px; }
+  .carousel-btn{ width:36px; height:36px; }
+}

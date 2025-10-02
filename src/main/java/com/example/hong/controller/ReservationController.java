@@ -1,21 +1,18 @@
-// src/main/java/com/example/hong/controller/ReservationController.java
 package com.example.hong.controller;
 
 import com.example.hong.domain.ReserveTargetType;
-import com.example.hong.entity.Cafe;                      // ★ 추가
 import com.example.hong.entity.Reservation;
-import com.example.hong.entity.UserEvent;               // ★ 추가
-import com.example.hong.repository.CafeRepository;      // ★ 추가
-import com.example.hong.repository.UserEventRepository; // ★ 추가
-import com.example.hong.repository.UserRepository;      // ★ 추가
+import com.example.hong.entity.UserEvent;
+import com.example.hong.repository.CafeRepository;
+import com.example.hong.repository.UserEventRepository;
+import com.example.hong.repository.UserRepository;
 import com.example.hong.service.ReservationService;
-import com.example.hong.service.SegmentRealtimeService; // ★ 추가
+import com.example.hong.service.SegmentRealtimeService;
 import com.example.hong.service.auth.AppUserPrincipal;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -33,11 +30,10 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    // ★ 이벤트 적재용 의존성
-    private final UserRepository userRepository;               // ★ 추가
-    private final CafeRepository cafeRepository;               // ★ 추가
-    private final UserEventRepository userEventRepository;     // ★ 추가
-    private final SegmentRealtimeService segmentRealtimeService; // ★ 추가
+    private final UserRepository userRepository;
+    private final CafeRepository cafeRepository;
+    private final UserEventRepository userEventRepository;
+    private final SegmentRealtimeService segmentRealtimeService;
 
     private Long meId(Authentication a) {
         return (a != null && a.isAuthenticated() && !(a.getPrincipal() instanceof String))
@@ -45,6 +41,7 @@ public class ReservationController {
                 : null;
     }
 
+    /** 공통 예약 페이지: /reserve?type=CAFE&id=123 */
     @GetMapping("/reserve")
     public String reservePage(@RequestParam("type") ReserveTargetType type,
                               @RequestParam("id") Long targetId,
@@ -54,6 +51,7 @@ public class ReservationController {
         return "reserve";
     }
 
+    /** 예약 생성(JSON API)  */
     @PostMapping(value = "/api/reservations", consumes = "application/json", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody CreateReservationReq req, Authentication auth) {
@@ -63,7 +61,8 @@ public class ReservationController {
         LocalDateTime at = LocalDateTime.parse(req.getReservationAt(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
         Reservation saved = reservationService.create(userId, req.getTargetType(), req.getTargetId(), at, req.getPartySize());
 
-        // ✅ 예약 이벤트 (카페일 때만)
+
+        // 예약 이벤트 클릭시 스택 쌓리게 (카페일 때만)
         if (req.getTargetType() == ReserveTargetType.CAFE) {
             try {
                 var user = userRepository.getReferenceById(userId);
@@ -73,6 +72,7 @@ public class ReservationController {
             } catch (Exception ignore) {}
         }
 
+        // JSON 본문은 그대로, 참고용 Location 헤더를 함께 제공 (클라이언트가 필요 시 따라가도록)
         return ResponseEntity.ok()
                 .header(HttpHeaders.LOCATION, "/mypage/reservations")
                 .body(Map.of(
@@ -82,6 +82,7 @@ public class ReservationController {
                 ));
     }
 
+    /** 예약 생성(폼 제출) →  마이페이지/예약내역으로 리다이렉트 */
     @PostMapping(value = "/reservations", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String createAndRedirect(CreateReservationForm form,
                                     Authentication auth,
@@ -92,7 +93,7 @@ public class ReservationController {
         LocalDateTime at = LocalDateTime.parse(form.getReservationAt(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
         reservationService.create(userId, form.getTargetType(), form.getTargetId(), at, form.getPartySize());
 
-        // ✅ 예약 이벤트 (카페일 때만)
+        // 예약 이벤트 클릭시 스택 쌓리게 (카페일 때만)
         if (form.getTargetType() == ReserveTargetType.CAFE) {
             try {
                 var user = userRepository.getReferenceById(userId);
@@ -106,6 +107,7 @@ public class ReservationController {
         return "redirect:/mypage/reservations";
     }
 
+    /** 예약 취소(JSON) */
     @PostMapping("/api/reservations/{reservationId}/cancel")
     @ResponseBody
     public ResponseEntity<?> cancel(@PathVariable Long reservationId, Authentication auth) {
@@ -123,6 +125,7 @@ public class ReservationController {
         private int partySize;
     }
 
+    /** 폼 전송용 DTO */
     @Data
     public static class CreateReservationForm {
         private ReserveTargetType targetType; // CAFE/RESTAURANT

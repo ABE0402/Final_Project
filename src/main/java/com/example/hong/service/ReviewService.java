@@ -3,10 +3,7 @@ package com.example.hong.service;
 import com.example.hong.dto.AspectScoreDto;
 import com.example.hong.dto.HateSpeechResponseDto;
 import com.example.hong.dto.ReviewItemDto;
-import com.example.hong.entity.Cafe;
-import com.example.hong.entity.Review;
-import com.example.hong.entity.ReviewAspectScore;
-import com.example.hong.entity.User;
+import com.example.hong.entity.*;
 import com.example.hong.repository.CafeRepository;
 import com.example.hong.repository.ReviewAspectScoreRepository;
 import com.example.hong.repository.ReviewRepository;
@@ -28,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
@@ -59,8 +57,6 @@ public class ReviewService {
     @Transactional
     public void addWithImages(Long userId, Long cafeId, int rating, String content, List<MultipartFile> images) {
         HateSpeechResponseDto validationResult = validateReviewContent(content);
-
-
         if (validationResult.isHateSpeech()) {
             // 부적절한 내용이 감지되면 예외를 발생시켜 리뷰 저장을 중단
             String labels = String.join(", ", validationResult.getPredictedLabels());
@@ -74,7 +70,7 @@ public class ReviewService {
         if (cafe.getOwner() != null && cafe.getOwner().getId().equals(userId)) {
             throw new IllegalArgumentException("본인 매장에는 리뷰를 작성할 수 없습니다.");
         }
-        if (reviewRepo.existsByUserAndCafe(user, cafe)) {
+        if (reviewRepo.existsByUserAndCafeAndDeletedFalse(user, cafe)) {
             throw new IllegalArgumentException("이미 이 매장에 리뷰를 작성했습니다.");
         }
 
@@ -215,12 +211,24 @@ public class ReviewService {
         String created = (r.getCreatedAt() == null) ? "" : r.getCreatedAt().format(DT_FMT);
         String nickname = resolveNickname(r.getUser()); // fetch join으로 세션 밖에서도 안전
 
-        // [추가된 부분]
+
         // 1. Review 엔티티에 연결된 감성 분석 점수 목록을 가져옵니다.
         //    (Review 엔티티에 getReviewAspectScores() 메소드가 있어야 합니다.)
         List<AspectScoreDto> aspectScores = r.getReviewAspectScores().stream()
                 .map(score -> new AspectScoreDto(score.getAspect(), score.getScore()))
                 .toList();
+
+        String replyContent = null;
+        String replyUpdatedAt = null;
+        OwnerReply reply = r.getReply(); // Review 엔티티에서 답글을 가져옴 (Fetch Join 덕분에 가능)
+        if (reply != null) {
+            replyContent = reply.getContent();
+            LocalDateTime updatedAt = reply.getUpdatedAt() != null ? reply.getUpdatedAt() : reply.getCreatedAt();
+            if (updatedAt != null) {
+                replyUpdatedAt = updatedAt.format(DT_FMT);
+            }
+        }
+
 
         // 2. builder()를 사용하여 DTO를 생성할 때, aspectScores 리스트를 추가합니다.
         return ReviewItemDto.builder()
@@ -234,7 +242,9 @@ public class ReviewService {
                 .imageUrl3(r.getImageUrl3())
                 .imageUrl4(r.getImageUrl4())
                 .imageUrl5(r.getImageUrl5())
-                .aspectScores(aspectScores) // [추가] 감성 분석 점수 리스트를 DTO에 포함
+                .aspectScores(aspectScores)
+                .replyContent(replyContent)
+                .replyUpdatedAt(replyUpdatedAt)
                 .build();
     }
 
@@ -286,7 +296,6 @@ public class ReviewService {
             c.setAverageRating(avgBD); //
         });
     }
-
     private void deleteReviewImages(Review r) {
         // URL들이 null이어도 안전하게 필터링
         var urls = Stream.of(r.getImageUrl1(), r.getImageUrl2(), r.getImageUrl3(), r.getImageUrl4(), r.getImageUrl5())

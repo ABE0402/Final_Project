@@ -113,4 +113,50 @@
   // 최초 1회 + 주기적 갱신(선택)
   updateCount();
   setInterval(updateCount, 60000);
+   function visibleNotifIds(){
+      return $$('.notif-item', list)
+        .map(n => Number(n.dataset.id))
+        .filter(id => Number.isFinite(id));
+    }
+
+    // "모두 읽음" 버튼을 "보이는 알림 전부 삭제"로 동작 변경
+    readAllBtn?.addEventListener('click', async () => {
+      const ids = visibleNotifIds();
+      if (ids.length === 0) {
+        // 보이는 게 없으면 그냥 UI만 정리
+        list.innerHTML = '<div class="p-3 text-muted small">새 알림이 없습니다.</div>';
+        badge.textContent = '0';
+        badge.classList.add('hidden');
+        return;
+      }
+
+      readAllBtn.disabled = true;
+      readAllBtn.textContent = '삭제 중...';
+
+      try {
+        await fetchJSON('/api/notifications/bulk', {
+          method: 'DELETE',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ ids })
+        });
+
+        // UI 정리
+        list.innerHTML = '<div class="p-3 text-muted small">새 알림이 없습니다.</div>';
+        badge.textContent = '0';
+        badge.classList.add('hidden');
+
+        // 패널 닫고 싶으면 주석 해제
+        // closePanel();
+
+      } catch(e){
+        // 실패 시 메시지
+        list.insertAdjacentHTML('afterbegin',
+          '<div class="p-2 text-danger small">삭제에 실패했어요. 잠시 후 다시 시도해 주세요.</div>');
+      } finally {
+        readAllBtn.disabled = false;
+        readAllBtn.textContent = '모두 읽음'; // 라벨 그대로 두되 동작은 삭제
+        // 서버 기준으로도 최신 카운트 다시 반영(혹시 모를 레이스 컨디션 방지)
+        updateCount();
+      }
+    });
 })();

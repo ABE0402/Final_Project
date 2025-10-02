@@ -5,5 +5,5 @@ import com.example.hong.dto.SearchRequestDto;
 import java.util.List;
 
 public interface CafeRepositoryCustom {
-    List<Cafe> search(SearchRequestDto condition);
+    List<Cafe> search(SearchRequestDto condition, List<String> tagNames);
 }

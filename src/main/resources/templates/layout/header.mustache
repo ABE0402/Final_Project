@@ -1,22 +1,22 @@
-<header class="site-header border-bottom bg-white">
-    <nav class="container d-flex align-items-center justify-content-between py-3 gap-3">
+<link rel="stylesheet" href="/css/header.css">
+<header class="site-header border-bottom">
+    <nav class="header-container">
 
         <!-- Left: Logo -->
-        <a href="/" class="brand d-inline-flex align-items-center text-decoration-none">
-            <span class="brand-mark rounded-2 me-2"></span>
-            <span class="fw-bold text-olive">Hong Around</span>
+        <a href="/" class="brand">
+            <img src="/images/logoB.png" alt="Hong Around" style="height:40px;" class="logo-img">
         </a>
 
         <!-- Right: Actions -->
         <div class="d-flex align-items-center gap-2">
             {{#auth.isLoggedIn}}
                 {{#auth.isOwner}}
-                    <a href="/owner" class="badge text-bg-success text-decoration-none">점주</a>
-                    <a href="/owner/shops/new" class="btn btn-sm btn-outline-olive">가게 등록</a>
+                    <a href="/owner" class="badge-owner">점주</a>
+                    <a href="/owner/shops/new" class="btn-sm btn-olive-outline">가게 등록</a>
                 {{/auth.isOwner}}
 
                 {{#auth.isAdmin}}
-                    <a class="btn btn-warning btn-sm" href="/admin">관리자</a>
+                    <a class="btn-sm btn-warning" href="/admin">관리자</a>
                 {{/auth.isAdmin}}
 
                 <!-- ▼▼▼ 알림 벨 UI (로그인 전용) ▼▼▼ -->
@@ -38,17 +38,17 @@
                 </div>
                 <!-- ▲▲▲ 알림 벨 UI 끝 ▲▲▲ -->
 
-                <a class="btn btn-sm btn-outline-olive" href="/mypage">마이페이지</a>
+                <a class="btn-sm btn-olive-outline" href="/mypage">마이페이지</a>
 
                 <form method="post" action="/logout" class="m-0">
                     {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
-                    <button class="btn btn-sm btn-outline-secondary" type="submit">로그아웃</button>
+                    <button class="btn-sm btn-secondary-outline" type="submit">로그아웃</button>
                 </form>
             {{/auth.isLoggedIn}}
 
             {{^auth.isLoggedIn}}
-                <a class="btn btn-sm btn-outline-olive" href="/login">로그인</a>
-                <a class="btn btn-sm btn-olive" href="/signup">회원가입</a>
+                <a class="btn-sm btn-olive-outline" href="/login">로그인</a>
+                <a class="btn-sm btn-olive-filled" href="/signup">회원가입</a>
             {{/auth.isLoggedIn}}
         </div>
     </nav>

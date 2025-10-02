@@ -45,34 +45,80 @@ public class SearchService {
         }
     }
 
+
+    //검색
     @Transactional
     public List<CafeSearchResultDto> searchCafesAndLog(SearchRequestDto request, Long userId) {
-        // 1. 검색 이벤트(SearchEvent) 로그를 먼저 저장하고, 저장된 객체를 받아옵니다.
+        // 1) 로그/태그 확장
         SearchEvent event = logSearchEvent(request, userId);
-
         List<String> originalTags = extractAllTagNames(request);
-        List<String> expandedTags = expandTags(originalTags); // 연관 태그 추가
-        // 2. event가 null이 아니고(즉, 로깅이 필요한 검색이었고), 사용자가 선택한 필터(태그)가 있다면 로그를 저장합니다.
-        if (event != null) {
-            List<String> selectedTagNames = extractAllTagNames(request);
-
-            // [디버깅 로그 추가 1] DTO에서 태그가 제대로 추출되었는지 확인
-            log.info("### DTO에서 추출된 태그 이름: {}", selectedTagNames);
-
-
-            if (!selectedTagNames.isEmpty()) {
-                logTagSelections(event, selectedTagNames);
-            }
+        if (event != null && !originalTags.isEmpty()) {
+            logTagSelections(event, originalTags);
         }
+        List<String> expandedTags = expandTags(originalTags);
 
-        // 3. Querydsl을 이용해 모든 조건(키워드+필터)에 맞는 카페 목록을 검색합니다.
-        List<Cafe> cafes = cafeRepository.search(request);
+        // 2) DB 후보군 조회
+        List<Cafe> candidates = cafeRepository.search(request, expandedTags);
 
-        // 4. DTO로 변환하여 반환합니다.
-        return cafes.stream()
-                .map(CafeSearchResultDto::fromEntity)
+        // 디버그 로그: 후보 수, 태그, 쿼리 확인
+        String query = StringUtils.hasText(request.getQuery()) ? request.getQuery().trim() : "";
+        log.info("searchCafesAndLog: candidates={}, originalTags={}, expandedTags={}, query='{}'",
+                candidates.size(), originalTags, expandedTags, query);
+
+        boolean hasTags = !originalTags.isEmpty();
+        Set<String> userTagSet = new HashSet<>(originalTags);
+
+        return candidates.stream()
+                .map(cafe -> {
+                    double similarity;
+                    // (A) 태그가 있으면 기존 Jaccard 계산
+                    if (hasTags) {
+                        Set<String> cafeTags = cafe.getCafeTags().stream()
+                                .map(ct -> ct.getTag().getName())
+                                .collect(Collectors.toSet());
+                        similarity = jaccard(userTagSet, cafeTags);
+                    } else if (StringUtils.hasText(query)) {
+                        // (B) 태그가 없고 텍스트 쿼리만 있을 때는 텍스트 매칭 점수로 대체
+                        String q = query.toLowerCase();
+                        String name = (cafe.getName() == null ? "" : cafe.getName().toLowerCase());
+                        String desc = (cafe.getDescription() == null ? "" : cafe.getDescription().toLowerCase());
+                        String addr = (cafe.getAddressRoad() == null ? "" : cafe.getAddressRoad().toLowerCase());
+
+                        if (name.contains(q)) similarity = 1.0;
+                        else if (desc.contains(q) || addr.contains(q)) similarity = 0.5;
+                        else similarity = 0.0;
+                    } else {
+                        // (C) 태그도 없고 쿼리도 없으면 기본 0.0 (혹은 다른 비즈니스 룰)
+                        similarity = 0.0;
+                    }
+
+                    CafeSearchResultDto dto = CafeSearchResultDto.fromEntity(cafe);
+                    dto.setSimilarity(similarity);
+                    return dto;
+                })
+                // 필터는 '태그 검색'을 한 경우에만 유사도 기준으로 적용
+                .filter(dto -> {
+                    if (hasTags) {
+                        return dto.getSimilarity() >= 0.1;
+                    } else {
+                        return true; // 텍스트 검색일 땐 필터 패스
+                    }
+                })
+                .sorted(Comparator.comparing(CafeSearchResultDto::getSimilarity).reversed())
                 .collect(Collectors.toList());
     }
+
+    // 자카드 유사도 계산 헬퍼 메소드
+    private double jaccard(Set<String> s1, Set<String> s2) {
+        if (s1.isEmpty() && s2.isEmpty()) return 1.0;
+        if (s1.isEmpty() || s2.isEmpty()) return 0.0;
+        Set<String> intersection = new HashSet<>(s1);
+        intersection.retainAll(s2);
+        Set<String> union = new HashSet<>(s1);
+        union.addAll(s2);
+        return (double) intersection.size() / union.size();
+    }
+
 
 
     // [추가됨] 태그 목록을 확장하는 헬퍼 메소드
@@ -156,7 +202,7 @@ public class SearchService {
 //     *  SearchEvent 테이블을 사용하여 인기 검색어를 조회합니다. 나중에 구현할거
 //     */
 //    public List<String> getTopKeywords() {
-//        // SearchEventRepository에 findTop5SearchQueries() 메소드를 추가해야 합니다.
+//        // SearchEventRepository에 findTop5SearchQueries() 메소드를 추가
 //        return searchEventRepository.findTop5SearchQueries();
 //    }
 //

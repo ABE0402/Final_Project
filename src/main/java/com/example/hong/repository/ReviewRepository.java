@@ -36,10 +36,12 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("select avg(r.rating) from Review r where r.cafe.id = :cafeId")
     Double avgRatingByCafeId(@Param("cafeId") Long cafeId);
 
+
     @Query("""
     select r from Review r
     join fetch r.user u
     left join fetch r.reviewAspectScores s
+    left join fetch r.reply rp
     where r.cafe.id = :cafeId and r.deleted = false
     order by r.id desc
     """)
@@ -77,6 +79,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         Long getCafeId();
         Long getCnt();
     }
+
     @Query("""
     select r from Review r
     left join fetch r.cafe c

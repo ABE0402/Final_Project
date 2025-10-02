@@ -1,10 +1,10 @@
-// src/main/java/com/example/hong/controller/HomeController.java
 package com.example.hong.controller;
 
 import com.example.hong.domain.ApprovalStatus;
 import com.example.hong.domain.TagAppliesTo;
 import com.example.hong.dto.PlaceCardDto;
 import com.example.hong.entity.Cafe;
+import com.example.hong.entity.User;
 import com.example.hong.repository.CafeRepository;
 import com.example.hong.repository.TagRepository;
 import com.example.hong.repository.UserRepository;
@@ -14,6 +14,7 @@ import com.example.hong.service.SegmentRecommendationService;
 import com.example.hong.service.auth.AppUserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,12 +34,17 @@ public class HomeController {
     private final UserRepository userRepository;
     private final CafeRepository cafeRepository;
 
-    // 첫 화면: 기본 카테고리 = cafe
+    // 화면 최초 진입
     @GetMapping("/")
-    public String home(@RequestParam(defaultValue = "cafe") String category,   // cafe | restaurant
+    public String home(@RequestParam(defaultValue = "all") String category,   // all | cafe | restaurant
                        @RequestParam(defaultValue = "recommend") String sort,  // recommend | rating | review
+                       @AuthenticationPrincipal AppUserPrincipal userPrincipal,
                        Authentication auth,
                        Model model) {
+
+        if (userPrincipal != null) {
+            model.addAttribute("user", userPrincipal);
+        }
 
         model.addAttribute("category", category);
         model.addAttribute("sort", sort);
@@ -50,7 +56,6 @@ public class HomeController {
         if ("cafe".equalsIgnoreCase(category)) {
             currentUser(auth).ifPresent(user -> {
                 Map<String, List<PlaceCardDto>> rec = segmentRecommendationService.sectionsFor(user, 12);
-                rec = filterApprovedVisible(rec);
                 rec.forEach((title, cards) -> sections.add(toSection(title, cards)));
             });
         }
@@ -123,7 +128,7 @@ public class HomeController {
 
     /* ===== helpers ===== */
 
-    private Optional<com.example.hong.entity.User> currentUser(Authentication auth) {
+    private Optional<User> currentUser(Authentication auth) {
         if (auth == null || !(auth.getPrincipal() instanceof AppUserPrincipal p)) return Optional.empty();
         return userRepository.findById(p.getId());
     }
@@ -168,7 +173,6 @@ public class HomeController {
         section.put("sortSelected", Map.of("recommend", true, "rating", false, "review", false, "favorite", false));
         return section;
     }
-
     private Map<String, List<PlaceCardDto>> filterApprovedVisible(Map<String, List<PlaceCardDto>> sections) {
         // 1) 모든 카드 id 수집
         List<Long> allIds = sections.values().stream()

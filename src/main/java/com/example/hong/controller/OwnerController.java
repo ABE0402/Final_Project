@@ -27,10 +27,11 @@ public class OwnerController {
     }
 
     // 점주 메인(리뷰 탭 기본)
-    @GetMapping({"", "/"})
+    @GetMapping({"","/"})
     public String home() {
         return "redirect:/owner/reviews";
     }
+
 
     // 점주 리뷰 관리(대댓글)
     @GetMapping("/reviews")

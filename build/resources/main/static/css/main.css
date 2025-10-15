@@ -1,0 +1,339 @@
+:root{
+  --header-bg-color:#1B4332;
+  --primary-green:#40916C;
+  --green-light:#52B788;
+  --green-lightest:#B7E4C7;
+  --green-dark:#2D6A4F;
+
+  --page-bg:#F9F9F6;        /* 아이보리 화이트 */
+  --text-dark:#1f2d27;
+  --stroke:#E7E7DF;
+  --shadow-soft:0 8px 24px rgba(20,70,50,.10);
+  --shadow-hover:0 10px 28px rgba(20,70,50,.16);
+  --focus-glow: 0 0 0 3px rgba(64, 145, 108, 0.25); /* 검색창 포커스 효과 */
+}
+
+/* 공용 유틸 */
+.line-clamp-2{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.ratio-16x9{
+  background:#f3f3f3 center/cover no-repeat;
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+}
+
+/* ===== 페이지 배경 ===== */
+body, main.bg-body-tertiary{ background:var(--page-bg); }
+.display-5.fw-bold{ color:var(--text-dark); letter-spacing:.2px; }
+
+/* ===== 검색/필터 블록 (마크업/클래스 불변) ===== */
+form[action="/search"] .input-group.input-group-lg{
+  background:#fff;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  /* (업데이트) 검색창 높이를 키우기 위해 패딩 증가 */
+  padding:8px;
+  box-shadow:var(--shadow-soft);
+  overflow:visible;                 /* 드롭다운/달력 등 오버플로우 보이게 */
+}
+
+/* 좌측 드롭다운(전체/식당/카페) */
+form[action="/search"] .btn-group{ margin-right:6px; }
+form[action="/search"] #category-dropdown-button{
+  background:#eef7f1;
+  color:var(--green-dark);
+  border:1px solid var(--stroke);
+  border-radius:10px;
+  font-weight:600;
+  transition: background-color 0.15s ease; /* 호버 애니메이션 추가 */
+}
+form[action="/search"] #category-dropdown-button:hover {
+  background-color: var(--green-lightest);
+}
+
+form[action="/search"] .dropdown-menu{
+  border-radius:12px;
+  box-shadow:var(--shadow-soft);
+  border:1px solid var(--stroke);
+  overflow:hidden;
+  z-index:2000;                     /* 최상단 z-index 보장 */
+}
+form[action="/search"] .dropdown-menu .dropdown-item{ padding:.6rem .9rem; }
+/* 드롭다운 항목 호버 스타일 개선 */
+form[action="/search"] .dropdown-menu .dropdown-item:hover {
+    background-color: var(--green-lightest);
+    color: var(--green-dark);
+}
+
+/* 검색 인풋 (길이 확보 및 포커스 스타일 강화) */
+form[action="/search"] .form-control{
+  border:none!important;
+  box-shadow:none!important;
+  /* (업데이트) 검색창 텍스트 크기 증가 */
+  font-size:1.15rem;
+  transition: box-shadow 0.2s ease; /* 포커스 애니메이션 */
+}
+form[action="/search"] .form-control::placeholder{ color:#99a3a9; }
+/* 검색창 포커스 시 녹색 그림자 효과 추가 */
+form[action="/search"] .form-control:focus {
+  outline: none !important;
+  box-shadow: var(--focus-glow) !important;
+}
+
+
+/* (업데이트) 필터 트리거 버튼 스타일 개선 */
+form[action="/search"] .filter-trigger-btn{
+  border:1px solid var(--stroke);
+  border-radius:10px;
+  font-weight:600;
+  background:#fff;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* 소프트 초기 그림자 */
+}
+/* 카페 필터 버튼 (Green Theme) */
+#cafe-filter-trigger {
+    background-color: var(--green-lightest);
+    color: var(--green-dark);
+    border-color: var(--green-light);
+}
+#cafe-filter-trigger:hover {
+    background-color: #d6f2e2;
+    box-shadow: 0 4px 10px rgba(64, 145, 108, 0.2);
+}
+
+/* 식당 필터 버튼 (Gold/Brown Theme) */
+#restaurant-filter-trigger {
+    background-color: #FFF3E0; /* 아주 밝은 오렌지/노랑 */
+    color: #9C660A; /* 진한 골드 텍스트 */
+    border-color: #FFD590; /* 중간 골드 테두리 */
+}
+#restaurant-filter-trigger:hover {
+    background-color: #ffe0c0;
+    box-shadow: 0 4px 10px rgba(156, 102, 10, 0.2);
+}
+
+
+/* 돋보기 제출 버튼 */
+form[action="/search"] .btn.btn-primary{
+  background:var(--primary-green);
+  border-color:var(--primary-green);
+  font-weight:700;
+  border-radius:10px;
+}
+form[action="/search"] .btn.btn-primary:hover{
+  background:var(--green-dark);
+  border-color:var(--green-dark);
+}
+
+/* “지도에서 찾기” 버튼(아웃라인) */
+form[action="/search"] .btn.btn-outline-primary{
+  border:1px solid var(--stroke);
+  color:var(--primary-green);
+  background:#fff;
+  border-radius:10px;
+  font-weight:700;
+}
+form[action="/search"] .btn.btn-outline-primary:hover{
+  background:#eef7f1;
+  border-color:var(--primary-green);
+  color:var(--green-dark);
+}
+
+/* ===== 카테고리 토글(카페/식당) ===== */
+.cat-btn{
+  border-radius:999px;
+  padding:.45rem 1rem;
+  font-weight:700;
+  box-shadow:0 2px 8px rgba(64,145,108,.15);
+}
+.btn-olive{
+  background:var(--primary-green);
+  color:#fff;
+  border:1px solid var(--primary-green);
+  border-radius:999px;
+}
+.btn-olive:hover{ background:var(--green-light); color:#fff; }
+.btn-outline-olive{
+  background:#fff;
+  color:var(--primary-green);
+  border:1px solid var(--primary-green);
+  border-radius:999px;
+}
+.btn-outline-olive:hover{ background:var(--primary-green); color:#fff; }
+
+/* ===== 정렬 버튼(추천/평점/리뷰) – 외형만 ===== */
+.sort-btn{
+  border-radius:999px;
+  font-weight:700;
+  padding:.35rem .8rem;
+  border-color:var(--stroke);
+  background:#fff;
+  color:#4a5650;
+}
+.sort-btn:hover{ background:#f4f7f5; }
+.sort-btn.active{
+  background:var(--primary-green)!important;
+  border-color:var(--primary-green)!important;
+  color:#fff!important;
+  box-shadow:0 4px 12px rgba(64,145,108,.25);
+}
+
+/* ===== 카드/배지 기본(메인 범위 한정) ===== */
+main .card{
+  border:0;
+  border-radius:16px;
+  box-shadow:var(--shadow-soft);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+main .card:hover{ transform:translateY(-2px); box-shadow:var(--shadow-hover); }
+main .card .card-body{ padding:1rem 1rem 1.1rem; }
+main .badge{
+  background:rgba(64,145,108,.12);
+  color:var(--green-dark);
+  border:1px solid rgba(64,145,108,.25);
+  font-weight:600;
+  border-radius:999px;
+}
+
+/* ===== 모달 푸터(초기화/필터 적용) – 스타일만 ===== */
+#filterModal .modal-footer{ border-top:1px solid var(--stroke); }
+#filterModal .modal-footer .btn{
+  border-radius:10px;
+  padding:.55rem 1rem;
+  font-weight:700;
+}
+#filterModal .modal-footer .btn-light{
+  background:#fff;
+  border:1px solid var(--stroke);
+  color:#4a5650;
+}
+#filterModal .modal-footer .btn-light:hover{ background:#f4f7f5; }
+#filterModal .modal-footer .btn.btn-primary{
+  background:var(--primary-green);
+  border-color:var(--primary-green);
+}
+#filterModal .modal-footer .btn.btn-primary:hover{
+  background:var(--green-dark);
+  border-color:var(--green-dark);
+}
+
+/* ===== 스크롤 감시자 표시만 ===== */
+#scroll-end{ min-height:1px; }
+
+/* ===== 접근성 =====*/
+:focus-visible{ outline:3px solid rgba(64,145,108,.35); outline-offset:2px; }
+
+/* ===== 모바일 미세조정 (검색창 길이 확보 핵심) ===== */
+@media (max-width:576px){
+  form[action="/search"] .input-group.input-group-lg{
+    /* (업데이트) 모바일 패딩 조정 */
+    padding:6px;
+    border-radius:12px;
+  }
+  .cat-btn{ padding:.4rem .9rem; }
+
+  /* 모바일에서 모든 검색 버튼의 패딩을 약간 줄여서 인풋 영역 확보 */
+  form[action="/search"] .input-group.input-group-lg .btn {
+      padding: .6rem .8rem;
+  }
+  form[action="/search"] .input-group.input-group-lg .btn.dropdown-toggle {
+      padding-right: 1.5rem; /* 드롭다운 화살표 공간 확보 */
+  }
+
+  /* "지도에서 찾기" 버튼 텍스트를 숨기고 아이콘으로 대체 (공간 절약) */
+  form[action="/search"] .btn.btn-outline-primary:not([style*="display: none"]) {
+     padding: .6rem .75rem !important;
+     font-size: 0; /* 텍스트 숨김 */
+  }
+  form[action="/search"] .btn.btn-outline-primary::after {
+     content: '🗺️'; /* 지도 아이콘 추가 */
+     font-size: 1rem;
+     font-size: initial;
+     display: inline;
+  }
+}
+
+/* --- 검색바 인터랙션 보장 패치 --- */
+form[action="/search"] .input-group.input-group-lg{
+  position: relative;
+  overflow: visible !important;   /* 드롭다운이 잘리지 않게 */
+  z-index: 0;
+}
+
+/* 드롭다운 기준점과 레이어 올리기 */
+form[action="/search"] .btn-group{
+  position: relative;
+  z-index: 3;                     /* 인풋/다른 버튼보다 위 */
+  flex: 0 0 auto;
+}
+
+/* 실제 드롭다운 레이어 최상단 */
+form[action="/search"] .dropdown-menu{
+  z-index: 2000;                  /* 헤더/카드/인풋 위로 */
+  border-radius: 12px;
+}
+
+/* 인풋이 다른 요소 덮어버리는 것 방지 */
+form[action="/search"] .form-control{
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+}
+
+/* 필터/검색/지도 버튼도 인풋보다 위 */
+form[action="/search"] .filter-trigger-btn,
+form[action="/search"] .btn.btn-primary,
+form[action="/search"] .btn.btn-outline-primary{
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+}
+
+/* 드롭다운 항목 클릭이 다른 요소에 가려지지 않게 */
+form[action="/search"] .dropdown-menu .dropdown-item{
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+form[action="/search"] {
+  position: relative;
+  z-index: 10;
+}
+
+/* 드롭다운이 열렸을 때(btn-group.show) 검색바가 모든 섹션보다 위로 오게 */
+form[action="/search"] .btn-group.show {
+  position: relative;
+  z-index: 6000; /* 섹션, 캐러셀, 정렬옵션보다 높게 */
+}
+
+/* 실제 드롭다운 레이어 최상단 */
+form[action="/search"] .btn-group.show .dropdown-menu {
+  z-index: 7000; /* .sort-options(2100)도 확실히 넘김 */
+}
+
+/* 섹션들이 transform으로 새 스택을 만들더라도, z-index 낮춰 검색바를 넘지 못하게 */
+.tag-section {
+  position: relative;
+  z-index: 0;
+}
+.tag-section:hover {
+  z-index: 0; /* hover시에도 검색바보다 낮게 유지 */
+}
+
+/* 혹시 부모 오버플로로 잘리는 경우를 방지(이미 있으나 재보강) */
+form[action="/search"] .input-group.input-group-lg {
+  position: relative;
+  overflow: visible !important;
+  z-index: 1; /* 드롭다운 기준점보다만 낮게 */
+}
+
+/* 드롭다운 자체 레이어 튀어나오도록(사파리 등 렌더러 보정) */
+form[action="/search"] .dropdown-menu {
+  position: absolute; /* Bootstrap 기본 유지 */
+  will-change: transform;
+}

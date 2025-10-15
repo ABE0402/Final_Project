@@ -4,3 +4,9 @@ server:
 kakao:
   js-key: ${KAKAO_JS_KEY:a23af68b2c591eb7972938e924cddf5a}
   rest-api-key: ${KAKAO_REST_API_KEY:3936dfb56868dab819976b8713153087}
+
+spring:
+  elasticsearch:
+    uris:
+      - http://localhost:9200
+

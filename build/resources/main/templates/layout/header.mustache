@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="/css/header.css">
+<header class="site-header border-bottom">
+    <nav class="header-container">
+
+        <!-- Left: Logo -->
+        <a href="/" class="brand">
+            <img src="/images/logoB.png" alt="Hong Around" style="height:40px;" class="logo-img">
+        </a>
+
+        <!-- Right: Actions -->
+        <div class="d-flex align-items-center gap-2">
+            {{#auth.isLoggedIn}}
+                {{#auth.isOwner}}
+                    <a href="/owner" class="badge-owner">점주</a>
+                    <a href="/owner/shops/new" class="btn-sm btn-olive-outline">가게 등록</a>
+                {{/auth.isOwner}}
+
+                {{#auth.isAdmin}}
+                    <a class="btn-sm btn-warning" href="/admin">관리자</a>
+                {{/auth.isAdmin}}
+
+                <!-- ▼▼▼ 알림 벨 UI (로그인 전용) ▼▼▼ -->
+                <div class="position-relative">
+                    <button id="notif-bell" type="button" class="btn btn-sm btn-outline-secondary position-relative">
+                        🛎
+                        <span id="notif-count"
+                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger hidden">0</span>
+                    </button>
+
+                    <!-- 드롭다운 패널 -->
+                    <div id="notif-panel" class="notif-panel hidden">
+                        <div class="d-flex justify-content-between align-items-center border-bottom px-3 py-2">
+                            <strong>알림</strong>
+                            <button id="notif-read-all" type="button" class="btn btn-link btn-sm text-decoration-none">모두 읽음</button>
+                        </div>
+                        <div id="notif-list" class="notif-list">불러오는 중...</div>
+                    </div>
+                </div>
+                <!-- ▲▲▲ 알림 벨 UI 끝 ▲▲▲ -->
+
+                <a class="btn-sm btn-olive-outline" href="/mypage">마이페이지</a>
+
+                <form method="post" action="/logout" class="m-0">
+                    {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                    <button class="btn-sm btn-secondary-outline" type="submit">로그아웃</button>
+                </form>
+            {{/auth.isLoggedIn}}
+
+            {{^auth.isLoggedIn}}
+                <a class="btn-sm btn-olive-outline" href="/login">로그인</a>
+                <a class="btn-sm btn-olive-filled" href="/signup">회원가입</a>
+            {{/auth.isLoggedIn}}
+        </div>
+    </nav>
+
+
+    <!-- 알림 전용 리소스 (중복 로드만 피하면 됨) -->
+    <link rel="stylesheet" href="/css/notifications.css">
+    <script defer src="/js/notifications.js"></script>
+</header>

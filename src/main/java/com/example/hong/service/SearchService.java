@@ -1,5 +1,6 @@
 package com.example.hong.service;
 
+import com.example.hong.document.PlaceDocument;
 import com.example.hong.dto.CafeSearchResultDto;
 import com.example.hong.dto.SearchRequestDto;
 import com.example.hong.entity.*;
@@ -31,6 +32,13 @@ public class SearchService {
     private final SearchEventSelectionRepository searchEventSelectionRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private Map<String, List<String>> relatedTagsMap;
+    private final PlaceSearchRepository placeSearchRepository;
+
+
+    // 엘라스틱 서치
+    public List<PlaceDocument> searchByElasticsearch(String keyword, String category) {
+        return placeSearchRepository.searchByNameOrAddress(keyword);
+    }
 
 
     @PostConstruct

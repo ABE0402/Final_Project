@@ -1,0 +1,18 @@
+<div class="card shadow-sm">
+    <div class="card-body text-center p-4">
+        <div class="profile-avatar mx-auto mb-3">
+            <img src="{{#me.profileImageUrl}}{{me.profileImageUrl}}{{/me.profileImageUrl}}{{^me.profileImageUrl}}/images/profile-placeholder.png{{/me.profileImageUrl}}"
+                 alt="프로필" class="rounded-circle w-100 h-100 object-fit-cover">
+        </div>
+        <div class="fw-semibold">
+            {{#me.nickname}}{{me.nickname}}{{/me.nickname}}{{^me.nickname}}닉네임{{/me.nickname}}
+        </div>
+    </div>
+    <div class="list-group list-group-flush">
+        <a class="list-group-item list-olive {{#tab.profile}}active{{/tab.profile}}" href="/mypage">프로필관리</a>
+        <a class="list-group-item list-olive {{#tab.reviews}}active{{/tab.reviews}}" href="/mypage/reviews">리뷰관리</a>
+        <a class="list-group-item list-olive {{#tab.reservations}}active{{/tab.reservations}}" href="/mypage/reservations">예약내역</a>
+        <a class="list-group-item list-olive {{#tab.favorites}}active{{/tab.favorites}}" href="/mypage/favorites">즐겨찾기/찜한매장</a>
+        <a class="list-group-item list-olive {{#tab.account}}active{{/tab.account}}" href="/mypage/account">계정관리</a>
+    </div>
+</div>

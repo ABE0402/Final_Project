@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>{{#cafe}}{{name}}{{/cafe}} - Hong Around</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/cafe_show.css" rel="stylesheet">
+    <style>
+        :root{
+          --olive:#5b7c38; --olive-50:#eef3e7;
+        }
+        .hero{
+          position:relative; border-radius:1rem; overflow:hidden; min-height:260px;
+          background:#f2f2f2 center/cover no-repeat;
+        }
+        .hero-overlay{
+          position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.55));
+        }
+        .hero-meta{
+          position:absolute; left:1rem; right:1rem; bottom:1rem; color:#fff;
+        }
+        .chip{display:inline-block; padding:.25rem .6rem; border-radius:999px; background:rgba(255,255,255,.9); color:#2f2f2f; font-size:.8rem; margin:.15rem .25rem .15rem 0}
+        .chip-olive{background:var(--olive); color:#fff}
+        .line-2{
+          display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+        }
+        .thumb-rail img{object-fit:cover;width:100%;height:120px;border-radius:.5rem}
+        .map-box{position:relative; height:280px !important; border:1px solid #dbe3c0; border-radius:.5rem; overflow:hidden; background:#eef1e6;}
+        #detailMap{ width:100%; height:100%; display:block; }
+        .ratio-16x9{background:#f7f7f7 center/cover no-repeat}
+
+       .owner-reply{background:var(--olive-50); border-left:4px solid var(--olive); border-radius:.5rem; padding:.75rem}
+       .owner-reply .meta{font-size:.8rem; color:#6c757d}
+
+    </style>
+</head>
+<body class="bg-body-tertiary">
+{{> layout/header}}
+
+<main class="container py-4">
+
+    <!-- 히어로(대표사진 + 기본정보) -->
+    <section class="hero shadow-sm mb-4"
+             style="background-image:url('{{#cafe}}{{#heroImageUrl}}{{.}}{{/heroImageUrl}}{{^heroImageUrl}}/images/placeholder_shop.jpg{{/heroImageUrl}}{{/cafe}}')">
+        <div class="hero-overlay"></div>
+        <div class="hero-meta">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <h3 class="mb-0">{{#cafe}}{{name}}{{/cafe}}</h3>
+                <span class="badge bg-light text-dark">⭐ {{avg}}</span>
+                <span class="badge bg-light text-dark">리뷰 {{#cafe}}{{reviewCount}}{{/cafe}}</span>
+            </div>
+            <div class="mt-1 small">{{#cafe}}{{addressRoad}}{{/cafe}}</div>
+
+            <!-- 태그 칩 (있을 때만) -->
+            <div class="mt-2">
+                {{#tagsAll}}
+                    <span class="chip">{{.}}</span>
+                {{/tagsAll}}
+            </div>
+
+            <!-- 액션 버튼 -->
+            <div class="mt-3 d-flex gap-2 flex-wrap">
+                <a class="btn btn-sm btn-light" href="/cafes/{{cafe.id}}/reviews/new">리뷰 작성</a>
+                <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#favConfirmModal">
+                    {{#isFav}}즐겨찾기 해제{{/isFav}}{{^isFav}}즐겨찾기 추가{{/isFav}}
+                </button>
+                <button class="action-btn primary"
+                        onclick="location.href='/reserve?type=CAFE&id={{cafe.id}}'">
+                예약하기
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 즐겨찾기 모달 -->
+    <div class="modal fade" id="favConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">즐겨찾기</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+            </div>
+            <div class="modal-body">
+                {{#isFav}}즐겨찾기를 해제하시겠습니까?{{/isFav}}
+                {{^isFav}}즐겨찾기에 추가하시겠습니까?{{/isFav}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">아니요</button>
+                <form method="post" action="/cafes/{{cafe.id}}/favorite" class="m-0">
+                    {{#_csrf}}<input type="hidden" name="{{parameterName}}" value="{{token}}">{{/_csrf}}
+                    <button type="submit" class="btn btn-olive">네</button>
+                </form>
+            </div>
+        </div></div>
+    </div>
+
+    <!-- 상단 서브 이미지 레일 (있을 때만) -->
+    {{#images}}
+        <div class="row g-2 mb-3 thumb-rail">
+            {{#.}}
+                <div class="col-4"><img src="{{.}}" alt=""></div>
+            {{/.}}
+        </div>
+    {{/images}}
+
+    <div class="row g-3">
+        <!-- 좌측 메인 정보 -->
+        <div class="col-12 col-lg-8">
+            <div class="row g-3">
+                <!-- 매장 정보 -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="mb-3">매장 정보</h6>
+                            <ul class="list-unstyled small mb-0">
+                                <li>📍 {{#cafe}}{{addressRoad}}{{/cafe}}</li>
+                                <li>📞 {{#cafe}}{{#phone}}{{.}}{{/phone}}{{^phone}}-{{/phone}}{{/cafe}}</li>
+                                <li class="mt-2">
+                                    <div class="text-muted mb-1">영업시간</div>
+                                    {{#cafe}}{{#operatingHours}}
+                                        <pre class="mb-0" style="white-space:pre-wrap">{{.}}</pre>
+                                    {{/operatingHours}}{{/cafe}}
+                                    {{#cafe}}{{^operatingHours}}<span class="text-muted">정보 없음</span>{{/operatingHours}}{{/cafe}}
+                                </li>
+                                <li class="mt-2">
+                                    <div class="text-muted mb-1">자기소개</div>
+                                    {{#cafe}}{{#description}}
+                                        <pre class="mb-0" style="white-space:pre-wrap">{{.}}</pre>
+                                    {{/description}}{{/cafe}}
+                                    {{#cafe}}{{^description}}<span class="text-muted">소개가 아직 없습니다.</span>{{/description}}{{/cafe}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 메뉴(텍스트 + 사진) -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="mb-3">메뉴 안내</h6>
+                            {{#cafe}}{{#menuText}}
+                                <pre class="small mb-3" style="white-space:pre-wrap">{{.}}</pre>
+                            {{/menuText}}{{/cafe}}
+                            {{#cafe}}{{^menuText}}<div class="small text-muted">등록된 메뉴 소개가 없습니다.</div>{{/menuText}}{{/cafe}}
+
+                            {{#menuImages}}
+                                <div class="row g-2">
+                                    {{#.}}
+                                        <div class="col-6">
+                                            <div class="ratio ratio-16x9 rounded" style="background-image:url('{{.}}')"></div>
+                                        </div>
+                                    {{/.}}
+                                </div>
+                            {{/menuImages}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 태그: 카테고리별 -->
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6 class="mb-2">태그</h6>
+                            <div class="small text-muted mb-2">카테고리별로 등록된 태그입니다.</div>
+                            <div class="mb-2">
+                                {{#tags.companion}}<span class="chip">👥 {{.}}</span>{{/tags.companion}}
+                            </div>
+                            <div class="mb-2">
+                                {{#tags.mood}}<span class="chip">🎵 {{.}}</span>{{/tags.mood}}
+                            </div>
+                            <div class="mb-2">
+                                {{#tags.amenities}}<span class="chip">🛎️ {{.}}</span>{{/tags.amenities}}
+                            </div>
+                            <div class="mb-2">
+                                {{#tags.reservation}}<span class="chip">📅 {{.}}</span>{{/tags.reservation}}
+                            </div>
+                            <div class="mb-0">
+                                {{#tags.type}}<span class="chip chip-olive">{{.}}</span>{{/tags.type}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 리뷰 -->
+            <div class="card shadow-sm mt-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="m-0">리뷰</h6>
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-outline-secondary disabled">최신순</a>
+                            <a class="btn btn-outline-secondary disabled">별점순</a>
+                        </div>
+                    </div>
+                    {{#reviews}}
+                        <div class="border rounded p-3 mb-3">
+                            <div class="d-flex justify-content-between">
+                                <div class="fw-semibold">★ {{rating}}</div>
+                                <div class="small text-muted">{{createdAt}}</div>
+                            </div>
+                            <div class="small text-muted">작성자: {{nickname}}</div>
+                            <div class="mt-2">{{content}}</div>
+
+                            <div class="mt-2 d-flex gap-2 flex-wrap">
+                                {{#aspectScores}}
+                                    <span class="badge rounded-pill text-bg-light border fw-normal">
+                    {{aspect}}: <span class="fw-bold">{{score}}</span>
+                </span>
+                                {{/aspectScores}}
+                            </div>
+
+                            <div class="mt-2 d-flex gap-2 flex-wrap">
+                                {{#imageUrl1}}<img src="{{.}}" class="rounded" style="width:96px;height:96px;object-fit:cover">{{/imageUrl1}}
+                                {{#imageUrl2}}<img src="{{.}}" class="rounded" style="width:96px;height:96px;object-fit:cover">{{/imageUrl2}}
+                                {{#imageUrl3}}<img src="{{.}}" class="rounded" style="width:96px;height:96px;object-fit:cover">{{/imageUrl3}}
+                                {{#imageUrl4}}<img src="{{.}}" class="rounded" style="width:96px;height:96px;object-fit:cover">{{/imageUrl4}}
+                                {{#imageUrl5}}<img src="{{.}}" class="rounded" style="width:96px;height:96px;object-fit:cover">{{/imageUrl5}}
+                            </div>
+                            <!-- 점주 답글(객체형) -->
+                            {{#ownerReply}}
+                                <div class="owner-reply mt-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <div class="fw-semibold">점주 답글</div>
+                                        {{#updatedAt}}<div class="meta">{{.}}</div>{{/updatedAt}}
+                                    </div>
+                                    <div class="small" style="white-space:pre-wrap">{{content}}</div>
+                                </div>
+                            {{/ownerReply}}
+
+                            <!-- (대안) 평평한 필드로 내려올 때 -->
+                            {{^ownerReply}}
+                                {{#replyContent}}
+                                    <div class="owner-reply mt-2">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <div class="fw-semibold">점주 답글</div>
+                                            {{#replyUpdatedAt}}<div class="meta">{{.}}</div>{{/replyUpdatedAt}}
+                                        </div>
+                                        <div class="small" style="white-space:pre-wrap">{{replyContent}}</div>
+                                    </div>
+                                {{/replyContent}}
+                            {{/ownerReply}}
+                        </div>
+                    {{/reviews}}
+                    {{^reviews}}<div class="text-muted">아직 리뷰가 없어요.</div>{{/reviews}}
+                </div>
+            </div>
+        </div>
+        <!-- 우측 사이드 -->
+        <div class="col-12 col-lg-4">
+            <!-- 지도/위치 -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body" style="position: relative;">
+                    <h6 class="mb-2">위치</h6>
+                    <div id="detailMap" class="map-box"
+                         data-lat="{{#cafe}}{{lat}}{{/cafe}}"
+                         data-lng="{{#cafe}}{{lng}}{{/cafe}}"
+                         data-address="{{#cafe}}{{addressRoad}}{{/cafe}}">
+                    </div>
+                    <div class="small text-muted mt-2">
+                        📍 {{#cafe}}{{addressRoad}}{{/cafe}}
+                        {{#cafe}}{{#lat}}<br>lat: {{lat}}, lng: {{lng}}{{/lat}}{{/cafe}}
+                    </div>
+
+                    <div id="mapError" class="alert alert-light border small mt-2 d-none"></div>
+
+                    <a href="/pages/mainMap?highlight={{cafe.id}}" class="btn btn-dark shadow-sm"
+                    style="position: absolute; bottom: 16px; right: 16px; z-index: 10;">
+                    📍 지도에서 보기
+                    </a>
+                </div>
+            </div>
+
+            <!-- 연락처/빠른 정보 -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h6 class="mb-2">연락처</h6>
+                    <div class="small">📞 {{#cafe}}{{#phone}}{{.}}{{/phone}}{{^phone}}-{{/phone}}{{/cafe}}</div>
+                    <div class="small">📍 {{#cafe}}{{addressRoad}}{{/cafe}}</div>
+                    {{#cafe}}{{#postcode}}<div class="small">우편번호: {{.}}</div>{{/postcode}}{{/cafe}}
+                </div>
+            </div>
+
+            <!-- 베스트 -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="mb-3">베스트 (카페 핫한 곳)</h6>
+                    {{#bestCafes}}
+                        <a class="d-flex gap-3 text-decoration-none text-reset border rounded p-2 mb-2"
+                           href="/cafes/{{id}}">
+                            <div class="ratio ratio-16x9 bg-light"
+                                 style="width:120px;background-image:url('{{#heroImageUrl}}{{.}}{{/heroImageUrl}}{{^heroImageUrl}}/images/placeholder_shop.jpg{{/heroImageUrl}}');background-size:cover;background-position:center;border-radius:.5rem"></div>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold text-truncate">{{name}}</div>
+                                <div class="small text-muted text-truncate">{{addressRoad}}</div>
+                                <div class="small mt-1">⭐ {{#averageRating}}{{.}}{{/averageRating}}{{^averageRating}}0.0{{/averageRating}} · 리뷰 {{reviewCount}}</div>
+                            </div>
+                        </a>
+                    {{/bestCafes}}
+                    {{^bestCafes}}<div class="text-muted small">표시할 추천 매장이 없습니다.</div>{{/bestCafes}}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+{{> layout/footer}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{kakaoJsKey}}&libraries=services&autoload=false"></script>
+
+<script>
+    // 썸네일 → 히어로 교체
+    document.querySelectorAll('.thumb-rail img').forEach(img => {
+        img.addEventListener('click', () => {
+            const hero = document.querySelector('.hero');
+            if (hero) hero.style.backgroundImage = `url('${img.src}')`;
+        });
+    });
+
+    // 지도 초기화 함수
+    function initDetailMap() {
+        const box = document.getElementById('detailMap');
+        if (!box) {
+            return;
+        }
+
+        const rawLat = (box.getAttribute('data-lat') || '').trim();
+        const rawLng = (box.getAttribute('data-lng') || '').trim();
+        const address = (box.getAttribute('data-address') || '').trim();
+
+        const hasLatLng = rawLat !== '' && rawLng !== '' && !isNaN(parseFloat(rawLat)) && !isNaN(parseFloat(rawLng));
+        const map = new kakao.maps.Map(box, {
+            center: new kakao.maps.LatLng(37.5665, 126.9780),
+            level: 5
+        });
+
+        // 지도가 카드 내에서 렌더링될 때 크기를 제대로 잡지 못하는 경우를 대비해 relayout()을 호출
+        setTimeout(() => map.relayout(), 0);
+
+        const FOCUS_RADIUS_M = 100;
+        function fitMapToCircle(lat, lng, radiusMeters, paddingPx = 12) {
+            const dLat = radiusMeters / 111320;
+            const rad = Math.PI / 180;
+            const dLng = radiusMeters / (111320 * Math.cos(lat * rad));
+            const sw = new kakao.maps.LatLng(lat - dLat, lng - dLng);
+            const ne = new kakao.maps.LatLng(lat + dLat, lng + dLng);
+            const bounds = new kakao.maps.LatLngBounds(sw, ne);
+            try { map.setBounds(bounds, paddingPx); } catch (_) { map.setBounds(bounds); }
+        }
+
+        const applyPoint = (lat, lng) => {
+            const pos = new kakao.maps.LatLng(lat, lng);
+            new kakao.maps.Marker({ position: pos, map });
+            new kakao.maps.Circle({
+                center: pos, radius: FOCUS_RADIUS_M,
+                strokeWeight: 2, strokeColor: '#0052cc', strokeOpacity: 0.8,
+                strokeStyle: 'solid', fillColor: '#0052cc', fillOpacity: 0.12,
+                map
+            });
+            fitMapToCircle(lat, lng, FOCUS_RADIUS_M);
+        };
+
+        if (hasLatLng) {
+            applyPoint(parseFloat(rawLat), parseFloat(rawLng));
+        } else if (address) {
+            const geocoder = new kakao.maps.services.Geocoder();
+            geocoder.addressSearch(address, function (result, status) {
+                if (status === kakao.maps.services.Status.OK && result[0]) {
+                    const lat = parseFloat(result[0].y);
+                    const lng = parseFloat(result[0].x);
+                    applyPoint(lat, lng);
+                } else {
+                    const err = document.getElementById('mapError');
+                    if (err) { err.classList.remove('d-none'); err.textContent = '지도를 표시할 위치를 찾지 못했습니다. 주소를 확인해주세요.'; }
+                }
+            });
+        } else {
+            const err = document.getElementById('mapError');
+            if (err) { err.classList.remove('d-none'); err.textContent = '주소/좌표 정보가 없어 지도를 표시할 수 없습니다.'; }
+        }
+    }
+
+    // 카카오맵 SDK가 로드된 후 initDetailMap 함수를 실행합니다.
+    kakao.maps.load(initDetailMap);
+</script>
+</body>
+</html>

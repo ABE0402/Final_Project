@@ -34,6 +34,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+	implementation 'com.opencsv:opencsv:5.7.1'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'

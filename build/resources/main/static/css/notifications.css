@@ -1,0 +1,14 @@
+#notif-panel{
+  position:absolute; right:0; margin-top:.5rem; width:320px; background:#fff;
+  border:1px solid #e5e7eb; border-radius:.5rem; box-shadow:0 6px 24px rgba(0,0,0,.08);
+  z-index: 1000;
+}
+#notif-panel.hidden{ display:none!important; }
+#notif-list{ max-height: 420px; overflow:auto; }
+.notif-item{ padding:.75rem .75rem; border-bottom:1px solid #f1f3f5; }
+.notif-item:last-child{ border-bottom:0; }
+.notif-item .notif-link{ text-decoration:none; color:#111; display:block; }
+.notif-item .notif-time{ color:#888; font-size:.75rem; margin-top:.25rem; }
+.notif-unread{ background:#fffdf5; }
+.notif-read{ background:#fff; }
+#notif-count.hidden{ display:none!important; }
